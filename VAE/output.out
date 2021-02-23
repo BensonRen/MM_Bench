@@ -1,0 +1,87 @@
+retrain_time_evalsine_wavekl_coeff0.02lr0.001reg0.005
+Retrieving flag object for parameters
+This is a meta-material dataset
+reading from ensemble place
+I am reading data from the: ../Simulated_DataSets/Meta_material_Neural_Simulator/dataIn
+total number of training sample is 9000, the dimension of the feature is 8
+total number of test sample is 1000
+Making network now
+This is inference mode, the ckpt is /home/sr365/Why_NA/VAE/models/retrain0meta_material
+VAE(
+  (linears_d): ModuleList(
+    (0): Linear(in_features=50, out_features=1000, bias=True)
+    (1): Linear(in_features=1000, out_features=1000, bias=True)
+    (2): Linear(in_features=1000, out_features=1000, bias=True)
+    (3): Linear(in_features=1000, out_features=1000, bias=True)
+    (4): Linear(in_features=1000, out_features=1000, bias=True)
+    (5): Linear(in_features=1000, out_features=1000, bias=True)
+    (6): Linear(in_features=1000, out_features=1000, bias=True)
+    (7): Linear(in_features=1000, out_features=1000, bias=True)
+    (8): Linear(in_features=1000, out_features=1000, bias=True)
+    (9): Linear(in_features=1000, out_features=1000, bias=True)
+    (10): Linear(in_features=1000, out_features=8, bias=True)
+  )
+  (bn_linears_d): ModuleList(
+    (0): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (7): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (9): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): BatchNorm1d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (linears_e): ModuleList(
+    (0): Linear(in_features=28, out_features=1000, bias=True)
+    (1): Linear(in_features=1000, out_features=1000, bias=True)
+    (2): Linear(in_features=1000, out_features=1000, bias=True)
+    (3): Linear(in_features=1000, out_features=1000, bias=True)
+    (4): Linear(in_features=1000, out_features=1000, bias=True)
+    (5): Linear(in_features=1000, out_features=1000, bias=True)
+    (6): Linear(in_features=1000, out_features=1000, bias=True)
+    (7): Linear(in_features=1000, out_features=1000, bias=True)
+    (8): Linear(in_features=1000, out_features=1000, bias=True)
+    (9): Linear(in_features=1000, out_features=1000, bias=True)
+    (10): Linear(in_features=1000, out_features=60, bias=True)
+  )
+  (bn_linears_e): ModuleList(
+    (0): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (7): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (9): BatchNorm1d(1000, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): BatchNorm1d(60, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (linears_se): ModuleList(
+    (0): Linear(in_features=150, out_features=500, bias=True)
+    (1): Linear(in_features=500, out_features=500, bias=True)
+    (2): Linear(in_features=500, out_features=500, bias=True)
+    (3): Linear(in_features=500, out_features=500, bias=True)
+    (4): Linear(in_features=500, out_features=20, bias=True)
+  )
+  (bn_linears_se): ModuleList(
+    (0): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(20, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convs_se): ModuleList(
+    (0): Conv1d(1, 4, kernel_size=(5,), stride=(1,), padding=(2,))
+    (1): Conv1d(4, 4, kernel_size=(5,), stride=(1,), padding=(2,))
+    (2): Conv1d(4, 4, kernel_size=(8,), stride=(2,), padding=(3,))
+    (3): Conv1d(4, 1, kernel_size=(1,), stride=(1,))
+  )
+)
+number of trainable parameters is :
+19047509
+Start eval now:
+Evaluation finished

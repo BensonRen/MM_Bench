@@ -1,0 +1,185 @@
+retrain_time_evalsine_wavecouple_layer_num4dim_total4lambda_mse0.01trail1
+Retrieving flag object for parameters
+This is a meta-material dataset
+reading from ensemble place
+I am reading data from the: ../Simulated_DataSets/Meta_material_Neural_Simulator/dataIn
+total number of training sample is 9000, the dimension of the feature is 8
+total number of test sample is 1000
+Making network now
+This is inference mode, the ckpt is /home/sr365/Why_NA/INN_FrEIA/models/retrain0meta_material
+The nodes are: [<FrEIA.framework.InputNode object at 0x7f29132b1e10>, <FrEIA.framework.Node object at 0x7f29133ec310>, <FrEIA.framework.Node object at 0x7f2913165290>, <FrEIA.framework.Node object at 0x7f2913165310>, <FrEIA.framework.Node object at 0x7f2913165390>, <FrEIA.framework.Node object at 0x7f2913165410>, <FrEIA.framework.Node object at 0x7f2913165490>, <FrEIA.framework.Node object at 0x7f2913165510>, <FrEIA.framework.Node object at 0x7f2913165590>, <FrEIA.framework.Node object at 0x7f2913165610>, <FrEIA.framework.Node object at 0x7f2913165690>, <FrEIA.framework.Node object at 0x7f2913165710>, <FrEIA.framework.Node object at 0x7f2913165790>, <FrEIA.framework.Node object at 0x7f29131b74d0>, <FrEIA.framework.Node object at 0x7f29131b7310>, <FrEIA.framework.OutputNode object at 0x7f29131b7210>]
+Node 'coupling_0' takes the following inputs:
+	 Output #0 of node 'input' with dims (330,)
+
+Node 'permute_0' takes the following inputs:
+	 Output #0 of node 'coupling_0' with dims (330,)
+
+Node 'coupling_1' takes the following inputs:
+	 Output #0 of node 'permute_0' with dims (330,)
+
+Node 'permute_1' takes the following inputs:
+	 Output #0 of node 'coupling_1' with dims (330,)
+
+Node 'coupling_2' takes the following inputs:
+	 Output #0 of node 'permute_1' with dims (330,)
+
+Node 'permute_2' takes the following inputs:
+	 Output #0 of node 'coupling_2' with dims (330,)
+
+Node 'coupling_3' takes the following inputs:
+	 Output #0 of node 'permute_2' with dims (330,)
+
+Node 'permute_3' takes the following inputs:
+	 Output #0 of node 'coupling_3' with dims (330,)
+
+Node 'coupling_4' takes the following inputs:
+	 Output #0 of node 'permute_3' with dims (330,)
+
+Node 'permute_4' takes the following inputs:
+	 Output #0 of node 'coupling_4' with dims (330,)
+
+Node 'coupling_5' takes the following inputs:
+	 Output #0 of node 'permute_4' with dims (330,)
+
+Node 'permute_5' takes the following inputs:
+	 Output #0 of node 'coupling_5' with dims (330,)
+
+Node 'coupling_6' takes the following inputs:
+	 Output #0 of node 'permute_5' with dims (330,)
+
+Node 'permute_6' takes the following inputs:
+	 Output #0 of node 'coupling_6' with dims (330,)
+
+Node 'output' takes the following inputs:
+	 Output #0 of node 'permute_6' with dims (330,)
+
+ReversibleGraphNet(
+  (module_list): ModuleList(
+    (0): None
+    (1): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (2): PermuteRandom()
+    (3): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (4): PermuteRandom()
+    (5): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (6): PermuteRandom()
+    (7): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (8): PermuteRandom()
+    (9): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (10): PermuteRandom()
+    (11): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (12): PermuteRandom()
+    (13): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=165, out_features=512, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=512, out_features=512, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=512, out_features=330, bias=True)
+      )
+    )
+    (14): PermuteRandom()
+    (15): dummy()
+  )
+)
+/home/sr365/Why_NA/INN_FrEIA/models/retrain0meta_material
+number of trainable parameters is :
+7237132
+Start eval now:
+Evaluation finished

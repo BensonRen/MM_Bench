@@ -1,0 +1,386 @@
+None
+Retrieving flag object for parameters
+total number of training sample is 9000, the dimension of the feature is 4
+total number of test sample is 1000
+Making network now
+This is inference mode, the ckpt is /home/sr365/Why_NA/cINN/models/retrain0ballistics
+The nodes are: [<FrEIA.framework.InputNode object at 0x7fd85553dd10>, <FrEIA.framework.Node object at 0x7fd848516a10>, <FrEIA.framework.Node object at 0x7fd8483cc050>, <FrEIA.framework.Node object at 0x7fd8483cc0d0>, <FrEIA.framework.Node object at 0x7fd8483cc150>, <FrEIA.framework.Node object at 0x7fd8483cc1d0>, <FrEIA.framework.Node object at 0x7fd8483cc250>, <FrEIA.framework.Node object at 0x7fd8483cc2d0>, <FrEIA.framework.Node object at 0x7fd8483cc350>, <FrEIA.framework.Node object at 0x7fd8483cc3d0>, <FrEIA.framework.Node object at 0x7fd8483cc450>, <FrEIA.framework.Node object at 0x7fd8483cc4d0>, <FrEIA.framework.Node object at 0x7fd8483cc550>, <FrEIA.framework.Node object at 0x7fd8483cc5d0>, <FrEIA.framework.Node object at 0x7fd8483cc650>, <FrEIA.framework.Node object at 0x7fd848416f90>, <FrEIA.framework.Node object at 0x7fd848416c50>, <FrEIA.framework.Node object at 0x7fd848416d90>, <FrEIA.framework.Node object at 0x7fd848416e90>, <FrEIA.framework.Node object at 0x7fd84841e150>, <FrEIA.framework.Node object at 0x7fd84841e250>, <FrEIA.framework.Node object at 0x7fd84841e350>, <FrEIA.framework.Node object at 0x7fd84841e450>, <FrEIA.framework.Node object at 0x7fd84841e550>, <FrEIA.framework.Node object at 0x7fd84841e650>, <FrEIA.framework.Node object at 0x7fd84841e750>, <FrEIA.framework.Node object at 0x7fd84841e850>, <FrEIA.framework.OutputNode object at 0x7fd84841e810>, <FrEIA.framework.ConditionNode object at 0x7fd848642b50>]
+Node 'coupling_0' takes the following inputs:
+	 Output #0 of node 'input' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_0' takes the following inputs:
+	 Output #0 of node 'coupling_0' with dims (4,)
+
+Node 'coupling_1' takes the following inputs:
+	 Output #0 of node 'permute_0' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_1' takes the following inputs:
+	 Output #0 of node 'coupling_1' with dims (4,)
+
+Node 'coupling_2' takes the following inputs:
+	 Output #0 of node 'permute_1' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_2' takes the following inputs:
+	 Output #0 of node 'coupling_2' with dims (4,)
+
+Node 'coupling_3' takes the following inputs:
+	 Output #0 of node 'permute_2' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_3' takes the following inputs:
+	 Output #0 of node 'coupling_3' with dims (4,)
+
+Node 'coupling_4' takes the following inputs:
+	 Output #0 of node 'permute_3' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_4' takes the following inputs:
+	 Output #0 of node 'coupling_4' with dims (4,)
+
+Node 'coupling_5' takes the following inputs:
+	 Output #0 of node 'permute_4' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_5' takes the following inputs:
+	 Output #0 of node 'coupling_5' with dims (4,)
+
+Node 'coupling_6' takes the following inputs:
+	 Output #0 of node 'permute_5' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_6' takes the following inputs:
+	 Output #0 of node 'coupling_6' with dims (4,)
+
+Node 'coupling_7' takes the following inputs:
+	 Output #0 of node 'permute_6' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_7' takes the following inputs:
+	 Output #0 of node 'coupling_7' with dims (4,)
+
+Node 'coupling_8' takes the following inputs:
+	 Output #0 of node 'permute_7' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_8' takes the following inputs:
+	 Output #0 of node 'coupling_8' with dims (4,)
+
+Node 'coupling_9' takes the following inputs:
+	 Output #0 of node 'permute_8' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_9' takes the following inputs:
+	 Output #0 of node 'coupling_9' with dims (4,)
+
+Node 'coupling_10' takes the following inputs:
+	 Output #0 of node 'permute_9' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_10' takes the following inputs:
+	 Output #0 of node 'coupling_10' with dims (4,)
+
+Node 'coupling_11' takes the following inputs:
+	 Output #0 of node 'permute_10' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_11' takes the following inputs:
+	 Output #0 of node 'coupling_11' with dims (4,)
+
+Node 'coupling_12' takes the following inputs:
+	 Output #0 of node 'permute_11' with dims (4,)
+	 conditioned on node 'node' with dims (1,)
+
+Node 'permute_12' takes the following inputs:
+	 Output #0 of node 'coupling_12' with dims (4,)
+
+Node 'output' takes the following inputs:
+	 Output #0 of node 'permute_12' with dims (4,)
+
+ReversibleGraphNet(
+  (module_list): ModuleList(
+    (0): None
+    (1): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (2): PermuteRandom()
+    (3): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (4): PermuteRandom()
+    (5): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (6): PermuteRandom()
+    (7): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (8): PermuteRandom()
+    (9): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (10): PermuteRandom()
+    (11): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (12): PermuteRandom()
+    (13): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (14): PermuteRandom()
+    (15): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (16): PermuteRandom()
+    (17): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (18): PermuteRandom()
+    (19): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (20): PermuteRandom()
+    (21): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (22): PermuteRandom()
+    (23): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (24): PermuteRandom()
+    (25): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=3, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (26): PermuteRandom()
+    (27): dummy()
+    (28): None
+  )
+)
+retrain0ballistics
+number of trainable parameters is :
+1372904
+Start eval now:
+Evaluation finished
