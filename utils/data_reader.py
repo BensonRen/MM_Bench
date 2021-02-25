@@ -36,133 +36,6 @@ def importData(directory, x_range, y_range):
         print('For feature {}, the max is {} and min is {}'.format(i, np.max(ftr[:, i]), np.min(ftr[:, i])))
     return ftr, lbl
 
-
-# check that the data we're using is distributed uniformly and generate some plots
-def check_data(input_directory, col_range=range(2, 10), col_names=('h1','h2','h3','h4','r1','r2','r3','r4')):
-    for file in os.listdir(input_directory):
-        if file.endswith('.csv'):
-            print('\n histogram for file {}'.format(os.path.join(input_directory, file)))
-            with open(os.path.join(input_directory, file)) as f:
-                data = pd.read_csv(f, header=None, delimiter=',', usecols=col_range,
-                                   names=col_names)
-                for name in col_names:
-                    print('{} unique values for {}: {}'.format(len(data[name].unique()),
-                                                               name,
-                                                               np.sort(data[name].unique()))
-                          )
-                hist = data.hist(bins=13, figsize=(10, 5))
-                plt.tight_layout()
-                plt.show()
-                print('done plotting column data')
-
-
-
-
-# add columns of derived values to the input data
-# for now, just ratios of the inputs
-def addColumns(input_directory, output_directory, x_range, y_range):
-    print('adding columns...')
-    print('importing data')
-    data_files = []
-    for file in os.listdir(os.path.join(input_directory)):
-        if file.endswith('.csv'):
-            data_files.append(file)
-    for file in data_files:
-        ftr = pd.read_csv(os.path.join(input_directory, file), delimiter=',', usecols=x_range,
-                          names=['id0', 'id1'] + ['ftr' + str(i) for i in range(8)])
-        lbl = pd.read_csv(os.path.join(input_directory, file), delimiter=',', usecols=y_range, header=None)
-
-        print('computing new columns')
-        newCol = 0  # count the number of new columns added
-        for i in range(2, 6):  # first four are heights
-            for j in range(6, 10):  # second four are radii
-                ftr['ftr{}'.format(j-2)+'/'+'ftr{}'.format(i-2)] = ftr.apply(lambda row: row.iloc[j]/row.iloc[i], axis=1)
-                newCol += 1
-        print('total new columns added is {}\n'.format(newCol))
-        print('exporting')
-        data_total = pd.concat([ftr, pd.DataFrame(lbl)], axis=1)
-        # data_total['2010'] = data_total.str.replace('\n', ' ')
-        with open(os.path.join(output_directory, file[:-4] + '_div01.csv'), 'a') as file_out:
-            # for some stupid reason to_csv seems to insert a blank line between every single data line
-            # maybe try to fix this issue later
-            #data_total.to_csv(file_out, sep=',', index=False, header=False)
-            data_out = data_total.values
-            np.savetxt(file_out, data_out, delimiter=',', fmt='%f')
-    print('done')
-
-# finds simulation files in input_dir and finds + saves the subset that adhere to the geometry contraints r_bound
-# and h_bound
-def gridShape(input_dir, output_dir, shapeType, r_bounds, h_bounds):
-
-    files_to_filter = []
-    for file in os.listdir(input_dir):
-        if file.endswith('.csv'):
-            files_to_filter.append(os.path.join(input_dir, file))
-
-    print('filtering through {} files...'.format(len(files_to_filter)))
-    print('bounds on radii: [{}, {}], bounds on heights: [{}, {}]...'.format(r_bounds[0], r_bounds[1],
-                                                                       h_bounds[0], h_bounds[1]))
-    lengthsPreFilter = []
-    lengthsPostFilter = []
-    for file in files_to_filter:
-        with open(file, 'r') as f:
-            geom_specs = pd.read_csv(f, delimiter=',', header=None).values
-            geoms_filt = []
-            geoms_filtComp = []
-            lengthsPreFilter.append(len(geom_specs))
-            if shapeType=='corner':
-                print('cutting a corner of the data...')
-                for geom_spec in geom_specs:
-                    hs = geom_spec[2:6]
-                    rs = geom_spec[6:10]
-                    if (np.all(hs >= h_bounds[0]) and np.all(hs <= h_bounds[1])) or \
-                       (np.all(rs >= r_bounds[0]) and np.all(rs <= r_bounds[1])):
-                        geoms_filt.append(geom_spec)
-                    else:
-                        geoms_filtComp.append(geom_spec)
-            elif shapeType=='rCut':
-                print('cutting based on r values only...')
-                for geom_spec in geom_specs:
-                    rs = geom_spec[6:10]
-                    if (np.all(rs >= r_bounds[0]) and np.all(rs <= r_bounds[1])):
-                        geoms_filt.append(geom_spec)
-                    else:
-                        geoms_filtComp.append(geom_spec)
-            elif shapeType == 'hCut':
-                print('cutting based on h values only...')
-                for geom_spec in geom_specs:
-                    hs = geom_spec[2:6]
-                    if (np.all(hs >= h_bounds[0]) and np.all(hs <= h_bounds[1])):
-                        geoms_filt.append(geom_spec)
-                    else:
-                        geoms_filtComp.append(geom_spec)
-            else:
-                print('shapeType {} is not valid.'.format(shapeType))
-                return
-            geoms_filt = np.array(geoms_filt)
-            geoms_filtComp = np.array(geoms_filtComp)
-            lengthsPostFilter.append(len(geoms_filt))
-            print('{} reduced from {} to {}, ({}%)'.format(file, lengthsPreFilter[-1],
-                                                           lengthsPostFilter[-1],
-                                                           100*np.round(lengthsPostFilter[-1]/lengthsPreFilter[-1], 4)))
-
-        save_file = os.path.join(output_dir, os.path.split(file)[-1][:-4] + '_filt')
-        # save the filtered geometries, for training
-        with open(save_file + '.csv', 'w+') as f:
-            np.savetxt(f, geoms_filt, delimiter=',', fmt='%f')
-
-        # save the all the goemetries filtered out, for evaluation
-        with open(save_file + 'Comp.csv', 'w+') as f:
-            np.savetxt(f, geoms_filtComp, delimiter=',', fmt='%f')
-
-
-    print('\nAcross all files: of original {} combos, {} remain ({}%)'.format(sum(lengthsPreFilter),
-                                                                              sum(lengthsPostFilter),
-                                                                              100*np.round(sum(lengthsPostFilter)/ \
-                                                                                       sum(lengthsPreFilter), 4)
-                                                                              ))
-
-
 def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
                  data_dir=os.path.abspath(''), rand_seed=1234, normalize_input = True, test_ratio=0.02,
                              eval_data_all=False):
@@ -203,11 +76,14 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
     print('total number of test samples is {}'.format(len(ftrTest)),
           'length of an input spectrum is {}'.format(len(lblTest[0])))
     print('downsampling output curves')
+    
+    """
     # resample the output curves so that there are not so many output points
     # drop the beginning of the curve so that we have a multiple of 300 points
     if len(lblTrain[0]) > 2000:                                 # For Omar data set
         lblTrain = lblTrain[::, len(lblTest[0])-1800::6]
         lblTest = lblTest[::, len(lblTest[0])-1800::6]
+    """
 
     print('length of downsampled train spectra is {} for first, {} for final, '.format(len(lblTrain[0]),
                                                                                        len(lblTrain[-1])),
@@ -223,13 +99,38 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
     print('generating torch dataset')
     assert np.shape(ftrTrain)[0] == np.shape(lblTrain)[0]
     assert np.shape(ftrTest)[0] == np.shape(lblTest)[0]
+    
+    # This is for Yang's dataset
+    if normalize_input and np.max(np.max(ftrTrain)) > 1: 
+        ftrTrain[:, 0:1] = (ftrTrain[:, 0:1] - geoboundary[0]) / (geoboundary[1] - geoboundary[0])
+        ftrTrain[:, 0:1] = (ftrTrain[:, 0:1] - 0.5) / 0.5
+        ftrTest[:, 0:1] = (ftrTest[:, 0:1] - geoboundary[0]) / (geoboundary[1] - geoboundary[0])
+        ftrTest[:, 0:1] = (ftrTest[:, 0:1] - 0.5) / 0.5
+        ftrTrain[:, 1:2] = (ftrTrain[:, 1:2] - geoboundary[2]) / (geoboundary[3] - geoboundary[2])
+        ftrTrain[:, 1:2] = (ftrTrain[:, 1:2] - 0.5) / 0.5
+        ftrTest[:, 1:2] = (ftrTest[:, 1:2] - geoboundary[2]) / (geoboundary[3] - geoboundary[2])
+        ftrTest[:, 1:2] = (ftrTest[:, 1:2] - 0.5) / 0.5
+        ftrTrain[:, 2:10] = (ftrTrain[:, 2:10] - geoboundary[4]) / (geoboundary[5] - geoboundary[4])
+        ftrTrain[:, 2:10] = (ftrTrain[:, 2:10] - 0.5) / 0.5
+        ftrTest[:, 2:10] = (ftrTest[:, 2:10] - geoboundary[4]) / (geoboundary[5] - geoboundary[4])
+        ftrTest[:, 2:10] = (ftrTest[:, 2:10] - 0.5) / 0.5
+        ftrTrain[:, 10:] = (ftrTrain[:, 10:] - geoboundary[6]) / (geoboundary[7] - geoboundary[6])
+        ftrTrain[:, 10:] = (ftrTrain[:, 10:] - 0.5) / 0.5
+        ftrTest[:, 10:] = (ftrTest[:, 10:] - geoboundary[6]) / (geoboundary[7] - geoboundary[6])
+        ftrTest[:, 10:] = (ftrTest[:, 10:] - 0.5) / 0.5
 
+    """
+    This is for Christian's dataset
     #Normalize the data if instructed using boundary and the current numbers are larger than 1
     if normalize_input and np.max(np.max(ftrTrain)) > 30:
         ftrTrain[:,0:4] = (ftrTrain[:,0:4] - (geoboundary[0] + geoboundary[1]) / 2)/(geoboundary[1] - geoboundary[0]) * 2
         ftrTest[:,0:4] = (ftrTest[:,0:4] - (geoboundary[0] + geoboundary[1]) / 2)/(geoboundary[1] - geoboundary[0]) * 2
         ftrTrain[:,4:] = (ftrTrain[:,4:] - (geoboundary[2] + geoboundary[3]) / 2)/(geoboundary[3] - geoboundary[2]) * 2
         ftrTest[:,4:] = (ftrTest[:,4:] - (geoboundary[2] + geoboundary[3]) / 2)/(geoboundary[3] - geoboundary[2]) * 2
+    """
+    print("After normalization:")
+    for i in range(len(ftrTrain[0, :])):
+        print('For feature {}, the max is {} and min is {}'.format(i, np.max(ftrTrain[:, i]), np.min(ftrTrain[:, i])))
 
     train_data = MetaMaterialDataSet(ftrTrain, lblTrain, bool_train= True)
     test_data = MetaMaterialDataSet(ftrTest, lblTest, bool_train= False)
@@ -372,7 +273,7 @@ def read_data_robotic_arm(flags, eval_data_all=False):
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
 def read_data_ensemble_MM(flags, eval_data_all=False):
-    data_dir = os.path.join('../', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'dataIn')
+    data_dir = os.path.join('../', 'Data', 'Yang_data', 'dataIn')
     data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None, sep=' ').astype('float32').values
     data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None, sep=' ').astype('float32').values
     print("I am reading data from the:", data_dir)
@@ -412,7 +313,7 @@ def read_data(flags, eval_data_all=False):
                                                                 data_dir=flags.data_dir,
                                                                 eval_data_all=eval_data_all,
                                                                 test_ratio=flags.test_ratio)
-            print("I am reading data from:", data_dir)
+            print("I am reading data from:", flags.data_dir)
         # Reset the boundary is normalized
         if flags.normalize_input:
             flags.geoboundary_norm = [-1, 1, -1, 1]

@@ -13,9 +13,6 @@ from copy import deepcopy
 import sys
 import pickle
 import numpy as np
-from Simulated_DataSets.Robotic_Arm.generate_robotic_arm import determine_final_position
-from Simulated_DataSets.Sinusoidal_Wave.generate_Sinusoidal import *
-from Simulated_DataSets.Ballistics.Inverse_ballistics_original import InverseBallisticsModel
 # from ensemble_mm.predict_ensemble import ensemble_predict_master
 # 1
 def get_Xpred(path, name=None):
@@ -189,45 +186,6 @@ def write_flags_and_BVE(flags, best_validation_loss, save_dir, forward_best_loss
         print(flags_dict, file=f)
     # Pickle the obj
     save_flags(flags, save_dir=save_dir)
-
-
-# 10
-def simulator_sine(Xpred):
-    """
-    The simulator function for sine wave, input X out put Y
-    :param Xpred: The Xpred output from model
-    :return:
-    """
-    # First step is to un-normalize the data into original range
-    #Xpred = unnormalize_eval(Xpred, x_max=1, x_min=-1)
-    # Then feed through the original simulator
-    Ypred = getYfromX(Xpred)
-    # Then normalize it as the range of the original data
-    #Ypred = normalize_eval(Ypred, x_max=3, x_min=-3)
-    return Ypred
-
-
-# 11
-def simulator_robotic(Xpred):
-    """
-    The simulator function for robotic arms, input arm angles output final position Y
-    :param Xpred: The Xpred output from model
-    :return:
-    """
-    Ypred, positions = determine_final_position(Xpred[:, 0], Xpred[:, 1:], evaluate_mode=True)
-    return Ypred
-
-
-# 12
-def simulator_ballistics(Xpred):
-    """
-    The simulator function for ballistics dataset
-    :param Xpred: The Xpred output from model
-    :return:
-    """
-    Xpred[:, 3] *= 15
-    IB = InverseBallisticsModel()
-    return IB.forward_process(Xpred, output_full=True) 
 
 
 # 14
