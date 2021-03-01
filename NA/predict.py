@@ -14,7 +14,6 @@ from NA.model_maker import NA
 from utils import data_reader
 from utils.helper_functions import load_flags
 from utils.evaluation_helper import plotMSELossDistrib
-from utils.create_folder_modulized import get_folder_modulized
 import torch
 # Libs
 import numpy as np
@@ -83,12 +82,11 @@ def ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remov
     for pre_trained_model in model_list:
         if state_dict is False:
             pred_file, truth_file, flags = predict_from_model(pre_trained_model, Xpred_file)
+            # This line is to plot all histogram, make sure comment the pred_list.append line below as well for getting all the histograms
+            #pred_file, truth_file, flags = predict_from_model(pre_trained_model, Xpred_file, no_plot=False)
         else:
             model_folder = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'meta_material')
             pred_file, truth_file, flags = predict_from_model(model_folder, Xpred_file, load_state_dict=pre_trained_model)
-        #pred = np.loadtxt(pred_file, delimiter=' ')
-        #if remove_extra_files:          # Remove the generated files
-        #    os.remove(pred_file)
         pred_list.append(np.copy(np.expand_dims(pred_file, axis=2)))
     # Take the mean of the predictions
     pred_all = np.concatenate(pred_list, axis=2)
@@ -112,7 +110,7 @@ def ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remov
 
 def predict_all(models_dir="data"):
     """
-    This function predict all the models in the models/. directory
+    This function predict all the files in the models/. directory
     :return: None
     """
     for file in os.listdir(models_dir):
@@ -204,8 +202,7 @@ if __name__ == '__main__':
     #method_list = ['Tandem','MDN','INN_FrEIA','cINN','NA','VAE']
     #for method in method_list:
     #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../'+ method + '/data/', no_plot=False)  
-        
-    #predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '/data/users/ben/multi_eval/NA/meta_material', no_plot=True)  
+    predict_ensemble_for_all('models/worst5', 'data/', no_plot=False)  
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']
@@ -215,9 +212,9 @@ if __name__ == '__main__':
         #predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../multi_eval/'+ method + '/meta_material/', no_plot=True)  
     
     # This is for the modulized multi evaluation in the ICML_EXP folder
-    method_list_multi = get_folder_modulized()
-    for method in method_list_multi:
-        predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', os.path.join(method, 'meta_material/'), no_plot=True)  
+    #method_list_multi = get_folder_modulized()
+    #for method in method_list_multi:
+    #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', os.path.join(method, 'meta_material/'), no_plot=True)  
 
 
     #predict_from_model("models/retrain0ballistics", 'data/Xpred_ball.csv', no_plot=False, load_state_dict=None)

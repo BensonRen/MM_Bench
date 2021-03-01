@@ -13,6 +13,8 @@ from copy import deepcopy
 import sys
 import pickle
 import numpy as np
+from Data.Peurifoy.generate_Peurifoy import simulate as peur_sim
+from Data.Chen.generate_chen import simulate as chen_sim
 # from ensemble_mm.predict_ensemble import ensemble_predict_master
 # 1
 def get_Xpred(path, name=None):
@@ -188,25 +190,7 @@ def write_flags_and_BVE(flags, best_validation_loss, save_dir, forward_best_loss
     save_flags(flags, save_dir=save_dir)
 
 
-# 14
-"""
-def simulator_meta_material(Xpred):
-    ""
-    The function where calls the ensemble model to work as a simulator
-    This use the prediction ensemble function in NA model which trained a bunch of network and predict the output averaged
-    Uses a temporary folder called useless to save and read the file
-    ""
-    np.savetxt('/work/sr365/useless/Xpred.csv', Xpred)
-    # Path has to be changed for pickel to unpickel the model from checkpoint file
-    cwd = os.getcwd()
-    print("Your are currenlty in folder", cwd)
-    os.chdir('/hpc/home/sr365/Pytorch/ensemble_mm')
-    print("Now you are in folder", os.getcwd())
-    ensemble_predict_master('/hpc/home/sr365/Pytorch/ensemble_mm/models', '/work/sr365/useless/Xpred.csv')
-    os.chdir(cwd)
-    Ypred = np.loadtxt('/work/sr356/useless/Ypred_ensemble.csv', delimiter=' ')
-    return Ypred
-"""
+
     
 # 15
 def simulator(data_set, Xpred):
@@ -218,12 +202,12 @@ def simulator(data_set, Xpred):
     :return: Ypred from the simulator
     """
 
-    if data_set == 'sine_wave':
-        return simulator_sine(Xpred)
-    elif data_set == 'robotic_arm':
-        return simulator_robotic(Xpred)
-    elif data_set == 'ballistics':
-        return simulator_ballistics(Xpred)
+    if data_set == 'peurifoy':
+        return simulator_peurifoy(Xpred)
+    elif data_set == 'chen':
+        return simulator_chen(Xpred)
+    elif data_set == 'Yang':
+        sys.exit("You are using Yang dataset, there is no simulator built-in for Yang! Please use neural simulator")
     else:
         sys.exit("In Simulator: Your data_set entry is not correct, check again!")
 

@@ -84,6 +84,10 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
         lblTrain = lblTrain[::, len(lblTest[0])-1800::6]
         lblTest = lblTest[::, len(lblTest[0])-1800::6]
     """
+    # If the length is over 2000, only take 2000
+    if len(lblTrain[0]) > 2000:                                
+        lblTrain = lblTrain[::, :2000]
+        lblTest = lblTest[::, :2000]
 
     print('length of downsampled train spectra is {} for first, {} for final, '.format(len(lblTrain[0]),
                                                                                        len(lblTrain[-1])),

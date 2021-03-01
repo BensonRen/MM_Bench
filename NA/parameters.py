@@ -8,13 +8,13 @@ DATA_SET = 'meta_material'
 # DATA_SET = 'naval_propulsion'
 # DATA_SET = 'robotic_arm'
 # DATA_SET = 'ballistics'
-TEST_RATIO = 0.2
+TEST_RATIO = 0.02
 
 # Model Architectural Params for meta_material data Set
 USE_LORENTZ = False
 LINEAR = [14,  1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 500]
 CONV_OUT_CHANNEL = [4, 4, 4, 4]
-CONV_KERNEL_SIZE = [8, 5, 5, 5]
+CONV_KERNEL_SIZE = [8, 8, 5, 5]
 CONV_STRIDE = [2, 2, 1, 1]
 
 # Model Architectural Params for gaussian mixture DataSet
@@ -26,7 +26,7 @@ CONV_STRIDE = [2, 2, 1, 1]
 
 # Optimizer Params
 OPTIM = "Adam"
-REG_SCALE = 5e-4
+REG_SCALE = 1e-4
 BATCH_SIZE = 1024
 EVAL_BATCH_SIZE = 2048
 EVAL_STEP = 20
@@ -34,8 +34,8 @@ TRAIN_STEP = 300
 BACKPROP_STEP = 300
 LEARN_RATE = 1e-4
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
-LR_DECAY_RATE = 0.8
-STOP_THRESHOLD = 1e-5
+LR_DECAY_RATE = 0.2
+STOP_THRESHOLD = 1e-9
 
 # Data specific Params
 X_RANGE = [i for i in range(2, 16 )]

@@ -103,14 +103,11 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
      """
      This function is to evaluate all different datasets in the model with one function call
      """
-     data_set_list = ["robotic_arm","sine_wave","ballistics","meta_material"]
-     #data_set_list = ["robotic_arm","sine_wave","ballistics"]
-     #data_set_list = ["robotic_arm"]
-     #data_set_list = ["meta_material"]
+     data_set_list = ["Yang_param_"]
      for eval_model in data_set_list:
-        for j in range(1):
+        for j in range(5):
             useless_flags = flag_reader.read_flag()
-            useless_flags.eval_model = "retrain" + str(j) + eval_model
+            useless_flags.eval_model = eval_model + str(j) 
             evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, eval_data_all=eval_data_all, save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
 def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
@@ -133,14 +130,14 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
     eval_flags = flag_reader.read_flag()
-
+    
     #####################
     # different dataset #
     #####################
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
-    #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     
     
     

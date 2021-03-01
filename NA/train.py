@@ -75,8 +75,17 @@ def hyperswipe():
 
 if __name__ == '__main__':
     # Read the parameters to be set
-    flags = flag_reader.read_flag()
-    hyperswipe()
+    for i in range(5):
+        flags = flag_reader.read_flag()
+        flags.model_name = 'Yang_param_pure_' + str(i+15)
+        #linear = [1000  for j in range(11)]
+        #linear[0] = 14
+        #linear[-1] = 500
+        #flags.linear = linear
+        #flags.reg_scale = 1e-4
+        training_from_flag(flags)
+        
+    #hyperswipe()
     #training_from_flag(flags)
     # Do the retraining for all the data set to get the training 
     #for i in range(10):

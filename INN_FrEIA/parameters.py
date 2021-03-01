@@ -37,7 +37,6 @@ Y_NOISE_SCALE = 1e-2
 
 
 # Optimization params
-KL_COEFF = 1
 OPTIM = "Adam"
 REG_SCALE = 5e-3
 BATCH_SIZE = 1024

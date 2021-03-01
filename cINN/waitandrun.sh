@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CUDA_VISIBLE_DEVICES=1
-export PYTHONPATH="/home/sr365/Why_NA/:$PYTHONPATH"
+export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
 #PID=5023
@@ -22,6 +22,7 @@ COMMAND=evaluate.py
 #COMMAND plotsAnalysis.py
 SPACE='        '
 SECONDS=0
+python train.py
 nohup python $COMMAND 1>output.out 2>error.err & 
 echo $! > pidfile.txt
 

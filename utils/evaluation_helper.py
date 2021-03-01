@@ -31,7 +31,7 @@ def get_test_ratio_helper(flags):
         #return 0.01                          # 100 in total
     elif flags.data_set == 'meta_material':
         #return 0.02
-        return 0.1                        # 10000 in total for Meta material
+        return 0.02                        # 10000 in total for Meta material
     else:
         print("Your dataset is none of the artificial datasets")
         return None

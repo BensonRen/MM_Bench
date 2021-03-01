@@ -162,10 +162,10 @@ class Network(object):
         """
         if torch.cuda.is_available():
             #self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_forward.pt'))
-            self.model = torch.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt')))
+            self.model.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt')))
         else:
             #self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_forward.pt'), map_location=torch.device('cpu'))
-            self.model = torch.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt'), map_location=torch.device('cpu')))
+            self.mode.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt'), map_location=torch.device('cpu')))
 
     def train(self):
         """
@@ -202,7 +202,7 @@ class Network(object):
             # Calculate the avg loss of training
             train_avg_loss = train_loss.cpu().data.numpy() / (j + 1)
 
-            if epoch % self.flags.eval_step:                      # For eval steps, do the evaluations and tensor board
+            if epoch % self.flags.eval_step == 0:                      # For eval steps, do the evaluations and tensor board
                 # Record the training loss to the tensorboard
                 #self.log.add_scalar('Loss/train', train_avg_loss, epoch)
                 # self.log.add_scalar('Loss/BDY_train', boundary_avg_loss, epoch)

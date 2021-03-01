@@ -3,18 +3,18 @@ The parameter file storing the parameters for INN Model
 """
 
 # Define which data set you are using
-# DATA_SET = 'meta_material'
+DATA_SET = 'meta_material'
 # DATA_SET = 'gaussian_mixture'
 # DATA_SET = 'sine_wave'
 # DATA_SET = 'naval_propulsion'
 # DATA_SET = 'robotic_arm'
-DATA_SET = 'ballistics'
+# DATA_SET = 'ballistics'
 TEST_RATIO = 0.2
 
 # Architectural Params
-DIM_Z = 4
-DIM_X = 4
-DIM_Y = 1
+DIM_Z = 14
+DIM_X = 14
+DIM_Y = 2000
 COUPLE_LAYER_NUM = 13
 DIM_SPEC = None
 # The below definitions are useless now since we are using the package
@@ -45,26 +45,21 @@ BATCH_SIZE = 1024
 EVAL_BATCH_SIZE = 4096
 EVAL_STEP = 20
 GRAD_CLAMP = 15
-TRAIN_STEP = 500
+TRAIN_STEP = 5
 VERB_STEP = 20
 LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
 LR_DECAY_RATE = 0.5
 STOP_THRESHOLD = -float('inf')
 
-# Data specific params
-X_RANGE = [i for i in range(2, 10 )]
-#Y_RANGE = [i for i in range(10 , 2011 )]                       # Real Meta-material dataset range
-Y_RANGE = [i for i in range(10 , 310 )]                         # Artificial Meta-material dataset
+X_RANGE = [i for i in range(2, 16 )]
+Y_RANGE = [i for i in range(16 , 2017 )]                         # Artificial Meta-material dataset
 FORCE_RUN = True
-MODEL_NAME  = 'ballistics'
-# MODEL_NAME  = 'dim_z_2 + wBN + 100 + lr1e-3 + reg5e-3'
-DATA_DIR = '../'                                               # All simulated simple dataset
-#DATA_DIR = '/work/sr365/'                                      # real Meta-material dataset
-#DATA_DIR = '/work/sr365/NN_based_MM_data/'                      # Artificial Meta-material dataset
-GEOBOUNDARY =[30, 52, 42, 52]
+MODEL_NAME = 'fake_2k' 
+DATA_DIR = '../Data/Yang_data/'                                               # All simulated simple dataset
+GEOBOUNDARY =[0.3, 0.6, 1, 1.5, 0.1, 0.2, -0.786, 0.786]
 NORMALIZE_INPUT = True
 
 # Running specific params
 USE_CPU_ONLY = False
-EVAL_MODEL = None
+EVAL_MODEL = 'fake_2k'
