@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=3
-export PYTHONPATH="/home/sr365/Why_NA/:$PYTHONPATH"
+export CUDA_VISIBLE_DEVICES=0
+export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
 #PID=5023

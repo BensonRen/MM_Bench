@@ -28,7 +28,6 @@ def read_flag():
     parser.add_argument('--dim-y', default=DIM_Y, type=int, help='dimension of the latent variable y')
     parser.add_argument('--dim-spec', default=DIM_SPEC, type=int, help='dimension of the spectra encoded conponent')
     parser.add_argument('--couple-layer-num', default=COUPLE_LAYER_NUM, type=int, help='The number of coupling blocks to use')
-    parser.add_argument('--subnet-linear', type=list, default=SUBNET_LINEAR, help='The fc layers units for subnetwork')
     parser.add_argument('--linear-se', type=list, default=LINEAR_SE, help='The fc layers units for spectra encoder model')
     parser.add_argument('--conv-out-channel-se', type=list, default=CONV_OUT_CHANNEL_SE, help='The output channel of your 1d conv for spectra encoder model')
     parser.add_argument('--conv-kernel-size-se', type=list, default=CONV_KERNEL_SIZE_SE, help='The kernel size of your 1d conv for spectra encoder model')

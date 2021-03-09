@@ -202,10 +202,18 @@ def simulator(data_set, Xpred):
     :return: Ypred from the simulator
     """
 
-    if data_set == 'peurifoy':
-        return simulator_peurifoy(Xpred)
-    elif data_set == 'chen':
-        return simulator_chen(Xpred)
+    if data_set == 'Peurifoy':
+        # The geometric boundary of peurifoy dataset is [30, 70], normalizing manually
+        Xpred = Xpred * 20. + 50
+        Ypred = []
+        for i in range(len(Xpred)):
+            spec = peur_sim(Xpred[i, :])
+            Ypred.append(spec)
+        return np.array(Ypred)
+    elif data_set == 'Chen':
+        # The geometric boundary of Chen dataset is [5, 50], unnormalizing manually
+        Xpred = Xpred*22.5+27.5
+        return chen_sim(Xpred)
     elif data_set == 'Yang':
         sys.exit("You are using Yang dataset, there is no simulator built-in for Yang! Please use neural simulator")
     else:

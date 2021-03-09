@@ -15,21 +15,16 @@ def get_test_ratio_helper(flags):
     The unified place for getting the test_ratio the same for all methods for the dataset,
     This is for easier changing for multi_eval
     """
-    if flags.data_set == 'ballistics':
+    if flags.data_set == 'Chen':
         #return 0.00781                       # 100 in total
-        #return 0.02
-        return 0.1
+        return 0.002
         #return 0.039                        # 500 in total
-    elif flags.data_set == 'sine_wave':
+    elif flags.data_set == 'Peurifoy':
         #return 0.0125                        # 100 in total
-        #return 0.02
-        return 0.1
+        return 0.002
+        #return 0.1
         #return 0.0625                        # 500 in total
-    elif flags.data_set == 'robotic_arm':
-        #return 0.02
-        return 0.1                          # 500 in total
-        #return 0.01                          # 100 in total
-    elif flags.data_set == 'meta_material':
+    elif flags.data_set == 'Yang':
         #return 0.02
         return 0.02                        # 10000 in total for Meta material
     else:
@@ -107,6 +102,7 @@ def plotMSELossDistrib(pred_file, truth_file, flags, save_dir='data/'):
         plt.savefig(os.path.join(save_dir,
                              '{}.png'.format(eval_model_str)))
         print('(Avg MSE={:.4e})'.format(np.mean(mse)))
+        return np.mean(mse)
 
 
 def eval_from_simulator(Xpred_file, flags):

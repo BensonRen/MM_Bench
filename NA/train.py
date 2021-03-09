@@ -58,23 +58,26 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    layer_size_list = [500, 1000]
-    reg_scale_list = [5e-4]
-    #reg_scale_list = [1e-5, 5e-5, 1e-4, 5e-4]
+    reg_scale_list = [1e-4, 5e-4, 1e-3, 5e-3]
+    layer_size_list = [500, 1000, 1500]
+    reg_scale = 1e-4
+    #layer_num = 7
     for reg_scale in reg_scale_list:
-        for layer_num in range(10,14):
-            for layer_size in layer_size_list:
-                flags = flag_reader.read_flag()  	#setting the base case
-                linear = [layer_size for j in range(layer_num)]        #Set the linear units
-                linear[0] = 14                   # The start of linear
-                linear[-1] = 500                # The end of linear
-                flags.linear = linear
-                flags.reg_scale = reg_scale
-                flags.model_name = 'linear_' + str(layer_size) + '_num_' + str(layer_num) + '_reg_' + str(reg_scale) + '_lr_' + str(flags.lr)
-                training_from_flag(flags)
+        for i in range(3):
+            for layer_num in range(5,14):
+                for layer_size in layer_size_list:
+                    flags = flag_reader.read_flag()  	#setting the base case
+                    linear = [layer_size for j in range(layer_num)]        #Set the linear units
+                    linear[0] = 3                   # The start of linear
+                    linear[-1] = 201                # The end of linear
+                    flags.linear = linear
+                    flags.reg_scale = reg_scale
+                    flags.model_name = flags.data_set + 'conv_431_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
+                    training_from_flag(flags)
 
 if __name__ == '__main__':
     # Read the parameters to be set
+    """
     for i in range(5):
         flags = flag_reader.read_flag()
         flags.model_name = 'Yang_param_pure_' + str(i+15)
@@ -84,8 +87,8 @@ if __name__ == '__main__':
         #flags.linear = linear
         #flags.reg_scale = 1e-4
         training_from_flag(flags)
-        
-    #hyperswipe()
+    """
+    hyperswipe()
     #training_from_flag(flags)
     # Do the retraining for all the data set to get the training 
     #for i in range(10):

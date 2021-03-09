@@ -55,16 +55,32 @@ def retrain_different_dataset(index):
         flags.train_step = 500
         flags.test_ratio = 0.2
         training_from_flag(flags)
+def hyperswipe():
+    """
+    This is for doing hyperswiping for the model parameters
+    """
+    layer_size_list = [250, 750]
+    for i in range(3):
+        for layer_num in range(6,14):
+            for layer_size in layer_size_list:
+                    flags = flag_reader.read_flag()  	#setting the base case
+                    # Decoder arch
+                    linear_b = [layer_size  for j in range(layer_num)]
+                    linear_b[0] = 201
+                    linear_b[-1] = 3
 
-
+                    flags.linear_b = linear_b
+                    flags.model_name = flags.data_set + '_layer_num_' + str(layer_num) + '_unit_' + str(layer_size)  + '_reg_scale_' + str(flags.reg_scale) + '_trail_' + str(i)
+                    training_from_flag(flags)
 if __name__ == '__main__':
     # Read the parameters to be set
     flags = flag_reader.read_flag()
-
+    
+    hyperswipe()
     # Call the train from flag function
     #for i in range(20):
     #training_from_flag(flags)
 
     # Do the retraining for all the data set to get the training 
-    for i in range(10):
-        retrain_different_dataset(i)
+    #for i in range(10):
+    #    retrain_different_dataset(i)

@@ -60,13 +60,29 @@ def retrain_different_dataset(index):
         flags.stop_threshold = -float('inf')
         training_from_flag(flags)
 
+def hyperswipe():
+    """
+    This is for doing hyperswiping for the model parameters
+    """
+    reg_scale_list = [1e-3, 5e-3, 1e-4,  5e-4]
+    lambda_mse_list = [100, 50, 20, 10, 1]
+    for reg_scale in reg_scale_list:
+        for couple_layer_num in range(4,10):    
+            for lambda_mse in lambda_mse_list:
+                flags = flag_reader.read_flag()  	#setting the base case
+                flags.couple_layer_num = couple_layer_num
+                flags.lambda_mse = lambda_mse
+                flags.reg_scale = reg_scale
+                flags.model_name = flags.data_set + 'couple_layer_num' + str(couple_layer_num) + 'labmda_mse' + str(lambda_mse) + '_lr_' + str(flags.lr) + '_reg_scale_' + str(reg_scale)
+                training_from_flag(flags)
 
 if __name__ == '__main__':
     # Read the parameters to be set
     flags = flag_reader.read_flag()
-
+    
+    hyperswipe()
     # Call the train from flag function
-    training_from_flag(flags)
+    #training_from_flag(flags)
 
     # Do the retraining for all the data set to get the training for reproducibility
     #for i in range(5):

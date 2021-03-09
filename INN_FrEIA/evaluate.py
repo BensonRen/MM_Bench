@@ -55,7 +55,10 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, moduli
 
     # Plot the MSE distribution
     if flags.data_set != 'meta_material' and not multi_flag and not modulized_flag: 
-        plotMSELossDistrib(pred_file, truth_file, flags)
+        MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+        # Add this MSE back to the folder
+        flags.best_validation_loss = MSE
+        helper_functions.save_flags(flags, os.path.join("models", model_dir))
     print("Evaluation finished")
    
 def evaluate_all(models_dir="models"):
@@ -107,7 +110,8 @@ if __name__ == '__main__':
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False)
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
     
-    evaluate_different_dataset(modulized_flag=True)
+    #evaluate_different_dataset(modulized_flag=True)
+    evaluate_all("models/Peurifoy/")
     
     
     # Call the evaluate function from model

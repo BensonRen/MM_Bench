@@ -320,7 +320,7 @@ class Network(object):
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
-                if self.flags.data_set != 'meta_material':
+                if self.flags.data_set != 'Yang':
                     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
         return Ypred_file, Ytruth_file
@@ -415,7 +415,7 @@ class Network(object):
                 save_model_str_FF_off = saved_model_str.replace('BP_on_FF_on', 'BP_on_FF_off')
                 Ypred_file_FF_off = Ypred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
                 Xpred_file_FF_off = Xpred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
-            if self.flags.data_set != 'meta_material':  # This is for meta-meterial dataset, since it does not have a simple simulator
+            if self.flags.data_set != 'Yang':  # This is for meta-meterial dataset, since it does not have a simple simulator
                 # 2 options: simulator/logit
                 Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
                 if not save_Simulator_Ypred:            # The default is the simulator Ypred output
@@ -460,7 +460,7 @@ class Network(object):
         best_estimate_index = np.argmin(MSE_list)
         #print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input.cpu().data.numpy()[best_estimate_index, :]), [1, -1])
-        if save_Simulator_Ypred and self.flags.data_set != 'meta_material':
+        if save_Simulator_Ypred and self.flags.data_set != 'Yang':
             Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
             if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])

@@ -9,6 +9,7 @@ def product(a,b):
 
 def besselj(m,x):
     if np.isnan(np.sqrt(x)).any():
+        print("in besselj: your x is nan")
         print(x)
     return jv(m+0.5,x)/np.sqrt(x)
 
@@ -140,16 +141,22 @@ def generate(low_bound,up_bound,num_samples,num_layers):
         #r = rad[n]
 
         spect = simulate(r)
+        data_x.append(r)
+        data_y.append(spect)
 
-        r = np.expand_dims(r,axis=0)
-        dz = np.expand_dims(spect,axis=0)
+    # Convert list to np array
+    data_x = np.array(data_x)
+    data_y = np.array(data_y)
+        # Computationally expensive for concatenate
+        # r = np.expand_dims(r,axis=0)
+        # dz = np.expand_dims(spect,axis=0)
 
-        if len(data_x) == 0:
-            data_x = r
-            data_y = dz
-        else:
-            data_x = np.concatenate((data_x,r))
-            data_y = np.concatenate((data_y,dz))
+        # if len(data_x) == 0:
+        #     data_x = r
+        #     data_y = dz
+        # else:
+        #     data_x = np.concatenate((data_x,r))
+        #     data_y = np.concatenate((data_y,dz))
 
     return data_x, data_y
 

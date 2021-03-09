@@ -4,6 +4,7 @@ The class wrapper for the networks
 # Built-in
 import os
 import time
+import sys
 
 # Torch
 import torch
@@ -116,14 +117,10 @@ class Network(object):
         return torch.tensor(nparray, requires_grad=requires_grad, device='cuda', dtype=torch.float)
 
     def get_boundary_lower_bound_uper_bound(self):
-        if self.flags.data_set == 'sine_wave':
-            return np.array([2, 2]), np.array([-1, -1]), np.array([1, 1])
-        elif self.flags.data_set == 'ballistics':
-            return np.array([2, 2, 1.099, 1]), np.array([-1, 0.5, 0.157, 0.46]), np.array([1, 2.5, 1.256, 1.46])
-        elif self.flags.data_set == 'robotic_arm':
-            return np.array([1.88, 3.7, 3.82, 3.78]), np.array([-0.87, -1.87, -1.92, -1.73]), np.array([1.018, 1.834, 1.897, 2.053])
-        elif self.flags.data_set == 'meta_material':
-            return np.array([2.272,2.272,2.272,2.272,2,2,2,2]), np.array([-1,-1,-1,-1,-1,-1,-1,-1]), np.array([1.272,1.272,1.272,1.272,1,1,1,1])
+        if self.flags.data_set == 'Chen': 
+            return np.array([2 for i in range(5)]), np.array([-1 for i in range(5)]), np.array([1 in range(5)])
+        elif self.flags.data_set == 'Peurifoy': 
+            return np.array([2 for i in range(3)]), np.array([-1 for i in range(3)]), np.array([1 in range(3)])
         else:
             sys.exit("In Tandem, during getting the boundary loss boundaries, Your data_set entry is not correct, check again!")
 

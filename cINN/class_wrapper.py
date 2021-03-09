@@ -93,7 +93,6 @@ class Network(object):
         ######################################
         # Pytorch nightly modification 02.18 #
         ######################################
-        print(type(z))
         zz = torch.sum(z**2, dim=1)
         jac = self.model.log_jacobian(run_forward=False)                # get the log jacobian
         neg_log_likeli = 0.5 * zz - jac
@@ -132,7 +131,7 @@ class Network(object):
         :return: None
         """
         # torch.save(self.model.state_dict, os.path.join(self.ckpt_dir, 'best_model_state_dict.pt'))
-        torch.save(self.model, os.path.join(self.ckpt_dir, 'best_model_INN.pt'))
+        torch.save(self.model, os.path.join(self.ckpt_dir, 'best_model_cINN.pt'))
 
     def load(self):
         """
@@ -141,9 +140,9 @@ class Network(object):
         """
         # self.model.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model_state_dict.pt')))
         if torch.cuda.is_available():
-            self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_INN.pt'))
+            self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_cINN.pt'))
         else:
-            self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_INN.pt'), map_location = torch.device('cpu'))
+            self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_cINN.pt'), map_location = torch.device('cpu'))
 
 
     def train(self):
@@ -303,7 +302,7 @@ class Network(object):
                 np.savetxt(fxt, x.cpu().data.numpy())
                 np.savetxt(fxp, Xpred)
                 np.savetxt(fyt, y.cpu().data.numpy())
-                if self.flags.data_set != 'meta_material':
+                if self.flags.data_set != 'Yang':
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
             tk.record(1)

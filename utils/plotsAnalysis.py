@@ -217,9 +217,11 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
     #Get all the parameters.txt running related data and make HMpoint objects
     HMpoint_list = []
     df_list = []                        #make a list of data frame for further use
+    print("going through folder: ", HeatMap_dir)
     for subdir, dirs, files in os.walk(HeatMap_dir):
         for file_name in files:
-             if (file_name == 'parameters.txt'):
+            #print("passing file-name:", file_name)
+            if (file_name == 'parameters.txt'):
                 file_path = os.path.join(subdir, file_name) #Get the file relative path from 
                 # df = pd.read_csv(file_path, index_col=0)
                 flag = helper_functions.load_flags(subdir)
@@ -234,7 +236,12 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
                                                 f1_name = feature_1_name))
                 else:
                     if feature_2_name == 'linear_unit':                         # If comparing different linear units
-                        df['linear_unit'] = eval(df[feature_1_name][0])[1]
+                        # linear_unit has always need to be at the feature_2 and either from linear or linear_f,
+                        # If you want to test for linear_b for Tandem, make sure you modify manually here
+                        try:
+                            df['linear_unit'] = eval(df['linear'][0])[1]
+                        except:
+                            df['linear_unit'] = eval(df['linear_b'][0])[1]
                         df['best_validation_loss'] = get_bvl(file_path)
                     if feature_2_name == 'kernel_second':                       # If comparing different kernel convs
                         print(df['conv_kernel_size'])
@@ -245,7 +252,7 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
                     HMpoint_list.append(HMpoint(float(df[heat_value_name][0]),eval(str(df[feature_1_name][0])),
                                                 eval(str(df[feature_2_name][0])), feature_1_name, feature_2_name))
     
-    print(df_list)
+    print("df_list =", df_list)
     #Concatenate all the dfs into a single aggregate one for 2 dimensional usee
     df_aggregate = pd.concat(df_list, ignore_index = True, sort = False)
     df_aggregate.astype({heat_value_name: 'float'})
@@ -401,7 +408,11 @@ def get_bvl(file_path):
         if 'best_validation_loss' in col:
             print(col)
             strlist = col.split(':')
-            bvl = eval(strlist[1][1:-2])
+            #print("in get_bvl, str is: ", strlist[1])
+            if strlist[1].endswith(']') or strlist[1].endswith('}') :
+                strlist[1] = strlist[1][:-1]
+            bvl = eval(strlist[1])
+            print("bvl = ", bvl)
     if bvl == 0:
         print("Error! We did not found a bvl in .txt.file")
     else:

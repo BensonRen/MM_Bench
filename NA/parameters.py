@@ -2,39 +2,36 @@
 Params for Back propagation model
 """
 # Define which data set you are using
-DATA_SET = 'meta_material'
-# DATA_SET = 'gaussian_mixture'
-# DATA_SET = 'sine_wave'
-# DATA_SET = 'naval_propulsion'
-# DATA_SET = 'robotic_arm'
-# DATA_SET = 'ballistics'
-TEST_RATIO = 0.02
+#DATA_SET = 'Yang'
+#DATA_SET = 'Chen'
+DATA_SET = 'Peurifoy'
+TEST_RATIO = 0.2
 
 # Model Architectural Params for meta_material data Set
 USE_LORENTZ = False
-LINEAR = [14,  1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 500]
-CONV_OUT_CHANNEL = [4, 4, 4, 4]
-CONV_KERNEL_SIZE = [8, 8, 5, 5]
-CONV_STRIDE = [2, 2, 1, 1]
+LINEAR = [3, 400, 400, 400, 201]
+#CONV_OUT_CHANNEL = [4, 4, 4]
+#CONV_KERNEL_SIZE = [8, 5, 5]
+#CONV_STRIDE = [2, 1, 1]
 
 # Model Architectural Params for gaussian mixture DataSet
 #LINEAR = [4, 500, 500, 500, 500, 1]                 # Dimension of data set cross check with data generator
-#CONV_OUT_CHANNEL = []
-#CONV_KERNEL_SIZE = []
-#CONV_STRIDE = []
+CONV_OUT_CHANNEL = [4]
+CONV_KERNEL_SIZE = [3]
+CONV_STRIDE = [1]
 
 
 # Optimizer Params
 OPTIM = "Adam"
-REG_SCALE = 1e-4
+REG_SCALE = 5e-3
 BATCH_SIZE = 1024
 EVAL_BATCH_SIZE = 2048
 EVAL_STEP = 20
 TRAIN_STEP = 300
 BACKPROP_STEP = 300
-LEARN_RATE = 1e-4
+LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
-LR_DECAY_RATE = 0.2
+LR_DECAY_RATE = 0.8
 STOP_THRESHOLD = 1e-9
 
 # Data specific Params
@@ -43,7 +40,7 @@ X_RANGE = [i for i in range(2, 16 )]
 Y_RANGE = [i for i in range(16 , 2017 )]                         # Artificial Meta-material dataset
 FORCE_RUN = True
 MODEL_NAME = None 
-DATA_DIR = '../Data/Yang_data/'                                               # All simulated simple dataset
+DATA_DIR = '/home/sr365/MM_Bench/Data/'                                               # All simulated simple dataset
 #DATA_DIR = '/work/sr365/'                                      # real Meta-material dataset
 #DATA_DIR = '/work/sr365/NN_based_MM_data/'                      # Artificial Meta-material dataset
 #DATA_DIR = '/home/omar/PycharmProjects/github/idlm_Pytorch-master/forward/'

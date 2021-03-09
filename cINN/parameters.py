@@ -3,22 +3,33 @@ The parameter file storing the parameters for INN Model
 """
 
 # Define which data set you are using
-DATA_SET = 'meta_material'
-# DATA_SET = 'gaussian_mixture'
-# DATA_SET = 'sine_wave'
-# DATA_SET = 'naval_propulsion'
-# DATA_SET = 'robotic_arm'
-# DATA_SET = 'ballistics'
+#DATA_SET = 'Yang'
+#DATA_SET = 'Chen'
+DATA_SET = 'Peurifoy'
+
 TEST_RATIO = 0.2
 
 # Architectural Params
+"""
+# Chen
+DIM_Z = 5
+DIM_X = 5
+DIM_Y = 256
+"""
+# Peurifoy
+DIM_Z = 3
+DIM_X = 3
+DIM_Y = 201
+"""
+# Yang
 DIM_Z = 14
 DIM_X = 14
 DIM_Y = 2000
+"""
+
 COUPLE_LAYER_NUM = 13
 DIM_SPEC = None
 # The below definitions are useless now since we are using the package
-SUBNET_LINEAR = []                                          # Linear units for Subnet FC layer
 LINEAR_SE = []                      # Linear units for spectra encoder
 CONV_OUT_CHANNEL_SE = []
 CONV_KERNEL_SIZE_SE = []
@@ -40,23 +51,24 @@ Y_NOISE_SCALE = 1e-1
 
 # Optimization params
 OPTIM = "Adam"
-REG_SCALE = 2e-5
-BATCH_SIZE = 1024
-EVAL_BATCH_SIZE = 4096
+REG_SCALE = 5e-3
+BATCH_SIZE = 2048
+EVAL_BATCH_SIZE = 2048
 EVAL_STEP = 20
 GRAD_CLAMP = 15
-TRAIN_STEP = 5
+TRAIN_STEP = 300
 VERB_STEP = 20
 LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
-LR_DECAY_RATE = 0.5
+LR_DECAY_RATE = 0.8
 STOP_THRESHOLD = -float('inf')
 
 X_RANGE = [i for i in range(2, 16 )]
 Y_RANGE = [i for i in range(16 , 2017 )]                         # Artificial Meta-material dataset
 FORCE_RUN = True
-MODEL_NAME = 'fake_2k' 
-DATA_DIR = '../Data/Yang_data/'                                               # All simulated simple dataset
+MODEL_NAME = None 
+DATA_DIR = '/home/sr365/MM_Bench/Data/'                                               # All simulated simple dataset
+#DATA_DIR = '../Data/Yang_data/'                                               # All simulated simple dataset
 GEOBOUNDARY =[0.3, 0.6, 1, 1.5, 0.1, 0.2, -0.786, 0.786]
 NORMALIZE_INPUT = True
 

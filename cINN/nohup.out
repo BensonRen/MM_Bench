@@ -2171,3 +2171,2201 @@ Saving the model down...
 Process: 627301 is still running
 Process 627163 has finished
 Process 627301 has finished
+Your flags.data_set entry is not correct, check again!
+Process 658861 has finished
+Your flags.data_set entry is not correct, check again!
+Process 658925 has finished
+Your flags.data_set entry is not correct, check again!
+Process 659129 has finished
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 274, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 192, in read_data_chen
+    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 605, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 814, in __init__
+    self._engine = self._make_engine(self.engine)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1045, in _make_engine
+    return mapping[engine](self.f, **self.options)  # type: ignore[call-arg]
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1862, in __init__
+    self._open_handles(src, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1363, in _open_handles
+    storage_options=kwds.get("storage_options", None),
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/common.py", line 647, in get_handle
+    newline="",
+FileNotFoundError: [Errno 2] No such file or directory: '../Data/Simulated_DataSets/Chen/data_x.csv'
+Process 659170 has finished
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 274, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 192, in read_data_chen
+    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 605, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 814, in __init__
+    self._engine = self._make_engine(self.engine)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1045, in _make_engine
+    return mapping[engine](self.f, **self.options)  # type: ignore[call-arg]
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1862, in __init__
+    self._open_handles(src, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1363, in _open_handles
+    storage_options=kwds.get("storage_options", None),
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/common.py", line 647, in get_handle
+    newline="",
+FileNotFoundError: [Errno 2] No such file or directory: '/Chen/data_x.csv'
+Process 659368 has finished
+flgas.data_dir =  ../Data/
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 275, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 193, in read_data_chen
+    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 605, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 814, in __init__
+    self._engine = self._make_engine(self.engine)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1045, in _make_engine
+    return mapping[engine](self.f, **self.options)  # type: ignore[call-arg]
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1862, in __init__
+    self._open_handles(src, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1363, in _open_handles
+    storage_options=kwds.get("storage_options", None),
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/common.py", line 647, in get_handle
+    newline="",
+FileNotFoundError: [Errno 2] No such file or directory: '/Chen/data_x.csv'
+Process 659593 has finished
+flgas.data_dir =  ../Data/
+data_dir =  ../Data/Chen
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 276, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 194, in read_data_chen
+    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 605, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 814, in __init__
+    self._engine = self._make_engine(self.engine)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1045, in _make_engine
+    return mapping[engine](self.f, **self.options)  # type: ignore[call-arg]
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1862, in __init__
+    self._open_handles(src, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1363, in _open_handles
+    storage_options=kwds.get("storage_options", None),
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/common.py", line 647, in get_handle
+    newline="",
+FileNotFoundError: [Errno 2] No such file or directory: '../Data/Chendata_x.csv'
+Process 659660 has finished
+flgas.data_dir =  ../Data/
+data_dir =  ../Data/Chen
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 276, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 199, in read_data_chen
+    data_x = np.normalize_np(data_x)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/numpy/__init__.py", line 215, in __getattr__
+    "{!r}".format(__name__, attr))
+AttributeError: module 'numpy' has no attribute 'normalize_np'
+Process 659701 has finished
+flgas.data_dir =  Data/
+data_dir =  Data/Chen
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 276, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 194, in read_data_chen
+    data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 605, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 814, in __init__
+    self._engine = self._make_engine(self.engine)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1045, in _make_engine
+    return mapping[engine](self.f, **self.options)  # type: ignore[call-arg]
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1862, in __init__
+    self._open_handles(src, kwds)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/parsers.py", line 1363, in _open_handles
+    storage_options=kwds.get("storage_options", None),
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/pandas/io/common.py", line 647, in get_handle
+    newline="",
+FileNotFoundError: [Errno 2] No such file or directory: 'Data/Chen/data_x.csv'
+Process 692552 has finished
+flgas.data_dir =  /home/sr365/MM_Bench/Data/
+data_dir =  /home/sr365/MM_Bench/Data/Chen
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 276, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 199, in read_data_chen
+    data_x = np.normalize_np(data_x)
+  File "/home/sr365/anaconda3/envs/benicml/lib/python3.7/site-packages/numpy/__init__.py", line 215, in __getattr__
+    "{!r}".format(__name__, attr))
+AttributeError: module 'numpy' has no attribute 'normalize_np'
+Process 692815 has finished
+flgas.data_dir =  /home/sr365/MM_Bench/Data/
+data_dir =  /home/sr365/MM_Bench/Data/Chen
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 276, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 199, in read_data_chen
+    data_x = normalize_np(data_x)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 185, in normalize_np
+    assert np.min(x[:, i]) == -1, 'your normalization is wrong'
+AssertionError: your normalization is wrong
+Process 693022 has finished
+flgas.data_dir =  /home/sr365/MM_Bench/Data/
+data_dir =  /home/sr365/MM_Bench/Data/Chen
+In normalize_np, your max is: 1.0
+In normalize_np, your min is: -1.0
+In normalize_np, your max is: 1.0
+In normalize_np, your min is: -1.0
+In normalize_np, your max is: 1.0
+In normalize_np, your min is: -1.0000001
+Traceback (most recent call last):
+  File "train.py", line 69, in <module>
+    training_from_flag(flags)
+  File "train.py", line 26, in training_from_flag
+    train_loader, test_loader = data_reader.read_data(flags)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 278, in read_data
+    train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 201, in read_data_chen
+    data_x = normalize_np(data_x)
+  File "/home/sr365/MM_Bench/utils/data_reader.py", line 187, in normalize_np
+    assert np.min(x[:, i]) == -1, 'your normalization is wrong'
+AssertionError: your normalization is wrong
+Process 693684 has finished
+flgas.data_dir =  /home/sr365/MM_Bench/Data/
+data_dir =  /home/sr365/MM_Bench/Data/Chen
+In normalize_np, row  0  your max is: 1.0
+In normalize_np, row  0  your min is: -1.0
+In normalize_np, row  1  your max is: 1.0
+In normalize_np, row  1  your min is: -1.0
+In normalize_np, row  2  your max is: 1.0
+In normalize_np, row  2  your min is: -1.0000001
+In normalize_np, row  3  your max is: 1.0
+In normalize_np, row  3  your min is: -1.0000001
+In normalize_np, row  4  your max is: 1.0
+In normalize_np, row  4  your min is: -0.99999994
+total number of training sample is 40000, the dimension of the feature is 5
+total number of test sample is 10000
+Making network now
+The nodes are: [<FrEIA.framework.InputNode object at 0x7f5b1d991a10>, <FrEIA.framework.Node object at 0x7f5b13cd8790>, <FrEIA.framework.Node object at 0x7f5b13b9b850>, <FrEIA.framework.Node object at 0x7f5b13b9b8d0>, <FrEIA.framework.Node object at 0x7f5b13b9b950>, <FrEIA.framework.Node object at 0x7f5b13b9b9d0>, <FrEIA.framework.Node object at 0x7f5b13b9ba50>, <FrEIA.framework.Node object at 0x7f5b13b9bad0>, <FrEIA.framework.Node object at 0x7f5b13b9bb50>, <FrEIA.framework.Node object at 0x7f5b13b9bbd0>, <FrEIA.framework.Node object at 0x7f5b13b9bc50>, <FrEIA.framework.Node object at 0x7f5b13b9bcd0>, <FrEIA.framework.Node object at 0x7f5b13b9bd50>, <FrEIA.framework.Node object at 0x7f5b13b9bdd0>, <FrEIA.framework.Node object at 0x7f5b13b9be50>, <FrEIA.framework.Node object at 0x7f5b13b9bed0>, <FrEIA.framework.Node object at 0x7f5b13b9bf50>, <FrEIA.framework.Node object at 0x7f5b13b9bfd0>, <FrEIA.framework.Node object at 0x7f5b12ee1090>, <FrEIA.framework.Node object at 0x7f5b12ee1110>, <FrEIA.framework.Node object at 0x7f5b12ee1190>, <FrEIA.framework.Node object at 0x7f5b12ee1210>, <FrEIA.framework.Node object at 0x7f5b12ee1290>, <FrEIA.framework.Node object at 0x7f5b12ee1310>, <FrEIA.framework.Node object at 0x7f5b12ee1390>, <FrEIA.framework.Node object at 0x7f5b12ee1410>, <FrEIA.framework.Node object at 0x7f5b12ee1490>, <FrEIA.framework.OutputNode object at 0x7f5b12ee14d0>, <FrEIA.framework.ConditionNode object at 0x7f5b2070be50>]
+Node 'coupling_0' takes the following inputs:
+	 Output #0 of node 'input' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_0' takes the following inputs:
+	 Output #0 of node 'coupling_0' with dims (5,)
+
+Node 'coupling_1' takes the following inputs:
+	 Output #0 of node 'permute_0' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_1' takes the following inputs:
+	 Output #0 of node 'coupling_1' with dims (5,)
+
+Node 'coupling_2' takes the following inputs:
+	 Output #0 of node 'permute_1' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_2' takes the following inputs:
+	 Output #0 of node 'coupling_2' with dims (5,)
+
+Node 'coupling_3' takes the following inputs:
+	 Output #0 of node 'permute_2' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_3' takes the following inputs:
+	 Output #0 of node 'coupling_3' with dims (5,)
+
+Node 'coupling_4' takes the following inputs:
+	 Output #0 of node 'permute_3' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_4' takes the following inputs:
+	 Output #0 of node 'coupling_4' with dims (5,)
+
+Node 'coupling_5' takes the following inputs:
+	 Output #0 of node 'permute_4' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_5' takes the following inputs:
+	 Output #0 of node 'coupling_5' with dims (5,)
+
+Node 'coupling_6' takes the following inputs:
+	 Output #0 of node 'permute_5' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_6' takes the following inputs:
+	 Output #0 of node 'coupling_6' with dims (5,)
+
+Node 'coupling_7' takes the following inputs:
+	 Output #0 of node 'permute_6' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_7' takes the following inputs:
+	 Output #0 of node 'coupling_7' with dims (5,)
+
+Node 'coupling_8' takes the following inputs:
+	 Output #0 of node 'permute_7' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_8' takes the following inputs:
+	 Output #0 of node 'coupling_8' with dims (5,)
+
+Node 'coupling_9' takes the following inputs:
+	 Output #0 of node 'permute_8' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_9' takes the following inputs:
+	 Output #0 of node 'coupling_9' with dims (5,)
+
+Node 'coupling_10' takes the following inputs:
+	 Output #0 of node 'permute_9' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_10' takes the following inputs:
+	 Output #0 of node 'coupling_10' with dims (5,)
+
+Node 'coupling_11' takes the following inputs:
+	 Output #0 of node 'permute_10' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_11' takes the following inputs:
+	 Output #0 of node 'coupling_11' with dims (5,)
+
+Node 'coupling_12' takes the following inputs:
+	 Output #0 of node 'permute_11' with dims (5,)
+	 conditioned on node 'node' with dims (256,)
+
+Node 'permute_12' takes the following inputs:
+	 Output #0 of node 'coupling_12' with dims (5,)
+
+Node 'output' takes the following inputs:
+	 Output #0 of node 'permute_12' with dims (5,)
+
+ReversibleGraphNet(
+  (module_list): ModuleList(
+    (0): None
+    (1): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (2): PermuteRandom()
+    (3): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (4): PermuteRandom()
+    (5): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (6): PermuteRandom()
+    (7): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (8): PermuteRandom()
+    (9): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (10): PermuteRandom()
+    (11): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (12): PermuteRandom()
+    (13): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (14): PermuteRandom()
+    (15): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (16): PermuteRandom()
+    (17): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (18): PermuteRandom()
+    (19): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (20): PermuteRandom()
+    (21): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (22): PermuteRandom()
+    (23): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (24): PermuteRandom()
+    (25): GLOWCouplingBlock(
+      (s1): Sequential(
+        (0): Linear(in_features=258, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=6, bias=True)
+      )
+      (s2): Sequential(
+        (0): Linear(in_features=259, out_features=160, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=160, out_features=160, bias=True)
+        (3): ReLU()
+        (4): Linear(in_features=160, out_features=160, bias=True)
+        (5): ReLU()
+        (6): Linear(in_features=160, out_features=4, bias=True)
+      )
+    )
+    (26): PermuteRandom()
+    (27): dummy()
+    (28): None
+  )
+)
+Start training now...
+Starting training now
+Doing Evaluation on the model now
+This is Epoch 0, training loss -0.14334, validation loss -0.40227
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 20, training loss -3.28350, validation loss 6.56877
+Doing Evaluation on the model now
+This is Epoch 40, training loss -2.99345, validation loss -3.85426
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 60, training loss -2.00069, validation loss -2.62108
+Epoch    73: reducing learning rate of group 0 to 8.0000e-04.
+Doing Evaluation on the model now
+This is Epoch 80, training loss -4.25268, validation loss -4.76967
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 100, training loss -4.88753, validation loss -5.42871
+Saving the model down...
+Epoch   113: reducing learning rate of group 0 to 6.4000e-04.
+Doing Evaluation on the model now
+This is Epoch 120, training loss -7.20077, validation loss -7.70464
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 140, training loss -6.68831, validation loss -7.24003
+Saving the model down...
+Epoch   158: reducing learning rate of group 0 to 5.1200e-04.
+Doing Evaluation on the model now
+This is Epoch 160, training loss -8.27643, validation loss -8.63332
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 180, training loss -9.13411, validation loss -9.18535
+Saving the model down...
+Epoch   198: reducing learning rate of group 0 to 4.0960e-04.
+Doing Evaluation on the model now
+This is Epoch 200, training loss -8.77282, validation loss -9.22935
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 220, training loss -7.26111, validation loss -7.86930
+Doing Evaluation on the model now
+This is Epoch 240, training loss -8.39382, validation loss -9.75359
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 260, training loss -9.64964, validation loss -9.42786
+Saving the model down...
+Epoch   269: reducing learning rate of group 0 to 3.2768e-04.
+Doing Evaluation on the model now
+This is Epoch 280, training loss -10.38533, validation loss -11.02776
+Saving the model down...
+Process: 695104 is still running
+Process: 695104 is still running
+Process: 695581 is still running
+Process 695104 has finished
+Process 695905 has finished
+Process: 695581 is still running
+Process: 695581 is still running
+Process 695581 has finished
+Process 700948 has finished
+Process 701497 has finished
+Process 701867 has finished
+Process: 702320 is still running
+Process: 702320 is still running
+Process: 702320 is still running
+Process 702320 has finished
+Process: 706836 is still running
+Process: 707056 is still running
+Process 706836 has finished
+Process: 707056 is still running
+Process 708096 has finished
+Process: 707056 is still running
+Process 708204 has finished
+Process: 708434 is still running
+Process 707056 has finished
+Process: 708434 is still running
+Process: 709292 is still running
+Process 709426 has finished
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process: 710476 is still running
+Process: 708434 is still running
+Process: 709292 is still running
+Process 710476 has finished
+Process 708434 has finished
+Process: 709292 is still running
+Process 709292 has finished
+Process 731555 has finished
+Process: 732796 is still running
+Process: 732904 is still running
+Process: 732796 is still running
+Process: 732904 is still running
+Process: 732796 is still running
+Process: 732904 is still running
+Process: 732796 is still running
+Process: 732904 is still running
+Process 732796 has finished
+Process: 732904 is still running
+Process: 732904 is still running
+Process 732904 has finished
+Process: 735113 is still running
+Process: 735182 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process 735182 has finished
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process: 735113 is still running
+Process: 735250 is still running
+Process 735113 has finished
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process: 735250 is still running
+Process 735250 has finished
+Process: 887261 is still running
+Process 887261 has finished
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process: 887850 is still running
+Process 887850 has finished
+Process: 891965 is still running
+Process 891965 has finished
+Process: 892530 is still running
+Process 892530 has finished
+Process: 894061 is still running
+Process 894061 has finished
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process: 895011 is still running
+Process 895011 has finished
+Process 902832 has finished
+Process 902884 has finished
+Process: 903047 is still running
+Process: 903476 is still running
+Process: 903047 is still running
+Process 903476 has finished
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process: 903047 is still running
+Process 903047 has finished
+Process 912138 has finished
+Process: 912489 is still running
+Process: 912810 is still running
+Process: 913315 is still running
+Process 912810 has finished
+Process 913315 has finished
+Process 918424 has finished
+Process 918637 has finished
+Process 918747 has finished
+Process 918810 has finished
+Process 918975 has finished
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process: 919129 is still running
+Process 919129 has finished
+Process 929112 has finished
+Process: 929651 is still running
+Process: 929820 is still running
+Process: 930145 is still running
+Process: 930239 is still running
+Process 929651 has finished
+Process: 930431 is still running
+Process 929820 has finished
+Process: 930145 is still running
+Process 930239 has finished
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process: 930145 is still running
+Process: 930431 is still running
+Process 930145 has finished
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 937989 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process 937989 has finished
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process: 938170 is still running
+Process: 930431 is still running
+Process 938170 has finished
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process: 930431 is still running
+Process 930431 has finished
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process: 1038619 is still running
+Process 1038619 has finished

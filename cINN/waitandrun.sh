@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=3
 export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
@@ -14,15 +14,15 @@ export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 TIME=`date`
 PWD=`pwd`
 # The command to execute
-COMMAND=evaluate.py
+#COMMAND=evaluate.py
 #COMMAND=predict.py
-#COMMAND=train.py
+COMMAND=train.py
 #COMMAND=create_folder_modulized.py
 #COMMAND= delete_after_BP_FF.py
 #COMMAND plotsAnalysis.py
 SPACE='        '
 SECONDS=0
-python train.py
+#python train.py
 nohup python $COMMAND 1>output.out 2>error.err & 
 echo $! > pidfile.txt
 

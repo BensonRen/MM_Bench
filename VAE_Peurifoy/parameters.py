@@ -4,12 +4,13 @@ The parameter file storing the parameters for VAE Model
 
 # Define which data set you are using
 #DATA_SET = 'Yang'
-DATA_SET = 'Chen'
-#DATA_SET = 'Peurifoy'
+#DATA_SET = 'Chen'
+DATA_SET = 'Peurifoy'
 
 TEST_RATIO = 0.2
 
 # Architectural Params
+"""
 # Chen
 DIM_Z = 5
 DIM_X = 5
@@ -19,6 +20,7 @@ DIM_Y = 256
 DIM_Z = 3
 DIM_X = 3
 DIM_Y = 201
+"""
 # Yang
 DIM_Z = 14
 DIM_X = 14

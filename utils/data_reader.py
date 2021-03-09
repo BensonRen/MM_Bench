@@ -63,7 +63,7 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
         test_ratio = 0.999
     # get data files
     print('getting data files...')
-    ftrTrain, lblTrain = importData(os.path.join(data_dir, 'dataIn'), x_range, y_range)
+    ftrTrain, lblTrain = importData(os.path.join(data_dir,'Yang', 'dataIn'), x_range, y_range)
     if (test_ratio > 0):
         print("Splitting training data into test set, the ratio is:", str(test_ratio))
         ftrTrain, ftrTest, lblTrain, lblTest = train_test_split(ftrTrain, lblTrain,
@@ -181,100 +181,51 @@ def normalize_np(x):
         x_range = (x_max - x_min ) /2.
         x_avg = (x_max + x_min) / 2.
         x[:, i] = (x[:, i] - x_avg) / x_range
-        assert np.max(x[:, i]) == 1, 'your normalization is wrong'
-        assert np.min(x[:, i]) == -1, 'your normalization is wrong'
+        print("In normalize_np, row ", str(i), " your max is:", np.max(x[:, i]))
+        print("In normalize_np, row ", str(i), " your min is:", np.min(x[:, i]))
+        assert np.max(x[:, i]) - 1 < 0.0001, 'your normalization is wrong'
+        assert np.min(x[:, i]) + 1 < 0.0001, 'your normalization is wrong'
     return x
 
 
-def read_data_sine_test_1d(flags, eval_data_all=False):
-    """
-    Data reader function for testing sine wave 1d data (1d to 1d)
-    :param flags: Input flags
-    """
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Sine_test/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
+def read_data_chen(flags, eval_data_all=False):
+    # Read the data
+    print("flgas.data_dir = ", flags.data_dir)
+    data_dir = os.path.join(flags.data_dir, 'Chen')
+    print("data_dir = ", data_dir)
+    data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
+    data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None).astype('float32').values
+
+    # The geometric boundary of Chen dataset is [5, 50], normalizing manually
+    data_x = (data_x - 27.5) / 22.5
+    
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class_1d_to_1d, test_ratio=0.99)
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class_1d_to_1d, test_ratio=flags.test_ratio)
-  
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
 
-def read_data_ballistics(flags, eval_data_all=False):
-    """
-    Data reader function for the ballistic data set
-    :param flags: Input flags
-    :return train_loader and test_loader in pytorch data set format (unnormalized)
-    """
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Ballistics/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_x[:,3] /= 15
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
-    if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=0.999)
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=flags.test_ratio)
+    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
-
-def read_data_gaussian_mixture(flags, eval_data_all=False):
+def read_data_peurifoy(flags, eval_data_all=False):
     """
     Data reader function for the gaussian mixture data set
     :param flags: Input flags
     :return: train_loader and test_loader in pytorch data set format (normalized)
     """
+
     # Read the data
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Gaussian_Mixture/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
-    data_y = np.squeeze(data_y)                             # Squeeze since this is a 1 column label
-    data_x = normalize_np(data_x)
-    if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=0.999)
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=flags.test_ratio)
+    data_dir = os.path.join(flags.data_dir, 'Peurifoy')
+    data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
+    data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None).astype('float32').values
 
+    # The geometric boundary of peurifoy dataset is [30, 70], normalizing manually
+    data_x = (data_x - 50) / 20.
 
-def read_data_sine_wave(flags, eval_data_all=False):
-    """
-    Data reader function for the sine function data set
-    :param flags: Input flags
-    :return: train_loader and test_loader in pytorch data set format (normalized)
-    """
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Sinusoidal_Wave/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
-    #data_x = normalize_np(data_x)
-    #data_y = normalize_np(data_y)
-    if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=0.999)
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_class, test_ratio=flags.test_ratio)
-
-
-def read_data_naval_propulsion(flags, eval_data_all=False):
-    """
-    Data reader function for the naval propulsion data set
-    :param flags: Input flags
-    :return: train_loader and test_loader in pytorch data set format (normalized)
-    """
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Naval_Propulsion/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
-    data_x = normalize_np(data_x)
-    data_y = normalize_np(data_y)
+    print("shape of data_x", np.shape(data_x))
+    print("shape of data_y", np.shape(data_y))
     if eval_data_all:
         return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
-
-def read_data_robotic_arm(flags, eval_data_all=False):
-    """
-    Data reader function for the robotic arm data set
-    :param flags: Input flags
-    :return: train_loader and test_loader in pytorch data set format (normalized)
-    """
-    data_dir = os.path.join(flags.data_dir, 'Simulated_DataSets/Robotic_Arm/')
-    data_x = pd.read_csv(data_dir + 'data_x.csv', header=None).astype('float32').values
-    data_y = pd.read_csv(data_dir + 'data_y.csv', header=None).astype('float32').values
-    if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
 def read_data_ensemble_MM(flags, eval_data_all=False):
     data_dir = os.path.join('../', 'Data', 'Yang_data', 'dataIn')
@@ -303,8 +254,9 @@ def read_data(flags, eval_data_all=False):
     :param eval_data_all: The switch to turn on if you want to put all data in evaluation data
     :return:
     """
-    if flags.data_set == 'meta_material':
-        print("This is a meta-material dataset")
+    print("In read_data, flags.data_set =", flags.data_set)
+    if flags.data_set == 'Yang':
+        print("This is a Yang dataset")
         if flags.geoboundary[0] == -1:          # ensemble produced ones
             print("reading from ensemble place")
             train_loader, test_loader = read_data_ensemble_MM(flags, eval_data_all=eval_data_all)
@@ -321,18 +273,10 @@ def read_data(flags, eval_data_all=False):
         # Reset the boundary is normalized
         if flags.normalize_input:
             flags.geoboundary_norm = [-1, 1, -1, 1]
-    elif flags.data_set == 'gaussian_mixture':
-        train_loader, test_loader = read_data_gaussian_mixture(flags, eval_data_all=eval_data_all)
-    elif flags.data_set == 'sine_wave':
-        train_loader, test_loader = read_data_sine_wave(flags, eval_data_all=eval_data_all)
-    elif flags.data_set == 'naval_propulsion':
-        train_loader, test_loader = read_data_naval_propulsion(flags, eval_data_all=eval_data_all)
-    elif flags.data_set == 'robotic_arm':
-        train_loader, test_loader = read_data_robotic_arm(flags, eval_data_all=eval_data_all)
-    elif flags.data_set == 'ballistics':
-        train_loader, test_loader = read_data_ballistics(flags,  eval_data_all=eval_data_all)
-    elif flags.data_set == 'sine_test_1d':
-        train_loader, test_loader = read_data_sine_test_1d(flags, eval_data_all=eval_data_all)
+    elif flags.data_set == 'Peurifoy':
+        train_loader, test_loader = read_data_peurifoy(flags,eval_data_all=eval_data_all)
+    elif flags.data_set == 'Chen':
+        train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
     else:
         sys.exit("Your flags.data_set entry is not correct, check again!")
     return train_loader, test_loader

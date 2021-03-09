@@ -1,10 +1,10 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=0
-export PYTHONPATH="/home/sr365/Why_NA/:$PYTHONPATH"
+export CUDA_VISIBLE_DEVICES=3
+export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
-PID=236622
+PID=929199
 while [ -e /proc/$PID ]
 do
     echo "Process: $PID is still running" 
@@ -14,9 +14,9 @@ done
 TIME=`date`
 PWD=`pwd`
 # The command to execute
-COMMAND=evaluate.py
+#COMMAND=evaluate.py
 #COMMAND=predict.py
-#COMMAND=train.py
+COMMAND=train.py
 #COMMAND=create_folder_modulized.py
 #COMMAND= delete_after_BP_FF.py
 #COMMAND plotsAnalysis.py

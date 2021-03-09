@@ -22,7 +22,6 @@ from math import inf
 import matplotlib.pyplot as plt
 # Own module
 from utils.time_recorder import time_keeper
-from utils.create_folder_modulized import get_folder_modulized
 
 
 class Network(object):
@@ -271,15 +270,3 @@ class Network(object):
             self.evaluate(save_dir=save_dir, prefix='inference' + str(i))
             tk.record(i)
     
-    def evaluate_modulized_multi_time(self, time=2048, algo='MDN'):
-        """
-        Make evaluation multiple times for deeper comparison for stochastic algorithm, also be part of the comparison of different modules (initializer, optimizer and filtering). This function provides a baseline result for the experiements
-        """
-        # Get the list of folders
-        folder_list = get_folder_modulized(off_only=True)
-
-        # evaluate for all the folders
-        for folder in folder_list:
-            if algo in folder:
-                self.evaluate_multiple_time(time=time, save_dir=folder)
-        

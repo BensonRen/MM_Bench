@@ -3,19 +3,34 @@ The parameter file storing the parameters for INN Model
 """
 
 # Define which data set you are using
-# DATA_SET = 'meta_material'
-# DATA_SET = 'gaussian_mixture'
-# DATA_SET = 'sine_wave'
-# DATA_SET = 'naval_propulsion'
-DATA_SET = 'robotic_arm'
-# DATA_SET = 'ballistics'
+#DATA_SET = 'Yang'
+#DATA_SET = 'Chen'
+DATA_SET = 'Peurifoy'
+
 TEST_RATIO = 0.2
 
 # Architectural Params
-DIM_Z = 2
-DIM_X = 4
-DIM_Y = 2
+# Chen
+"""
+DIM_X = 5
+DIM_Y = 256
+DIM_Z = 1 
+DIM_TOT = 300
+"""
+# Peurifoy
+DIM_X = 3
+DIM_Y = 201
+DIM_Z = 1 
 DIM_TOT = 4
+"""
+# Yang
+DIM_X = 14
+DIM_Y = 201
+DIM_Z = 1 
+DIM_TOT = 4
+"""
+
+# Architectural Params
 COUPLE_LAYER_NUM = 6
 DIM_SPEC = None
 SUBNET_LINEAR = []                                          # Linear units for Subnet FC layer
@@ -56,19 +71,11 @@ X_RANGE = [i for i in range(2, 10 )]
 #Y_RANGE = [i for i in range(10 , 2011 )]                       # Real Meta-material dataset range
 Y_RANGE = [i for i in range(10 , 310 )]                         # Artificial Meta-material dataset
 FORCE_RUN = True
-MODEL_NAME  = None
-# MODEL_NAME  = 'dim_z_2 + wBN + 100 + lr1e-3 + reg5e-3'
-DATA_DIR = '../'                                               # All simulated simple dataset
-#DATA_DIR = '/work/sr365/'                                      # real Meta-material dataset
-#DATA_DIR = '/work/sr365/NN_based_MM_data/'                      # Artificial Meta-material dataset
-GEOBOUNDARY =[-1,1,-1,1]
-#GEOBOUNDARY =[30, 52, 42, 52]
+MODEL_NAME = None 
+DATA_DIR = '/home/sr365/MM_Bench/Data/'                                               # All simulated simple dataset
+GEOBOUNDARY =[0.3, 0.6, 1, 1.5, 0.1, 0.2, -0.786, 0.786]
 NORMALIZE_INPUT = True
 
 # Running specific params
 USE_CPU_ONLY = False
-#EVAL_MODEL = "ballistics_Jakob"
-#EVAL_MODEL = "robotic_armcouple_layer_num5dim_total4"
-EVAL_MODEL = "retrain_time_evalsine_wavecouple_layer_num4dim_total4lambda_mse0.01trail1"
-#EVAL_MODEL = "sine_wavecouple_layer_num4dim_total4lambda_mse0.01trail1"
-#EVAL_MODEL = "sine_wavecouple_layer_num6dim_total5"
+EVAL_MODEL = None

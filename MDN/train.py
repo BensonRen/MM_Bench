@@ -28,7 +28,7 @@ def training_from_flag(flags):
     print("Making network now")
 
     # Make Network
-    ntwk = Network(MDN, flags, train_loader, test_loader, ckpt_dir=flags.ckpt_dir)
+    ntwk = Network(MDN, flags, train_loader, test_loader)
 
     # Training process
     print("Start training now...")
@@ -56,16 +56,50 @@ def retrain_different_dataset(index):
         flags.stop_threshold = -float('inf')
         training_from_flag(flags)
 
+def hyperswipe():
+    """
+    This is for doing hyperswiping for the model parameters
+    """
+    reg_scale_list =  [0]
+    layer_size_list = [500, 1000]
+    num_gauss_list = [5, 10,  20]
+    for reg_scale in reg_scale_list:
+        for layer_num in range(5,10):
+            for layer_size in layer_size_list:
+                for num_gaussian in num_gauss_list:
+                    flags = flag_reader.read_flag()  	#setting the base case
+                    flags.reg_scale = reg_scale
+                    linear = [layer_size  for j in range(layer_num)]
+                    linear[0] = 201
+                    linear[-1] = 3
+                    flags.linear = linear
+                    flags.num_gaussian = num_gaussian
+                    flags.model_name = flags.data_set + '_gaussian_'+str(num_gaussian) + '_layer_num_' + str(layer_num) + '_unit_' + str(layer_size) + '_lr_' + str(flags.lr) + '_reg_scale_' + str(reg_scale)
+                    try:
+                        training_from_flag(flags)
+                    except RuntimeError as e:
+                        print("Failing the device-side assert for MDN mdn.sample function! doing 3 retries now:")
+                        for j in range(3):
+                            try:
+                                print("trying number ", j)
+                                training_from_flag(flags)
+                                break;
+                            except:
+                                print("Failing again! try again")
+                                    
+                                    
+
 
 if __name__ == '__main__':
     # torch.manual_seed(1)
     # torch.cuda.manual_seed(1)
     # Read the parameters to be set
     flags = flag_reader.read_flag()
-
+    
+    hyperswipe()
     # Call the train from flag function
     #training_from_flag(flags)
 
     # Do the retraining for all the data set to get the training 
-    for i in range(10):
-        retrain_different_dataset(i)
+    #for i in range(10):
+    #    retrain_different_dataset(i)

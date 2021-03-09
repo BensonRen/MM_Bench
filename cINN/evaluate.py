@@ -55,7 +55,10 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, moduli
 
     # Plot the MSE distribution
     if flags.data_set != 'meta_material' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
-        plotMSELossDistrib(pred_file, truth_file, flags)
+        MSE = plotMSELossDistrib(pred_file, truth_file, flags)
+        # Add this MSE back to the folder
+        flags.best_validation_loss = MSE
+        helper_functions.save_flags(flags, os.path.join("models", model_dir))
     print("Evaluation finished")
     
 def evaluate_all(models_dir="models"):
@@ -111,5 +114,11 @@ if __name__ == '__main__':
     
     #evaluate_different_dataset(modulized_flag=True)
     
-    evaluate_all("models/")
+    #evaluate_all("models/Chen_nocup_reg")
+    #evaluate_all("models/Yang")
+    evaluate_all("models/Peurifoy")
+    evaluate_all("models/Chen/Chen_reg1e-3")
+    evaluate_all("models/Chen/Chen_reg5e-3")
+    evaluate_all("models/Chen/Chen_reg1e-4")
+    evaluate_all("models/Chen/Chen_reg5e-4")
 
