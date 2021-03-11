@@ -158,30 +158,31 @@ def creat_mm_dataset():
     :return:
     """
     # Define model folder
-    model_folder = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'meta_material')
+    model_folder = os.path.join('..', 'Data', 'Yang_sim', 'model_param')
     # Load the flags to construct the model
     flags = load_flags(model_folder)
     flags.eval_model = model_folder
     ntwk = Network(NA, flags, train_loader=None, test_loader=None, inference_mode=True, saved_model=flags.eval_model)
     # This is the full file version, which would take a while. Testing pls use the next line one
-    geometry_points = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'dataIn', 'data_x.csv')
+    geometry_points = os.path.join('..', 'Data', 'Yang_sim', 'dataIn', 'data_x.csv')
     # Small version is for testing, the large file taks a while to be generated...
     #geometry_points = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'dataIn', 'data_x_small.csv')
     Y_filename = geometry_points.replace('data_x', 'data_y')
 
     # Set up the list of prediction files
     pred_list = []
+    num_models = 10
+
     # for each model saved, load the dictionary and do the inference
-    for i in range(5):
+    for i in range(num_models):
         print('predicting for {}th model saved'.format(i+1))
-        state_dict_file = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator',
-                                                           'state_dicts', 'mm{}.pth'.format(i+1))
+        state_dict_file = os.path.join('..', 'Data', 'Yang_sim', 'state_dicts', 'mm{}.pt'.format(i))
         pred_file, truth_file = ntwk.predict(Xpred_file=geometry_points, load_state_dict=state_dict_file, no_save=True)
         pred_list.append(pred_file)
 
-    Y_ensemble = np.zeros(shape=(*np.shape(pred_file), 5))
+    Y_ensemble = np.zeros(shape=(*np.shape(pred_file), num_models))
     # Combine the predictions by doing the average
-    for i in range(5):
+    for i in range(num_models):
         Y_ensemble[:, : ,i] = pred_list[i]
 
     Y_ensemble = np.mean(Y_ensemble, axis=2)
@@ -194,7 +195,7 @@ def creat_mm_dataset():
 
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
-    #creat_mm_dataset()
+    creat_mm_dataset()
     
    
     # Single evaluation in the data folder of each method
@@ -202,7 +203,7 @@ if __name__ == '__main__':
     #method_list = ['Tandem','MDN','INN_FrEIA','cINN','NA','VAE']
     #for method in method_list:
     #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../'+ method + '/data/', no_plot=False)  
-    predict_ensemble_for_all('models/worst5', 'data/', no_plot=False)  
+    #predict_ensemble_for_all('models/worst5', 'data/', no_plot=False)  
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']

@@ -57,11 +57,11 @@ def hyperswipe():
     This is for doing hyperswiping for the model parameters
     """
     #reg_scale_list = [1e-3,  1e-4,  5e-3]
-    kl_coeff_list = [1, 0.1, 0.01]
+    kl_coeff_list = [1e-3, 5e-3, 1e-4, 5e-4, 5e-5]
     layer_size_list = [500, 1000]
     dim_z_list = [5, 15, 25]
     for kl_coeff in kl_coeff_list:
-        for layer_num in range(6,10):
+        for layer_num in range(7,12):
             for layer_size in layer_size_list:
                 for dim_z in dim_z_list:
                     flags = flag_reader.read_flag()  	#setting the base case

@@ -302,7 +302,7 @@ class Network(object):
                 np.savetxt(fxt, x.cpu().data.numpy())
                 np.savetxt(fxp, Xpred)
                 np.savetxt(fyt, y.cpu().data.numpy())
-                if self.flags.data_set != 'Yang':
+                if self.flags.data_set != 'Yang_sim':
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
             tk.record(1)

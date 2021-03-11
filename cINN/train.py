@@ -64,8 +64,8 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    reg_scale_list = [1e-3, 5e-3, 1e-4,  5e-4]
-    lambda_mse_list = [100, 50, 20, 10, 1]
+    reg_scale_list = [5e-3]
+    lambda_mse_list = [100, 10, 1]
     for reg_scale in reg_scale_list:
         for couple_layer_num in range(4,10):    
             for lambda_mse in lambda_mse_list:

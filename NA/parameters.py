@@ -2,7 +2,7 @@
 Params for Back propagation model
 """
 # Define which data set you are using
-#DATA_SET = 'Yang'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
 DATA_SET = 'Peurifoy'
 TEST_RATIO = 0.2
@@ -16,9 +16,9 @@ LINEAR = [3, 400, 400, 400, 201]
 
 # Model Architectural Params for gaussian mixture DataSet
 #LINEAR = [4, 500, 500, 500, 500, 1]                 # Dimension of data set cross check with data generator
-CONV_OUT_CHANNEL = [4]
-CONV_KERNEL_SIZE = [3]
-CONV_STRIDE = [1]
+CONV_OUT_CHANNEL = [4, 4]
+CONV_KERNEL_SIZE = [3, 3]
+CONV_STRIDE = [1, 1]
 
 
 # Optimizer Params

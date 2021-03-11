@@ -116,7 +116,7 @@ if __name__ == '__main__':
     
     #evaluate_all("models/Chen_nocup_reg")
     #evaluate_all("models/Yang")
-    evaluate_all("models/Peurifoy")
+    #evaluate_all("models/Peurifoy")
     evaluate_all("models/Chen/Chen_reg1e-3")
     evaluate_all("models/Chen/Chen_reg5e-3")
     evaluate_all("models/Chen/Chen_reg1e-4")

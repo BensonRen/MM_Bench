@@ -252,7 +252,7 @@ class Network(object):
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
                 np.savetxt(fxp, Xpred)
-                if self.flags.data_set != 'meta_material':
+                if self.flags.data_set != 'Yang_sim':
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
         tk.record(1)

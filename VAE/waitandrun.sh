@@ -14,9 +14,9 @@ done
 TIME=`date`
 PWD=`pwd`
 # The command to execute
-#COMMAND=evaluate.py
+COMMAND=evaluate.py
 #COMMAND=predict.py
-COMMAND=train.py
+#COMMAND=train.py
 #COMMAND=create_folder_modulized.py
 #COMMAND= delete_after_BP_FF.py
 #COMMAND plotsAnalysis.py

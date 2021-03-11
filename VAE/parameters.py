@@ -3,7 +3,7 @@ The parameter file storing the parameters for VAE Model
 """
 
 # Define which data set you are using
-#DATA_SET = 'Yang'
+#DATA_SET = 'Yang_sim'
 DATA_SET = 'Chen'
 #DATA_SET = 'Peurifoy'
 

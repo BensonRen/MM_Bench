@@ -356,7 +356,7 @@ class Network(object):
                 np.savetxt(fxp, Xpred)
                 np.savetxt(fxt, x.cpu().data.numpy())
                 np.savetxt(fyt, y.cpu().data.numpy())
-                if self.flags.data_set != 'meta_material':          # Meta-material needs special handling due to no simulator
+                if self.flags.data_set != 'Yang_sim':          # Meta-material needs special handling due to no simulator
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
             tk.record(1)

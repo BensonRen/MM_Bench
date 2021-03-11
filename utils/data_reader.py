@@ -226,18 +226,25 @@ def read_data_peurifoy(flags, eval_data_all=False):
 
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
+def read_data_Yang_sim(flags, eval_data_all=False):
+    """
+    Data reader function for the Yang_simulated data set
+    :param flags: Input flags
+    :return: train_loader and test_loader in pytorch data set format (normalized)
+    """
 
-def read_data_ensemble_MM(flags, eval_data_all=False):
-    data_dir = os.path.join('../', 'Data', 'Yang_data', 'dataIn')
+    # Read the data
+    data_dir = os.path.join(flags.data_dir, 'Yang_sim', 'dataIn')
     data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None, sep=' ').astype('float32').values
     data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None, sep=' ').astype('float32').values
-    print("I am reading data from the:", data_dir)
-    
-    
-    #data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None, sep=' ').astype('float32').values
-    #data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None, sep=' ').astype('float32').values
+
+    # This dataset is already normalized, no manual normalization needed!!!
+
+    print("shape of data_x", np.shape(data_x))
+    print("shape of data_y", np.shape(data_y))
     if eval_data_all:
         return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
 def read_data(flags, eval_data_all=False):
@@ -277,6 +284,8 @@ def read_data(flags, eval_data_all=False):
         train_loader, test_loader = read_data_peurifoy(flags,eval_data_all=eval_data_all)
     elif flags.data_set == 'Chen':
         train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+    elif flags.data_set == 'Yang_sim':
+        train_loader, test_loader =read_data_Yang_sim(flags,eval_data_all=eval_data_all)
     else:
         sys.exit("Your flags.data_set entry is not correct, check again!")
     return train_loader, test_loader

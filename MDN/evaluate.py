@@ -108,5 +108,5 @@ if __name__ == '__main__':
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False)
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
     #evaluate_different_dataset(modulized_flag=True)
-    evaluate_all("models/Chen")
+    evaluate_all("models/Peurifoy_fine_grid/")
 

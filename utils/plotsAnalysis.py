@@ -307,7 +307,7 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
         point_df_pivot = point_df_pivot.reindex(sorted(point_df_pivot.columns), axis=1)
         print("pivot=")
         csvname = HeatMap_dir + 'pivoted.csv'
-        point_df_pivot.to_csv(csvname)
+        point_df_pivot.to_csv(csvname, float_format="%.3g")
         print(point_df_pivot)
         sns.heatmap(point_df_pivot, cmap = "YlGnBu")
     plt.xlabel(plot_y_name)                 # Note that the pivot gives reversing labels

@@ -2,7 +2,7 @@
 Hyper-parameters of the Tandem model
 """
 # Define which data set you are using
-#DATA_SET = 'Yang'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
 DATA_SET = 'Peurifoy'
 
@@ -39,7 +39,7 @@ CONV_STRIDE_B = []
 
 # Optimizer parameters
 OPTIM = "Adam"
-REG_SCALE = 0 
+REG_SCALE = 5e-4 
 BATCH_SIZE = 1024
 EVAL_BATCH_SIZE = 1024
 EVAL_STEP = 50

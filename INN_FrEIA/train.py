@@ -65,12 +65,12 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    dim_tot_list = [10, 50]
-    lambda_mse_list = [100, 1, 0.01]
-    dim_z_list = [1,2]
+    dim_tot_list = [5, 15, 30]
+    lambda_mse_list = [0.001, 0.005, 0.01]
+    dim_z_list = [1]
     for dim_z in dim_z_list:
         for dim_pad in dim_tot_list:
-            for couple_layer_num in range(8,12):    
+            for couple_layer_num in range(9,10):    
                 for lambda_mse in lambda_mse_list:
                     flags = flag_reader.read_flag()  	#setting the base case
                     flags.couple_layer_num = couple_layer_num

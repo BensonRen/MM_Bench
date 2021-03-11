@@ -2,7 +2,7 @@
 Params for Back propagation model
 """
 # Define which data set you are using
-#DATA_SET = 'Yang'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
 DATA_SET = 'Peurifoy'
 TEST_RATIO = 0.2

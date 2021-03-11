@@ -58,8 +58,9 @@ def hyperswipe():
     """
     #reg_scale_list = [1e-3,  1e-4,  5e-3]
     kl_coeff_list = [1, 0.1, 0.01]
-    layer_size_list = [500, 1000]
+    kl_coeff_list = [1e-3, 5e-3, 1e-4, 5e-4, 5e-5]
     dim_z_list = [5, 15, 25]
+    layer_size_list = [500, 1000]
     for kl_coeff in kl_coeff_list:
         for layer_num in range(6,10):
             for layer_size in layer_size_list:

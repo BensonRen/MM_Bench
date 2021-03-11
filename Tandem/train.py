@@ -59,7 +59,7 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    layer_size_list = [250, 750]
+    layer_size_list = [250, 500, 750, 1000]
     for i in range(3):
         for layer_num in range(6,14):
             for layer_size in layer_size_list:
