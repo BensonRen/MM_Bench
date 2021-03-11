@@ -4303,3 +4303,46 @@ ReversibleGraphNet(
     (20): None
   )
 )
+Start training now...
+Starting training now
+Doing Evaluation on the model now
+This is Epoch 0, training loss 1.87239, validation loss 0.59381
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 20, training loss -2.22613, validation loss -2.34300
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 40, training loss -2.84761, validation loss -2.83573
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 60, training loss -3.32436, validation loss -3.26013
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 80, training loss -3.50790, validation loss -3.49083
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 100, training loss -3.12400, validation loss -3.00536
+Epoch   105: reducing learning rate of group 0 to 8.0000e-04.
+Doing Evaluation on the model now
+This is Epoch 120, training loss -3.79532, validation loss -3.75898
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 140, training loss -3.09932, validation loss -3.22916
+Doing Evaluation on the model now
+This is Epoch 160, training loss -3.32046, validation loss -3.48402
+Doing Evaluation on the model now
+This is Epoch 180, training loss -3.93581, validation loss -3.94089
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 200, training loss -3.90742, validation loss -3.89402
+Epoch   209: reducing learning rate of group 0 to 6.4000e-04.
+Doing Evaluation on the model now
+This is Epoch 220, training loss -4.07661, validation loss -3.88253
+Doing Evaluation on the model now
+This is Epoch 240, training loss -4.35166, validation loss -4.25103
+Saving the model down...
+Doing Evaluation on the model now
+This is Epoch 260, training loss -4.45647, validation loss -4.14459
+Doing Evaluation on the model now
+This is Epoch 280, training loss -4.57678, validation loss -4.44982
+Saving the model down...

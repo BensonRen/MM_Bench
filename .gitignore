@@ -3,6 +3,8 @@
 */models/
 **__
 **.sh
+*/*.out
+
 **.out
 **.err
 */data
