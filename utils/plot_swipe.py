@@ -1,11 +1,10 @@
 import torch
 from utils import plotsAnalysis
 if __name__ == '__main__':
-    # pathnamelist = ['/home/sr365/MM_Bench/MDN/models/Peurifoy/g5',
-    #                 '/home/sr365/MM_Bench/MDN/models/Peurifoy/g10',
+    pathnamelist = ['/home/sr365/MM_Bench/NA/models/Peurifoy/conv_44_33_11/']
     #                 '/home/sr365/MM_Bench/MDN/models/Peurifoy/g20',
     #                ]
-    pathnamelist = ['/home/sr365/MM_Bench/NA/models/Peurifoy/conv/']
+    #pathnamelist = ['/home/sr365/MM_Bench/NA/models/Peurifoy/conv/']
     for pathname in pathnamelist:
         
         # Forward: Convolutional swipe
@@ -13,12 +12,12 @@ if __name__ == '__main__':
         #                        HeatMap_dir='models/'+pathname,feature_1_name='kernel_first',feature_2_name='kernel_second')
         
         # General: Complexity swipe
-        #plotsAnalysis.HeatMapBVL('num_layers','num_unit','layer vs unit Heat Map',save_name=pathname + '_heatmap.png',
-        #                        HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='linear_unit')
+        plotsAnalysis.HeatMapBVL('num_layers','num_unit','layer vs unit Heat Map',save_name=pathname + '_heatmap.png',
+                                HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='linear_unit')
         
         # General: Reg scale and num_layers
-        plotsAnalysis.HeatMapBVL('num_layers','reg_scale','layer vs unit Heat Map',save_name=pathname + '_heatmap.png',
-                                HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='reg_scale')
+        #plotsAnalysis.HeatMapBVL('num_layers','reg_scale','layer vs unit Heat Map',save_name=pathname + '_heatmap.png',
+        #                        HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='reg_scale')
         
         # VAE: kl_coeff and num_layers
         #plotsAnalysis.HeatMapBVL('num_layers','kl_coeff','layer vs unit Heat Map',save_name=pathname + '_heatmap.png',

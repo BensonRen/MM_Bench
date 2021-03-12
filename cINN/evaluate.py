@@ -13,6 +13,7 @@ from utils import data_reader
 from utils import helper_functions
 from utils.evaluation_helper import plotMSELossDistrib
 from utils.evaluation_helper import get_test_ratio_helper
+from NA import predict
 
 # Libs
 import numpy as np
@@ -54,10 +55,22 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, moduli
         pred_file, truth_file = ntwk.evaluate()
 
     # Plot the MSE distribution
-    if flags.data_set != 'meta_material' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
+    if flags.data_set != 'Yang_sim' and not multi_flag and not modulized_flag:  # meta-material does not have simulator, hence no Ypred given
         MSE = plotMSELossDistrib(pred_file, truth_file, flags)
         # Add this MSE back to the folder
         flags.best_validation_loss = MSE
+        helper_functions.save_flags(flags, os.path.join("models", model_dir))
+    elif flags.data_set == 'Yang_sim' and not multi_flag and not modulized_flag:
+        # Save the current path for getting back in the future
+        cwd = os.getcwd()
+        abs_path_Xpred = os.path.abspath(pred_file.replace('Ypred','Xpred'))
+        # Change to NA dictory to do prediction
+        os.chdir('../NA/')
+        MSE = predict.ensemble_predict_master('../Data/Yang_sim/state_dicts/', 
+                                abs_path_Xpred, no_plot=False)
+        # Add this MSE back to the folder
+        flags.best_validation_loss = MSE
+        os.chdir(cwd)
         helper_functions.save_flags(flags, os.path.join("models", model_dir))
     print("Evaluation finished")
     
@@ -115,10 +128,6 @@ if __name__ == '__main__':
     #evaluate_different_dataset(modulized_flag=True)
     
     #evaluate_all("models/Chen_nocup_reg")
-    #evaluate_all("models/Yang")
+    evaluate_all("models/Yang")
     #evaluate_all("models/Peurifoy")
-    evaluate_all("models/Chen/Chen_reg1e-3")
-    evaluate_all("models/Chen/Chen_reg5e-3")
-    evaluate_all("models/Chen/Chen_reg1e-4")
-    evaluate_all("models/Chen/Chen_reg5e-4")
 

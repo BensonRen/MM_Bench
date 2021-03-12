@@ -60,11 +60,11 @@ def hyperswipe():
     """
     reg_scale_list = [0]
     layer_size_list = [500, 1000]
-    reg_scale = 1e-4
+    reg_scale = [1e-4, 0]
     #layer_num = 7
     for reg_scale in reg_scale_list:
         for i in range(3):
-            for layer_num in range(6,10):
+            for layer_num in range(7,10):
                 for layer_size in layer_size_list:
                     flags = flag_reader.read_flag()  	#setting the base case
                     linear = [layer_size for j in range(layer_num)]        #Set the linear units
@@ -72,7 +72,7 @@ def hyperswipe():
                     linear[-1] = 201                # The end of linear
                     flags.linear = linear
                     flags.reg_scale = reg_scale
-                    flags.model_name = flags.data_set + 'conv_44_33_11_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
+                    flags.model_name = flags.data_set + 'conv_444_335_111_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
                     training_from_flag(flags)
 
 if __name__ == '__main__':

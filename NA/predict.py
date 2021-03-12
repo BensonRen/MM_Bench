@@ -85,7 +85,7 @@ def ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remov
             # This line is to plot all histogram, make sure comment the pred_list.append line below as well for getting all the histograms
             #pred_file, truth_file, flags = predict_from_model(pre_trained_model, Xpred_file, no_plot=False)
         else:
-            model_folder = os.path.join('..', 'Simulated_DataSets', 'Meta_material_Neural_Simulator', 'meta_material')
+            model_folder = os.path.join('..', 'Data', 'Yang_sim', 'model_param')
             pred_file, truth_file, flags = predict_from_model(model_folder, Xpred_file, load_state_dict=pre_trained_model)
         pred_list.append(np.copy(np.expand_dims(pred_file, axis=2)))
     # Take the mean of the predictions
@@ -101,9 +101,9 @@ def ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remov
     # saving the plot down
     flags.eval_model = 'ensemble_plot' + Xpred_file.replace('/', '')
     if model_dir is None:
-        plotMSELossDistrib(save_name, truth_file, flags)
+        return plotMSELossDistrib(save_name, truth_file, flags)
     else:
-        plotMSELossDistrib(save_name, truth_file, flags, save_dir=model_dir)
+        return plotMSELossDistrib(save_name, truth_file, flags, save_dir=model_dir)
 
 
 
@@ -135,18 +135,18 @@ def ensemble_predict_master(model_dir, Xpred_file, no_plot, plot_dir=None):
         print("entering:", model)
         if 'skip' in model or '.zip' in model :             # For skipping certain folders
             continue;
-        if os.path.isdir(os.path.join(model_dir,model)) or '.pth' in model:
+        if os.path.isdir(os.path.join(model_dir,model)) or '.pt' in model:
             model_list.append(os.path.join(model_dir, model))
     if plot_dir is None:
-        ensemble_predict(model_list, Xpred_file, model_dir, state_dict=state_dict, no_plot=no_plot)
+        return ensemble_predict(model_list, Xpred_file, model_dir, state_dict=state_dict, no_plot=no_plot)
     else:
-        ensemble_predict(model_list, Xpred_file, plot_dir, state_dict=state_dict, no_plot=no_plot)
+        return ensemble_predict(model_list, Xpred_file, plot_dir, state_dict=state_dict, no_plot=no_plot)
         
 
 
 def predict_ensemble_for_all(model_dir, Xpred_file_dirs, no_plot):
     for files in os.listdir(Xpred_file_dirs):
-        if 'Xpred' in files and 'meta_material' in files:
+        if 'Xpred' in files and 'Yang_sim' in files:
             # If this has already been predicted, skip this file!
             if os.path.isfile(Xpred_file_dirs.replace('Xpred','Ypred')):
                 continue
@@ -195,7 +195,7 @@ def creat_mm_dataset():
 
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
-    creat_mm_dataset()
+    #creat_mm_dataset()
     
    
     # Single evaluation in the data folder of each method
@@ -203,7 +203,7 @@ if __name__ == '__main__':
     #method_list = ['Tandem','MDN','INN_FrEIA','cINN','NA','VAE']
     #for method in method_list:
     #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../'+ method + '/data/', no_plot=False)  
-    #predict_ensemble_for_all('models/worst5', 'data/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../cINN/data/', no_plot=False)  
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']

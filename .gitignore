@@ -4,7 +4,10 @@
 **__
 **.sh
 */*.out
-
+**.jpg
+**ensemble_plot*
+Data/Yang_sim/state_dicts/*.png
+**.png
 **.out
 **.err
 */data

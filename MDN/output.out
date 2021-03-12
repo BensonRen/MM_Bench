@@ -550,3 +550,345 @@ size of sigma =  torch.Size([1024, 12, 3, 3])
 size of mu =  torch.Size([1024, 12, 3])
 This is Epoch 240, training loss -10.66228, validation loss 0.00055
 Epoch   241: reducing learning rate of group 0 to 2.0972e-05.
+Epoch   252: reducing learning rate of group 0 to 1.6777e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 260, training loss -10.75268, validation loss 0.00039
+Saving the model down...
+Epoch   263: reducing learning rate of group 0 to 1.3422e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 280, training loss -10.92921, validation loss 0.00042
+In read_data, flags.data_set = Peurifoy
+shape of data_x (50000, 3)
+shape of data_y (50000, 201)
+total number of training sample is 40000, the dimension of the feature is 3
+total number of test sample is 10000
+Making network now
+MDN(
+  (linears): ModuleList(
+    (0): Linear(in_features=201, out_features=500, bias=True)
+    (1): Linear(in_features=500, out_features=500, bias=True)
+    (2): Linear(in_features=500, out_features=500, bias=True)
+    (3): Linear(in_features=500, out_features=500, bias=True)
+    (4): Linear(in_features=500, out_features=500, bias=True)
+    (5): Linear(in_features=500, out_features=500, bias=True)
+  )
+  (bn_linears): ModuleList(
+    (0): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (mdn): MDN(
+    (pi): Sequential(
+      (0): Linear(in_features=500, out_features=17, bias=True)
+      (1): Softmax(dim=1)
+    )
+    (sigma): Linear(in_features=500, out_features=153, bias=True)
+    (mu): Linear(in_features=500, out_features=51, bias=True)
+  )
+)
+Start training now...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 0, training loss 0.45108, validation loss 0.29853
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 20, training loss -8.01095, validation loss 0.00241
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 40, training loss -8.39090, validation loss 0.00450
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 60, training loss -8.76940, validation loss 0.00140
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 80, training loss -8.94495, validation loss 0.00218
+Epoch    82: reducing learning rate of group 0 to 8.0000e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 100, training loss -9.49819, validation loss 0.00511
+Epoch   114: reducing learning rate of group 0 to 6.4000e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 120, training loss -9.19051, validation loss 0.00141
+Epoch   125: reducing learning rate of group 0 to 5.1200e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 140, training loss -9.74319, validation loss 0.00144
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 160, training loss -10.16887, validation loss 0.00139
+Saving the model down...
+Epoch   175: reducing learning rate of group 0 to 4.0960e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 180, training loss -9.80847, validation loss 0.00114
+Saving the model down...
+Epoch   186: reducing learning rate of group 0 to 3.2768e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 200, training loss -10.32943, validation loss 0.00072
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 220, training loss -10.57758, validation loss 0.00085
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 240, training loss -10.57752, validation loss 0.00060
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 260, training loss -10.64755, validation loss 0.00089
+Epoch   264: reducing learning rate of group 0 to 2.6214e-05.
+Epoch   275: reducing learning rate of group 0 to 2.0972e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 280, training loss -10.33184, validation loss 0.00075
+Epoch   286: reducing learning rate of group 0 to 1.6777e-05.
+Epoch   297: reducing learning rate of group 0 to 1.3422e-05.
+In read_data, flags.data_set = Peurifoy
+shape of data_x (50000, 3)
+shape of data_y (50000, 201)
+total number of training sample is 40000, the dimension of the feature is 3
+total number of test sample is 10000
+Making network now
+MDN(
+  (linears): ModuleList(
+    (0): Linear(in_features=201, out_features=500, bias=True)
+    (1): Linear(in_features=500, out_features=500, bias=True)
+    (2): Linear(in_features=500, out_features=500, bias=True)
+    (3): Linear(in_features=500, out_features=500, bias=True)
+    (4): Linear(in_features=500, out_features=500, bias=True)
+    (5): Linear(in_features=500, out_features=500, bias=True)
+    (6): Linear(in_features=500, out_features=500, bias=True)
+  )
+  (bn_linears): ModuleList(
+    (0): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (mdn): MDN(
+    (pi): Sequential(
+      (0): Linear(in_features=500, out_features=12, bias=True)
+      (1): Softmax(dim=1)
+    )
+    (sigma): Linear(in_features=500, out_features=108, bias=True)
+    (mu): Linear(in_features=500, out_features=36, bias=True)
+  )
+)
+Start training now...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 0, training loss 0.09818, validation loss 0.29729
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 20, training loss -7.84834, validation loss 0.00492
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 40, training loss -8.39813, validation loss 0.00479
+Saving the model down...
+Epoch    57: reducing learning rate of group 0 to 8.0000e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 60, training loss -8.20617, validation loss 0.00210
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 80, training loss -8.97839, validation loss 0.00168
+Saving the model down...
+Epoch    94: reducing learning rate of group 0 to 6.4000e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 100, training loss -8.87171, validation loss 0.00188
+Epoch   105: reducing learning rate of group 0 to 5.1200e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 120, training loss -9.26092, validation loss 0.00196
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 140, training loss -9.52476, validation loss 0.00090
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 160, training loss -9.61279, validation loss 0.00084
+Saving the model down...
+Epoch   177: reducing learning rate of group 0 to 4.0960e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 180, training loss -9.55262, validation loss 0.00082
+Saving the model down...
+Epoch   188: reducing learning rate of group 0 to 3.2768e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 200, training loss -9.83713, validation loss 0.00075
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 220, training loss -10.07549, validation loss 0.00062
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 240, training loss -10.23893, validation loss 0.00054
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 260, training loss -10.41974, validation loss 0.00049
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 12, 3, 3])
+size of mu =  torch.Size([1024, 12, 3])
+This is Epoch 280, training loss -10.53906, validation loss 0.00076
+Epoch   292: reducing learning rate of group 0 to 2.6214e-05.
+In read_data, flags.data_set = Peurifoy
+shape of data_x (50000, 3)
+shape of data_y (50000, 201)
+total number of training sample is 40000, the dimension of the feature is 3
+total number of test sample is 10000
+Making network now
+MDN(
+  (linears): ModuleList(
+    (0): Linear(in_features=201, out_features=500, bias=True)
+    (1): Linear(in_features=500, out_features=500, bias=True)
+    (2): Linear(in_features=500, out_features=500, bias=True)
+    (3): Linear(in_features=500, out_features=500, bias=True)
+    (4): Linear(in_features=500, out_features=500, bias=True)
+    (5): Linear(in_features=500, out_features=500, bias=True)
+    (6): Linear(in_features=500, out_features=500, bias=True)
+  )
+  (bn_linears): ModuleList(
+    (0): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (1): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (6): BatchNorm1d(500, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (mdn): MDN(
+    (pi): Sequential(
+      (0): Linear(in_features=500, out_features=17, bias=True)
+      (1): Softmax(dim=1)
+    )
+    (sigma): Linear(in_features=500, out_features=153, bias=True)
+    (mu): Linear(in_features=500, out_features=51, bias=True)
+  )
+)
+Start training now...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 0, training loss 0.27012, validation loss 0.30733
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 20, training loss -7.83868, validation loss 0.00465
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 40, training loss -8.41928, validation loss 0.00228
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 60, training loss -8.85007, validation loss 0.00117
+Saving the model down...
+Epoch    68: reducing learning rate of group 0 to 8.0000e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 80, training loss -8.65309, validation loss 0.00124
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 100, training loss -9.26118, validation loss 0.00152
+Epoch   104: reducing learning rate of group 0 to 6.4000e-05.
+Epoch   115: reducing learning rate of group 0 to 5.1200e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 120, training loss -9.14169, validation loss 0.00160
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 140, training loss -9.73814, validation loss 0.00126
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 160, training loss -9.96723, validation loss 0.00094
+Saving the model down...
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 180, training loss -10.12663, validation loss 0.00045
+Saving the model down...
+Epoch   187: reducing learning rate of group 0 to 4.0960e-05.
+Epoch   198: reducing learning rate of group 0 to 3.2768e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 200, training loss -9.85915, validation loss 0.00063
+Epoch   209: reducing learning rate of group 0 to 2.6214e-05.
+Epoch   220: reducing learning rate of group 0 to 2.0972e-05.
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 220, training loss -10.35492, validation loss 0.00066
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 240, training loss -10.67028, validation loss 0.00048
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 260, training loss -10.86941, validation loss 0.00050
+Doing Evaluation on the model now
+size of sigma =  torch.Size([1024, 17, 3, 3])
+size of mu =  torch.Size([1024, 17, 3])
+This is Epoch 280, training loss -11.03436, validation loss 0.00043
+Saving the model down...
