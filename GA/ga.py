@@ -1,15 +1,16 @@
 import os
 import time
 import torch
+import math
 from utils.helper_functions import simulator
 import numpy as np
 from utils.time_recorder import time_keeper
-import sys
+from utils.evaluation_helper import plotMSELossDistrib
 from model_maker import Net
+import sys
 from torch.utils.tensorboard import SummaryWriter
 
-# TODO: Test & Fix to get running
-# TODO: Test to get results
+# TODO: Over training problems
 # TODO: Have ga.py only hold GA object, and slip GA_manager functionality into class_wrapper
 
 class GA_manager(object):
@@ -30,31 +31,24 @@ class GA_manager(object):
                 self.ckpt_dir = os.path.join(ckpt_dir, flags.model_name)
         self.train_loader = train_loader                        # The train data loader
         self.test_loader = test_loader                          # The test data loader
-        self.log = SummaryWriter(self.ckpt_dir)                 # Create a summary writer for keeping the summary to the tensor board
         if not os.path.isdir(self.ckpt_dir) and not inference_mode:
             os.mkdir(self.ckpt_dir)
 
         self.model = Net(flags)
         self.load()
-        self.model.eval()
-        self.algorithm = GA(flags, self.model, self.make_loss, GA_eval_mode)
+        self.model.cuda().eval()
+        self.algorithm = GA(flags, self.model, self.make_loss)
 
         self.best_validation_loss = float('inf')                # Set the BVL to large number
 
     #TODO: Fill in all necessary class_wrapper functions
     def make_loss(self, logit,labels):
-        return torch.nn.functional.mse_loss(logit,labels)
+        return torch.mean(torch.pow(logit - labels,2), dim=1)
 
     def load(self):
-        """
-        Loading the model from the check point folder with name best_model_forward.pt
-        :return:
-        """
         if torch.cuda.is_available():
-            #self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_forward.pt'))
             self.model.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt')))
         else:
-            #self.model = torch.load(os.path.join(self.ckpt_dir, 'best_model_forward.pt'), map_location=torch.device('cpu'))
             self.model.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt'), map_location=torch.device('cpu')))
 
     def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=True):
@@ -107,6 +101,7 @@ class GA_manager(object):
                 if self.flags.data_set != 'Yang':
                     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
+                plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
         return Ypred_file, Ytruth_file
 
     def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False, save_all=False, ind=None,
@@ -128,12 +123,12 @@ class GA_manager(object):
         # expand the target spectra to eval batch size
         target_spectra_expand = target_spectra.expand([self.flags.population, -1])
 
-        self.algorithm.set_new_target(target_spectra_expand)
+        self.algorithm.set_pop_and_target(target_spectra_expand)
         for i in range(self.flags.generations):
             logit = self.algorithm.evolve()
             loss = self.make_loss(logit,target_spectra_expand)
 
-        good_index = torch.argmin(loss,dim=0)
+        good_index = torch.argmin(loss,dim=0).cpu().data.numpy()
         geometry_eval_input = self.algorithm.generation.cpu().data.numpy()
 
         if save_all:  # If saving all the results together instead of the first one
@@ -168,9 +163,9 @@ class GA_manager(object):
         MSE_list = np.mean(np.square(Ypred - target_spectra_expand.cpu().data.numpy()), axis=1)
         best_estimate_index = np.argmin(MSE_list)
         # print("The best performing one is:", best_estimate_index)
-        Xpred_best = np.reshape(np.copy(geometry_eval_input.cpu().data.numpy()[best_estimate_index, :]), [1, -1])
+        Xpred_best = np.reshape(np.copy(geometry_eval_input[best_estimate_index, :]), [1, -1])
         if save_Simulator_Ypred and self.flags.data_set != 'Yang':
-            Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
+            Ypred = simulator(self.flags.data_set, geometry_eval_input)
             if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])
         Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])
@@ -180,63 +175,54 @@ class GA_manager(object):
 
 
 class GA(object):
-    def __init__(self,flags,model,loss_fn, GA_eval_mode):
+    def __init__(self,flags,model,loss_fn):
         ' Initialize general GA parameters '
+        self.n_params = flags.linear[0]
         self.data_set = flags.data_set
         self.n_elite = flags.elitism
         self.k = flags.k
         self.n_pop = flags.population
         self.n_kids = flags.population - flags.elitism
-        self.n_pairs = int(self.n_kids/2)
+        self.n_pairs = int(math.ceil(self.n_kids/2))
         self.mut = flags.mutation
         self.cross_p = flags.crossover
         self.selector = self.make_selector(flags.selection_operator)
         self.X_op = self.make_X_op(flags.cross_operator)
         self.device = torch.device('cpu' if flags.use_cpu_only else 'cuda')
-        self.get_boundary_lower_bound_upper_bound(flags)
         self.loss_fn = loss_fn
-        self.eval = GA_eval_mode
+        self.eval = False
+        self.span,self.lower,self.upper = self.get_boundary_lower_bound_upper_bound()
 
         self.model = model
-        self.calculate_spectra = self.sim if GA_eval_mode else self.model
+        self.calculate_spectra = self.sim if self.eval else self.model
         self.target = None
         self.generation = None
         self.fitness = None
         self.p_child = None
 
+    def get_boundary_lower_bound_upper_bound(self):
+        if self.data_set == 'Yang':
+            return torch.tensor([2.272, 2.272, 2.272, 2.272, 2, 2, 2, 2], device=self.device,requires_grad=False), \
+                   torch.tensor([-1, -1, -1, -1, -1, -1, -1, -1],device=self.device,requires_grad=False), \
+                   torch.tensor([1.272, 1.272, 1.272, 1.272, 1, 1, 1, 1],device=self.device,requires_grad=False)
+        else:
+            return torch.tensor(self.n_params*[2],device=self.device,requires_grad=False),\
+                   torch.tensor(self.n_params*[-1],device=self.device,requires_grad=False), \
+                   torch.tensor(self.n_params*[1],device=self.device,requires_grad=False)
+
+    def initialize_in_range(self, n_samples):
+        return torch.rand(n_samples,self.n_params,device=self.device,requires_grad=False)*self.span + self.lower
+
     def sim(self,X):
-        return simulator(self.data_set,X)
+        return torch.from_numpy(simulator(self.data_set,X.cpu().data.numpy())).float().cuda()
 
     def set_pop_and_target(self, trgt):
         ' Initialize parameters that change with new targets: fitness, target, generation '
         self.target = trgt
         self.target.requires_grad = False
-        self.generation = self.initialize_uniformly_in_bounds((self.n_pop,3))
-        self.p_child = torch.empty(2*self.n_pairs,3, device=self.device, requires_grad=False)
+        self.generation = self.initialize_in_range(self.n_pop)
+        self.p_child = torch.empty(2*self.n_pairs,self.n_params, device=self.device, requires_grad=False)
         self.fitness = torch.empty(self.n_pop, device=self.device, requires_grad=False)
-
-    def initialize_uniformly_in_bounds(self,shape):
-        return self.upper_bound * torch.rand(*shape,device=self.device,requires_grad=False) + self.lower_bound
-
-    def get_boundary_lower_bound_upper_bound(self,flags):
-        """
-        Due to the fact that the batched dataset is a random subset of the training set, mean and range would fluctuate.
-        Therefore we pre-calculate the mean, lower boundary and upper boundary to avoid that fluctuation. Replace the
-        mean and bound of your dataset here
-        :return:
-        """
-        if flags.data_set == 'meta_material':
-            self.lower_bound = torch.tensor([-1, -1, -1, -1, -1, -1, -1, -1], device=self.device, requires_grad=False)
-            self.upper_bound = torch.tensor([1.272, 1.272, 1.272, 1.272, 1, 1, 1, 1], device=self.device, requires_grad=False)
-        elif flags.data_set == 'peurifoy':
-            self.lower_bound = -torch.ones(8, device=self.device, requires_grad=False) * 1.75
-            self.upper_bound = torch.ones(8, device=self.device, requires_grad=False) * 1.75
-        elif flags.data_set == 'chen':
-            self.lower_bound = torch.ones(5, device=self.device,requires_grad=False)*5
-            self.upper_bound = torch.ones(5, device=self.device, requires_grad=False)*50
-        else:
-            sys.exit(
-                "In GA, during initialization from uniform to dataset distrib: Your data_set entry is not correct, check again!")
 
     def make_selector(self, S_type):
         ' Returns selection operator used to select parent mating pairs '
@@ -260,39 +246,40 @@ class GA(object):
 
     def roulette(self):
         ' Performs roulette-wheel selection from self.generation using self.fitness '
-        total = torch.sum(self.fitness)
+        mock_fit = 1/self.fitness
+        total = torch.sum(mock_fit)
+        mock_fit = mock_fit/total
 
-        r_wheel = torch.cumsum(self.fitness,0)
-        spin_values = torch.rand(2*self.n_pairs, device=self.device)*total
+        r_wheel = torch.cumsum(mock_fit,0)
+        spin_values = torch.rand(2*self.n_pairs,1, device=self.device, requires_grad=False)
 
-        r_wheel = r_wheel.unsqueeze(-1).expand(2*self.n_pairs)
-        spin_values = spin_values.unsqueeze(0).expand(2*self.n_pairs)
+        r_wheel = r_wheel.unsqueeze(0).expand(2*self.n_pairs,-1)
+        dist = r_wheel - spin_values
+        dist[torch.heaviside(-dist,torch.tensor(0.0, device=self.device,requires_grad=False)).bool()] = 1
+        idxs = torch.argmin(dist, dim=1)
 
-        trigger_pos = torch.heaviside(r_wheel - spin_values, torch.tensor(1.0,device=self.device))
-        trigger_neg = torch.heaviside(spin_values - r_wheel, torch.tensor(1.0,device=self.device))
-        trigger_idx = trigger_pos - trigger_neg
-
-        self.p_child = self.generation[torch.argmax(trigger_idx, dim=0),:].clone()
-        self.p_child = self.p_child.unsqueeze(1).view(self.n_pairs,2,3) #REPLACE 3 other numbers hardcode
+        self.p_child = self.generation[idxs,:].clone()
+        self.p_child = self.p_child.unsqueeze(1).view(self.n_pairs,2,self.n_params)
 
     def decimation(self):
         ' Performs population decimation selection from self.generation assuming it is sorted by fitness '
-        self.p_child = self.generation[torch.randint(self.k,(2*self.n_pairs,),device=self.device),:].clone()
-        self.p_child = self.p_child.unsqueeze(1).view(self.n_pairs,2,3) #REPLACE 3 other numbers hardcode
+        self.p_child = self.generation[torch.randint(self.k,(2*self.n_pairs,),device=self.device,requires_grad=False),:].clone()
+        self.p_child = self.p_child.unsqueeze(1).view(self.n_pairs,2,self.n_params)
 
     def tournament(self):
         ' Performs tournament-style selection from self.generation assuming it is sorted by fitness '
         for row in range(2*self.n_pairs):
-            self.p_child[row] = self.generation[torch.min(torch.randperm(self.n_pop,device=self.device)[:self.k])]
-        self.p_child = self.p_child.clone().unsqueeze(1).view(self.n_pairs,2,3) #REPLACE 3 other numbers hardcode
+            self.p_child[row] = self.generation[torch.min(torch.randperm(self.n_pop,device=self.device,requires_grad=False)[:self.k])]
+        self.p_child = self.p_child.clone().unsqueeze(1).view(self.n_pairs,2,self.n_params)
 
     def u_cross(self):
         ' Performs uniform crossover given pairs tensor arranged sequentially in parent-pairs '
-        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device) - self.cross_p,
-                                 torch.tensor(1.0, device=self.device)).bool()
+        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device, requires_grad=False) - self.cross_p,
+                                 torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
         selectX = self.p_child[x_mask]
         n_selected = selectX.shape[0]
-        site_mask = torch.rand(n_selected,3, device=self.device)
+        site_mask = torch.heaviside(torch.rand(n_selected,self.n_params, device=self.device, requires_grad=False)-0.5,
+                                    torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
 
         parentC = self.p_child.clone()
 
@@ -305,13 +292,12 @@ class GA(object):
             p0[site_mask[i]] = p1c[site_mask[i]]
             p1[site_mask[i]] = p0c[site_mask[i]]
 
-
     def s_cross(self):
         ' Performs single-point crossover given pairs tensor arranged sequentially in parent-pairs '
-        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device) - self.cross_p,
-                                 torch.tensor(1.0, device=self.device)).bool()
+        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device, requires_grad=False) - self.cross_p,
+                                 torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
         selectX = self.p_child[x_mask]
-        siteX = torch.randint(1, 3, (selectX.shape[0],), device=self.device)
+        siteX = torch.randint(1, self.n_params, (selectX.shape[0],), device=self.device, requires_grad=False)
         n_selected = selectX.shape[0]
 
         parentC = self.p_child.clone()
@@ -322,18 +308,15 @@ class GA(object):
             p1 = self.p_child[i][1]
             p1c = parentC[i][1]
 
-            p0[:siteX[i]] = p1c[siteX[i]:]
-            p1[siteX[i]:] = p0c[:siteX[i]]
-
+            p0[siteX[i]:] = p1c[siteX[i]:]
+            p1[siteX[i]:] = p0c[siteX[i]:]
 
     def mutate(self):
         ' Performs single-point random mutation given children tensor '
-        children = self.p_child.view(2*self.n_pairs,3)[:self.n_kids]
-        param_prob = torch.heaviside(torch.rand_like(children) - self.mut, torch.tensor(1.0,device=self.device)).bool()
-        self.p_child[param_prob] = self.initialize_uniformly_in_bounds(self.p_child[param_prob].shape)
-
-    def calculate_fitness(self):
-        self.fitness = 0
+        self.p_child = self.p_child.view(2*self.n_pairs,self.n_params)
+        param_prob = torch.heaviside(self.mut - self.initialize_in_range(2*self.n_pairs),
+                                     torch.tensor(1.0,device=self.device,requires_grad=False)).bool()
+        self.p_child[param_prob] = (torch.rand_like(self.p_child[param_prob]) - 0.5)/0.5
 
     def evolve(self):
         ' Function does the genetic algorithm. It evaluates the next generation given previous one'
@@ -343,10 +326,10 @@ class GA(object):
 
         # Evaluate fitness of current population
         logit = self.calculate_spectra(self.generation)
-        self.fitness = self.loss_fn(logit,self.trgt)
+        self.fitness = self.loss_fn(logit,self.target)
 
         # Select parents for mating and sort individuals in generation
-        self.fitness, sorter = torch.sort(self.fitness)
+        self.fitness, sorter = torch.sort(self.fitness,descending=False)
         self.generation = self.generation[sorter, :]
         self.selector()
 

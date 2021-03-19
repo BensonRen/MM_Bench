@@ -19,7 +19,7 @@ K = 5
 # Categorical Params
 SELECT_OPS = 'roulette' # 'decimation' 'tournament'
 CROSS_OPS = 'single-point' # 'uniform'
-GA_EVAL = True # Geometry -> Spectra calculation done by simulator function rather than a neural network
+GA_EVAL = False # Geometry -> Spectra calculation done by simulator function rather than a neural network
 
 # Optimization Params
 EVAL_STEP = 20
@@ -46,7 +46,7 @@ EVAL_MODEL = "ga"
 
 # NA Specific Parameters
 USE_LORENTZ = False
-LINEAR = [3, 400, 400, 400, 201]
+LINEAR = [8, 400, 400, 400, 201]
 
 CONV_OUT_CHANNEL = [4, 4, 4]
 CONV_KERNEL_SIZE = [3, 3, 5]

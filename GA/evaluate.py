@@ -18,7 +18,7 @@ from utils.evaluation_helper import get_test_ratio_helper
 # Libs
 import numpy as np
 import matplotlib.pyplot as plt
-from thop import profile, clever_format
+#from thop import profile, clever_format
 
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, MSE_Simulator=False,
@@ -95,7 +95,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     for eval_model in data_set_list:
         for j in range(5):
             useless_flags = flag_reader.read_flag()
-            useless_flags.eval_model = eval_model + str(j)
+            useless_flags.eval_model = 'retrain' + str(j) + eval_model
             evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, eval_data_all=eval_data_all,
                                 save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
