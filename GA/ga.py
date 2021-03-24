@@ -10,7 +10,6 @@ from model_maker import Net
 import sys
 from torch.utils.tensorboard import SummaryWriter
 
-# TODO: Over training problems
 # TODO: Have ga.py only hold GA object, and slip GA_manager functionality into class_wrapper
 
 class GA_manager(object):
@@ -182,7 +181,7 @@ class GA(object):
         self.n_elite = flags.elitism
         self.k = flags.k
         self.n_pop = flags.population
-        self.n_kids = flags.population - flags.elitism
+        self.n_kids = self.n_pop - self.n_elite
         self.n_pairs = int(math.ceil(self.n_kids/2))
         self.mut = flags.mutation
         self.cross_p = flags.crossover
@@ -206,6 +205,11 @@ class GA(object):
                    torch.tensor([-1, -1, -1, -1, -1, -1, -1, -1],device=self.device,requires_grad=False), \
                    torch.tensor([1.272, 1.272, 1.272, 1.272, 1, 1, 1, 1],device=self.device,requires_grad=False)
         else:
+            '''
+            return torch.tensor(self.n_params * [8], device=self.device, requires_grad=False), \
+                   torch.tensor(self.n_params * [0], device=self.device, requires_grad=False), \
+                   torch.tensor(self.n_params * [8], device=self.device, requires_grad=False)
+            '''
             return torch.tensor(self.n_params*[2],device=self.device,requires_grad=False),\
                    torch.tensor(self.n_params*[-1],device=self.device,requires_grad=False), \
                    torch.tensor(self.n_params*[1],device=self.device,requires_grad=False)
@@ -246,6 +250,7 @@ class GA(object):
 
     def roulette(self):
         ' Performs roulette-wheel selection from self.generation using self.fitness '
+        #mock_fit = self.fitness
         mock_fit = 1/self.fitness
         total = torch.sum(mock_fit)
         mock_fit = mock_fit/total
@@ -263,64 +268,72 @@ class GA(object):
 
     def decimation(self):
         ' Performs population decimation selection from self.generation assuming it is sorted by fitness '
-        self.p_child = self.generation[torch.randint(self.k,(2*self.n_pairs,),device=self.device,requires_grad=False),:].clone()
+        idxs = torch.randint(self.k,(2*self.n_pairs,),device=self.device,requires_grad=False)
+        self.p_child = self.generation[idxs].clone()
         self.p_child = self.p_child.unsqueeze(1).view(self.n_pairs,2,self.n_params)
 
     def tournament(self):
         ' Performs tournament-style selection from self.generation assuming it is sorted by fitness '
         for row in range(2*self.n_pairs):
-            self.p_child[row] = self.generation[torch.min(torch.randperm(self.n_pop,device=self.device,requires_grad=False)[:self.k])]
+            competitors = torch.randperm(self.n_pop,device=self.device,requires_grad=False)[:self.k]
+            self.p_child[row] = self.generation[torch.min(competitors)]
         self.p_child = self.p_child.clone().unsqueeze(1).view(self.n_pairs,2,self.n_params)
 
     def u_cross(self):
         ' Performs uniform crossover given pairs tensor arranged sequentially in parent-pairs '
-        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device, requires_grad=False) - self.cross_p,
-                                 torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
-        selectX = self.p_child[x_mask]
-        n_selected = selectX.shape[0]
+        rand_vec = torch.rand(self.n_pairs, device=self.device, requires_grad=False)
+        idcs = (rand_vec < self.cross_p).nonzero().squeeze()
+        n_selected = idcs.shape[0]
         site_mask = torch.heaviside(torch.rand(n_selected,self.n_params, device=self.device, requires_grad=False)-0.5,
                                     torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
 
         parentC = self.p_child.clone()
 
-        for i in range(n_selected):
+        for c,i in enumerate(idcs):
             p0 = self.p_child[i][0]
             p0c = parentC[i][0]
             p1 = self.p_child[i][1]
             p1c = parentC[i][1]
 
-            p0[site_mask[i]] = p1c[site_mask[i]]
-            p1[site_mask[i]] = p0c[site_mask[i]]
+            p0[site_mask[c]] = p1c[site_mask[c]]
+            p1[site_mask[c]] = p0c[site_mask[c]]
 
     def s_cross(self):
         ' Performs single-point crossover given pairs tensor arranged sequentially in parent-pairs '
-        x_mask = torch.heaviside(torch.rand(self.n_pairs, device=self.device, requires_grad=False) - self.cross_p,
-                                 torch.tensor(1.0, device=self.device, requires_grad=False)).bool()
-        selectX = self.p_child[x_mask]
-        siteX = torch.randint(1, self.n_params, (selectX.shape[0],), device=self.device, requires_grad=False)
-        n_selected = selectX.shape[0]
+        rand_vec = torch.rand(self.n_pairs, device=self.device, requires_grad=False)
+        idcs = (rand_vec < self.cross_p).nonzero().squeeze()
+        n_selected = idcs.shape[0]
+
+        #idcs = (rand_vec < self.cross_p).nonzero()
+        #if idcs.shape[0] != 1:
+        #    idcs = idcs.squeeze()
+        #    n_selected = idcs.shape[0]
+        #else:
+        #    n_selected = 0
+        #    idcs = ()
+
+        siteX = torch.randint(1, self.n_params, (n_selected,), device=self.device, requires_grad=False)
 
         parentC = self.p_child.clone()
 
-        for i in range(n_selected):
+        for c,i in enumerate(idcs):
             p0 = self.p_child[i][0]
             p0c = parentC[i][0]
             p1 = self.p_child[i][1]
             p1c = parentC[i][1]
 
-            p0[siteX[i]:] = p1c[siteX[i]:]
-            p1[siteX[i]:] = p0c[siteX[i]:]
+            p0[siteX[c]:] = p1c[siteX[c]:]
+            p1[siteX[c]:] = p0c[siteX[c]:]
 
     def mutate(self):
         ' Performs single-point random mutation given children tensor '
         self.p_child = self.p_child.view(2*self.n_pairs,self.n_params)
-        param_prob = torch.heaviside(self.mut - self.initialize_in_range(2*self.n_pairs),
-                                     torch.tensor(1.0,device=self.device,requires_grad=False)).bool()
-        self.p_child[param_prob] = (torch.rand_like(self.p_child[param_prob]) - 0.5)/0.5
+        r_vec = torch.rand_like(self.p_child)
+        param_prob = self.mut > r_vec
+        self.p_child[param_prob] = self.initialize_in_range(self.p_child.shape[0])[param_prob]
 
     def evolve(self):
         ' Function does the genetic algorithm. It evaluates the next generation given previous one'
-
         if self.target is None:
             raise(Exception('Set target spectra before running the GA'))
 
@@ -329,9 +342,10 @@ class GA(object):
         self.fitness = self.loss_fn(logit,self.target)
 
         # Select parents for mating and sort individuals in generation
-        self.fitness, sorter = torch.sort(self.fitness,descending=False)
-        self.generation = self.generation[sorter, :]
+        self.fitness, sorter = torch.sort(self.fitness,descending=False) #descending=True)
+        self.generation = self.generation[sorter]
         self.selector()
+
 
         # Do crossover followed by mutation to create children from parents
         self.X_op()
@@ -339,4 +353,5 @@ class GA(object):
 
         # Combine children and elites into new generation
         self.generation[self.n_elite:] = self.p_child[:self.n_kids]
+        #print(self.fitness[0])
         return logit
