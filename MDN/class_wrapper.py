@@ -187,7 +187,7 @@ class Network(object):
                         geometry = geometry.cuda()
                         spectra = spectra.cuda()
                     pi, sigma, mu = self.model(spectra)  # Get the output
-                    if self.flags.data_set == 'meta_material':                  # since meta-material does not have simulator
+                    if self.flags.data_set == 'Yang_sim':                  # since meta-material does not have simulator
                         loss = self.make_loss(pi, sigma, mu, geometry)               # Get the loss tensor
                         test_loss += loss.detach().cpu().numpy()
                     else:
@@ -258,15 +258,16 @@ class Network(object):
         tk.record(1)
         return Ypred_file, Ytruth_file
 
-    def evaluate_multiple_time(self, time=200, save_dir='../multi_eval/MDN/'):
+    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/MM_bench_multi_eval/MDN/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result
         :return:
         """
-        tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
         save_dir = os.path.join(save_dir, self.flags.data_set)
+        tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         for i in range(time):
             self.evaluate(save_dir=save_dir, prefix='inference' + str(i))
             tk.record(i)
-    

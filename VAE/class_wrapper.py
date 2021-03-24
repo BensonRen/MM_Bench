@@ -242,8 +242,7 @@ class Network(object):
         tk.record(1)                # Record the total time of the eval period
         return Ypred_file, Ytruth_file
     
-    
-    def evaluate_multiple_time(self, time=200, save_dir='../multi_eval/VAE/'):
+    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/MM_bench_multi_eval/VAE/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result
@@ -251,6 +250,8 @@ class Network(object):
         """
         save_dir = os.path.join(save_dir, self.flags.data_set)
         tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         for i in range(time):
             self.evaluate(save_dir=save_dir, prefix='inference' + str(i))
             tk.record(i)

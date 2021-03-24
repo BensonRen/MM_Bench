@@ -56,29 +56,31 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    #reg_scale_list = [1e-3,  1e-4,  5e-3]
-    kl_coeff_list = [1e-3, 5e-3, 1e-4, 5e-4, 5e-5]
-    layer_size_list = [500, 1000]
-    dim_z_list = [5, 15, 25]
+    reg_scale_list = [1e-3,  1e-4,  5e-3]
+    kl_coeff_list = [5e-4,1e-4,1e-3]
+    layer_size_list = [200, 500, 750]
+    dim_z_list = [6,7,8,9,10]
     for kl_coeff in kl_coeff_list:
-        for layer_num in range(7,12):
+        for layer_num in range(4,10):
             for layer_size in layer_size_list:
                 for dim_z in dim_z_list:
-                    flags = flag_reader.read_flag()  	#setting the base case
-                    flags.dim_z = dim_z
-                    flags.kl_coeff = kl_coeff
-                    # Decoder arch
-                    linear_d = [layer_size  for j in range(layer_num)]
-                    linear_d[0] = flags.dim_y + flags.dim_z
-                    linear_d[-1] = flags.dim_x
-                    # Encoder arch
-                    linear_e = [layer_size  for j in range(layer_num)]
-                    linear_e[0] = flags.dim_y + flags.dim_x
-                    linear_e[-1] = 2 * flags.dim_z
-                    flags.linear_d = linear_d
-                    flags.linear_e = linear_e
-                    flags.model_name = flags.data_set + '_kl_coeff_'+str(kl_coeff) + '_layer_num_' + str(layer_num) + '_unit_' + str(layer_size) + '_dim_z_' + str(dim_z) + '_reg_scale_' + str(flags.reg_scale)
-                    training_from_flag(flags)
+                    for reg_scale in reg_scale_list:
+                        flags = flag_reader.read_flag()  	#setting the base case
+                        flags.reg_scale = reg_scale
+                        flags.dim_z = dim_z
+                        flags.kl_coeff = kl_coeff
+                        # Decoder arch
+                        linear_d = [layer_size  for j in range(layer_num)]
+                        linear_d[0] = flags.dim_y + flags.dim_z
+                        linear_d[-1] = flags.dim_x
+                        # Encoder arch
+                        linear_e = [layer_size  for j in range(layer_num)]
+                        linear_e[0] = flags.dim_y + flags.dim_x
+                        linear_e[-1] = 2 * flags.dim_z
+                        flags.linear_d = linear_d
+                        flags.linear_e = linear_e
+                        flags.model_name = flags.data_set + '_kl_coeff_'+str(kl_coeff) + '_layer_num_' + str(layer_num) + '_unit_' + str(layer_size) + '_dim_z_' + str(dim_z) + '_reg_scale_' + str(flags.reg_scale)
+                        training_from_flag(flags)
 
 if __name__ == '__main__':
     # torch.manual_seed(1)

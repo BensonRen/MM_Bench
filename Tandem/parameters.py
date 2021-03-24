@@ -2,9 +2,9 @@
 Hyper-parameters of the Tandem model
 """
 # Define which data set you are using
-#DATA_SET = 'Yang_sim'
+DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
-DATA_SET = 'Peurifoy'
+#DATA_SET = 'Peurifoy'
 
 TEST_RATIO = 0.2
 
@@ -24,11 +24,11 @@ CONV_STRIDE_B = [1, 1, 2]
 
 """
 # Model Architectural Params for gaussian mixture dataset
-LINEAR_F = [3, 1000, 1000, 1000, 1000, 1000, 1000, 201]
+LINEAR_F = [14, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1000]
 #LINEAR_F = [3, 500, 500, 500, 500, 500,  256]
-CONV_OUT_CHANNEL_F = []
-CONV_KERNEL_SIZE_F = []
-CONV_STRIDE_F = []
+CONV_OUT_CHANNEL_F = [4,4,4]
+CONV_KERNEL_SIZE_F = [4,3,3]
+CONV_STRIDE_F = [2,1,1]
 
 #LINEAR_B = [2, 500, 500, 500, 500, 500, 3]
 LINEAR_B = [201, 500, 500, 500, 500, 500, 3]

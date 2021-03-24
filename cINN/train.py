@@ -64,17 +64,18 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    reg_scale_list = [5e-3]
-    lambda_mse_list = [100, 10, 1]
+    reg_scale_list = [1e-4, 5e-4, 1e-5]
+    lambda_mse_list = [300, 100,  10, 1, 0.1, 0.01, 0.001]
     for reg_scale in reg_scale_list:
-        for couple_layer_num in range(4,10):    
+        for couple_layer_num in range(4,12):    
             for lambda_mse in lambda_mse_list:
-                flags = flag_reader.read_flag()  	#setting the base case
-                flags.couple_layer_num = couple_layer_num
-                flags.lambda_mse = lambda_mse
-                flags.reg_scale = reg_scale
-                flags.model_name = flags.data_set + 'couple_layer_num' + str(couple_layer_num) + 'labmda_mse' + str(lambda_mse) + '_lr_' + str(flags.lr) + '_reg_scale_' + str(reg_scale)
-                training_from_flag(flags)
+                for i in range(5):
+                    flags = flag_reader.read_flag()  	#setting the base case
+                    flags.couple_layer_num = couple_layer_num
+                    flags.lambda_mse = lambda_mse
+                    flags.reg_scale = reg_scale
+                    flags.model_name = flags.data_set + 'couple_layer_num' + str(couple_layer_num) + 'labmda_mse' + str(lambda_mse) + '_lr_' + str(flags.lr) + '_reg_scale_' + str(reg_scale) + '_trail_' + str(i)
+                    training_from_flag(flags)
 
 if __name__ == '__main__':
     # Read the parameters to be set

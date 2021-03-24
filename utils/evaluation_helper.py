@@ -17,11 +17,11 @@ def get_test_ratio_helper(flags):
     """
     if flags.data_set == 'Chen':
         #return 0.00781                       # 100 in total
-        return 0.002
+        return 0.004
         #return 0.039                        # 500 in total
     elif flags.data_set == 'Peurifoy':
         #return 0.0125                        # 100 in total
-        return 0.002
+        return 0.004
         #return 0.1
         #return 0.0625                        # 500 in total
     elif flags.data_set == 'Yang':
@@ -83,7 +83,7 @@ def plotMSELossDistrib(pred_file, truth_file, flags, save_dir='data/'):
     plt.hist(mse, bins=100)
     plt.xlabel('Mean Squared Error')
     plt.ylabel('cnt')
-    plt.suptitle('(Avg MSE={:.4e})'.format(np.mean(mse)))
+    plt.suptitle('(Avg MSE={:.4e}, 25%={:.3e}, 75%={:.3e})'.format(np.mean(mse), np.percentile(mse, 25), np.percentile(mse, 75)))
     eval_model_str = flags.eval_model.replace('/','_')
     plt.savefig(os.path.join(save_dir,
                             '{}.png'.format(eval_model_str)))

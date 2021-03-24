@@ -2,9 +2,9 @@
 Params for Back propagation model
 """
 # Define which data set you are using
-#DATA_SET = 'Yang_sim'
+DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
-DATA_SET = 'Peurifoy'
+#DATA_SET = 'Peurifoy'
 TEST_RATIO = 0.2
 
 # Model Architectural Params for meta_material data Set
@@ -35,7 +35,4 @@ NORMALIZE_INPUT = True
 
 # Running specific
 USE_CPU_ONLY = False
-EVAL_MODEL = 'meta_material'
-#EVAL_MODEL = 'sine_wave'
-#EVAL_MODEL = 'ballistics'
-#EVAL_MODEL = 'robotic_arm'
+EVAL_MODEL = None 

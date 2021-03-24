@@ -14,6 +14,7 @@ from utils import helper_functions
 from utils.evaluation_helper import plotMSELossDistrib
 from utils.evaluation_helper import get_test_ratio_helper
 # Libs
+from NA import predict
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, modulized_flag=False):
     """
@@ -82,20 +83,13 @@ def evaluate_all(models_dir="models"):
 
 
 def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_flag=False):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     data_set_list = ['meta_material']
-     #data_set_list = ["ballistics"]
-     #data_set_list = ["meta_material"]
-     #data_set_list = ['sine_wave','ballistics','robotic_arm']
-     #data_set_list = ['sine_wave','ballistics','robotic_arm','meta_material']
-     for eval_model in data_set_list:
-        for j in range(1):
-            useless_flags = flag_reader.read_flag()
-            useless_flags.eval_model = "retrain" + str(j) + eval_model
-            evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, 
-                                eval_data_all=eval_data_all, modulized_flag=modulized_flag)
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    for model in os.listdir('models/'):
+        if 'best' in model:
+            evaluate_from_model(model, multi_flag=multi_flag, 
+                        eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
@@ -117,5 +111,6 @@ if __name__ == '__main__':
     ### Call the "evaluate_different_dataset" function to evaluate all the models in the "models" folder, the multi_flag is to control whether evaulate across T or only do T=1 (if set to False), make sure you change the model name in function if you have any different model name 
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False)
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
-    #evaluate_different_dataset(modulized_flag=True)
-    evaluate_all("models/Chen/")
+    evaluate_different_dataset(multi_flag=True)
+    #evaluate_all("models/Yang/sweep4/")
+    #evaluate_all("models/Chen/")

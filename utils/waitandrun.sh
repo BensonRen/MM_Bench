@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CUDA_VISIBLE_DEVICES=0
-export PYTHONPATH="/home/sr365/Why_NA/:$PYTHONPATH"
+export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
 #PID=294818
@@ -20,7 +20,8 @@ PWD=`pwd`
 #COMMAND=delete.py
 #COMMAND=create_folder_modulized.py
 #COMMAND=delete_after_BP_FF.py
-COMMAND=plotsAnalysis.py
+#COMMAND=plotsAnalysis.py
+COMMAND=plot_swipe.py
 SPACE='        '
 SECONDS=0
 #python delete.py
