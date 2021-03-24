@@ -3,22 +3,22 @@ Params for Back propagation model
 """
 # Define which data set you are using
 #DATA_SET = 'Yang_sim'
-#DATA_SET = 'Chen'
-DATA_SET = 'Peurifoy'
+DATA_SET = 'Chen'
+#DATA_SET = 'Peurifoy'
 TEST_RATIO = 0.2
 
 # Model Architectural Params for meta_material data Set
 USE_LORENTZ = False
 LINEAR = [3, 400, 400, 400, 201]
-#CONV_OUT_CHANNEL = [4, 4, 4]
-#CONV_KERNEL_SIZE = [8, 5, 5]
-#CONV_STRIDE = [2, 1, 1]
+CONV_OUT_CHANNEL = []
+CONV_KERNEL_SIZE = []
+CONV_STRIDE = []
 
-# Model Architectural Params for gaussian mixture DataSet
+# Model Architectural Params for Yang dataset
 #LINEAR = [4, 500, 500, 500, 500, 1]                 # Dimension of data set cross check with data generator
-CONV_OUT_CHANNEL = [4, 4, 4]
-CONV_KERNEL_SIZE = [3, 3, 5]
-CONV_STRIDE = [1, 1, 1]
+#CONV_OUT_CHANNEL = [4, 4, 4]
+#CONV_KERNEL_SIZE = [3, 3, 5]
+#CONV_STRIDE = [2, 1, 1]
 
 
 # Optimizer Params

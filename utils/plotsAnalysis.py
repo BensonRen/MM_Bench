@@ -241,8 +241,11 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
                         try:
                             df['linear_unit'] = eval(df['linear'][0])[1]
                         except:
-                            df['linear_unit'] = eval(df['linear_b'][0])[1]
-                        df['best_validation_loss'] = get_bvl(file_path)
+                            try:
+                                df['linear_unit'] = eval(df['linear_b'][0])[1]
+                            except:
+                                df['linear_unit'] = eval(df['linear_e'][0])[1]
+                        #df['best_validation_loss'] = get_bvl(file_path)
                     if feature_2_name == 'kernel_second':                       # If comparing different kernel convs
                         print(df['conv_kernel_size'])
                         print(type(df['conv_kernel_size']))
@@ -253,6 +256,8 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
                                                 eval(str(df[feature_2_name][0])), feature_1_name, feature_2_name))
     
     print("df_list =", df_list)
+    if len(df_list) == 0:
+        print("Your df list is empty, which means you probably mis-spelled the folder name or your folder does not have any parameters.txt?")
     #Concatenate all the dfs into a single aggregate one for 2 dimensional usee
     df_aggregate = pd.concat(df_list, ignore_index = True, sort = False)
     df_aggregate.astype({heat_value_name: 'float'})

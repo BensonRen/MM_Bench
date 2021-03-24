@@ -1,9 +1,16 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=3
 export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
+#PIDA=714535
+#PIDB=714632
+#while [ -e /proc/$PIDA ] || [ -e /proc/$PIDB]
+#do
+#    echo "Process: $PID is still running" 
+#        sleep 10m
+#done
 #PID=5023
 #while [ -e /proc/$PID ]
 #do

@@ -41,9 +41,9 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.backprop_step = eval_flags.backprop_step
     flags.test_ratio = get_test_ratio_helper(flags)
 
-    if flags.data_set == 'meta_material':
+    if flags.data_set == 'Yang_sim':
         save_Simulator_Ypred = False
-        print("this is MM dataset, setting the save_Simulator_Ypred to False")
+        print("this is Yang sim dataset, setting the save_Simulator_Ypred to False")
     flags.batch_size = 1                            # For backprop eval mode, batchsize is always 1
     flags.lr = init_lr
     flags.BDY_strength = BDY_strength
@@ -71,7 +71,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     # Evaluation process
     print("Start eval now:")
     if multi_flag:
-        dest_dir = '/data/users/ben/multi_eval/NA/'
+        dest_dir = '/home/sr365/MM_bench_multi_eval/NA/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
         if not os.path.isdir(dest_dir):
             os.mkdir(dest_dir)
@@ -103,12 +103,11 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
      """
      This function is to evaluate all different datasets in the model with one function call
      """
-     data_set_list = ["Yang_param_"]
-     for eval_model in data_set_list:
-        for j in range(5):
-            useless_flags = flag_reader.read_flag()
-            useless_flags.eval_model = eval_model + str(j) 
-            evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, eval_data_all=eval_data_all, save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
+     ## Evaluate all models with "reatrain" and dataset name in models/
+     for model in os.listdir('models/'):
+         if 'best' in model:
+             evaluate_from_model(model, multi_flag=multi_flag, 
+                          eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
 def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
      """

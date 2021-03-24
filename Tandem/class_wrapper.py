@@ -118,11 +118,15 @@ class Network(object):
 
     def get_boundary_lower_bound_uper_bound(self):
         if self.flags.data_set == 'Chen': 
-            return np.array([2 for i in range(5)]), np.array([-1 for i in range(5)]), np.array([1 in range(5)])
+            dim = 5
         elif self.flags.data_set == 'Peurifoy': 
-            return np.array([2 for i in range(3)]), np.array([-1 for i in range(3)]), np.array([1 in range(3)])
+            dim = 3
+        elif self.flags.data_set == 'Yang_sim': 
+            dim = 14
         else:
             sys.exit("In Tandem, during getting the boundary loss boundaries, Your data_set entry is not correct, check again!")
+        
+        return np.array([2 for i in range(dim)]), np.array([-1 for i in range(dim)]), np.array([1 in range(dim)])
 
     def make_optimizer_f(self):
         """
@@ -409,16 +413,16 @@ class Network(object):
         tk.record(1)
         return Ypred_file, Ytruth_file
 
-    def evaluate_multiple_time(self, time=200, save_dir='../multi_eval/Tandem/'):
+    def evaluate_multiple_time(self, time=200, save_dir='/home/sr365/MM_bench_multi_eval/Tandem/'):
         """
         Make evaluation multiple time for deeper comparison for stochastic algorithms
         :param save_dir: The directory to save the result
         :return:
         """
+        save_dir = os.path.join(save_dir, self.flags.data_set)
         tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
-        save_dir += self.flags.data_set
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         for i in range(time):
             self.evaluate(save_dir=save_dir, prefix='inference' + str(i))
             tk.record(i)
-
-    # This is for getting each

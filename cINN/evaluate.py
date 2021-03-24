@@ -86,22 +86,14 @@ def evaluate_all(models_dir="models"):
 
 
 def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_flag=False):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     data_set_list = ["ballistics"]
-     #data_set_list = ["meta_material"]
-     #data_set_list = ["robotic_arm","sine_wave","ballistics"]
-     #data_set_list = ["robotic_arm","sine_wave","ballistics","meta_material"]
-     for eval_model in data_set_list:
-        for j in range(1):
-            useless_flags = flag_reader.read_flag()
-            #for model in os.listdir('models/'):
-            #    if eval_model in model and 'retrain' in model:
-                    #useless_flags.eval_model = model
-            useless_flags.eval_model = "retrain" + str(j) + eval_model
-            evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, 
-                                        eval_data_all=eval_data_all, modulized_flag=modulized_flag)
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    ## Evaluate all models with "reatrain" and dataset name in models/
+    for model in os.listdir('models/'):
+        if 'best' in model:
+            evaluate_from_model(model, multi_flag=multi_flag, 
+                        eval_data_all=eval_data_all, modulized_flag=modulized_flag)
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
@@ -125,9 +117,11 @@ if __name__ == '__main__':
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
     
     
-    #evaluate_different_dataset(modulized_flag=True)
+    evaluate_different_dataset(multi_flag=True)
     
     #evaluate_all("models/Chen_nocup_reg")
-    evaluate_all("models/Yang")
-    #evaluate_all("models/Peurifoy")
+    #evaluate_all("models/Yang/reg1e-4/")
+    #evaluate_all("models/Yang/reg5e-4/")
+    #evaluate_all("models/Yang/reg1e-5/")
+    #evaluate_all("models/Peurifoy_new_swipe")
 

@@ -4,19 +4,20 @@ export CUDA_VISIBLE_DEVICES=1
 export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
-PID=52544
-while [ -e /proc/$PID ]
-do
-    echo "Process: $PID is still running" 
-        sleep 10m
-done
+#PIDA=714535
+#PIDB=714632
+#while [ -e /proc/$PIDA ] || [ -e /proc/$PIDB]
+#do
+#    echo "Process: $PID is still running" 
+#        sleep 10m
+#done
 
 TIME=`date`
 PWD=`pwd`
 # The command to execute
-#COMMAND=evaluate.py
+COMMAND=evaluate.py
 #COMMAND=predict.py
-COMMAND=train.py
+#COMMAND=train.py
 #COMMAND=create_folder_modulized.py
 #COMMAND= delete_after_BP_FF.py
 #COMMAND plotsAnalysis.py

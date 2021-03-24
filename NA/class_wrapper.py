@@ -100,15 +100,7 @@ class Network(object):
             X_mean = (X_lower_bound + X_upper_bound) / 2        # Get the mean
             relu = torch.nn.ReLU()
             BDY_loss_all = 1 * relu(torch.abs(G - self.build_tensor(X_mean)) - 0.5 * self.build_tensor(X_range))
-            # Meta-material has a higher penalty
-            if self.flags.data_set == 'ballistics':
-                BDY_loss = 0.001*torch.sum(BDY_loss_all)
-            elif self.flags.data_set == 'sine_wave':
-                BDY_loss = 0.1*torch.sum(BDY_loss_all)
-            elif self.flags.data_set == 'robotic_arm':
-                BDY_loss = 0.01*torch.mean(BDY_loss_all)
-            else:
-                BDY_loss = 10*torch.mean(BDY_loss_all)
+            BDY_loss = 0.1*torch.sum(BDY_loss_all)
             #BDY_loss = self.flags.BDY_strength*torch.sum(BDY_loss_all)
         self.MSE_loss = MSE_loss
         self.Boundary_loss = BDY_loss
@@ -381,14 +373,7 @@ class Network(object):
             # Disabling the sorting!!
             mse_loss = np.reshape(np.sum(np.square(logit.cpu().data.numpy() - target_spectra_expand.cpu().data.numpy()), axis=1), [-1, 1])
             BDY_loss = self.get_boundary_loss_list_np(geometry_eval_input.cpu().data.numpy())
-            if self.flags.data_set == 'ballistics':
-                BDY_strength = 0.5
-            elif self.flags.data_set == 'sine_wave':
-                BDY_strength = 0.1
-            elif self.flags.data_set == 'robotic_arm':
-                BDY_strength = 0.01/2048
-            else:
-                BDY_strength = 10/2048
+            BDY_strength = 0.5
             mse_loss += BDY_strength * np.reshape(BDY_loss, [-1, 1])
             # The strategy of re-using the BPed result. Save two versions of file: one with FF and one without
             mse_loss = np.concatenate((mse_loss, np.reshape(np.arange(self.flags.eval_batch_size), [-1, 1])), axis=1)
@@ -489,20 +474,6 @@ class Network(object):
         """
         if init_from_Xpred is not None:
             geometry_eval = self.build_tensor(init_from_Xpred, requires_grad=True)
-        elif self.flags.data_set == 'ballistics':
-            bs = self.flags.eval_batch_size
-            numpy_geometry = np.zeros([bs, self.flags.linear[0]])
-            numpy_geometry[:, 0] = np.random.normal(0, 0.5, size=[bs,])
-            numpy_geometry[:, 1] = np.max(np.random.normal(1.5, 0.5, size=[bs,]), 0)
-            numpy_geometry[:, 2] = np.radians(np.random.uniform(9, 81, size=[bs,]))
-            numpy_geometry[:, 3] = np.random.poisson(15, size=[bs,]) / 15
-            geometry_eval = self.build_tensor(numpy_geometry, requires_grad=True)
-        elif self.flags.data_set == 'robotic_arm':
-            bs = self.flags.eval_batch_size
-            numpy_geometry = np.random.normal(0, 0.5, size=[bs, 4])
-            numpy_geometry[:, 0] /= 2
-            geometry_eval = self.build_tensor(numpy_geometry, requires_grad=True)
-            print("robotic_arm specific initialization")
         else:
             geometry_eval = torch.rand([self.flags.eval_batch_size, self.flags.linear[0]], requires_grad=True, device='cuda')
         #geomtry_eval = torch.randn([self.flags.eval_batch_size, self.flags.linear[0]], requires_grad=True, device='cuda')
@@ -531,16 +502,16 @@ class Network(object):
         mean and bound of your dataset here
         :return:
         """
-        if self.flags.data_set == 'sine_wave': 
-            return np.array([2, 2]), np.array([-1, -1]), np.array([1, 1])
-        elif self.flags.data_set == 'meta_material':
-            return np.array([2.272,2.272,2.272,2.272,2,2,2,2]), np.array([-1,-1,-1,-1,-1,-1,-1,-1]), np.array([1.272,1.272,1.272,1.272,1,1,1,1])
-        elif self.flags.data_set == 'ballistics':
-            return np.array([2, 2, 1.256, 1.1]), np.array([-1, 0.5, 0.157, 0.46]), np.array([1, 2.5, 1.413, 1.56])
-        elif self.flags.data_set == 'robotic_arm':
-            return np.array([1.2, 2.4, 2.4, 2.4]), np.array([-0.6, -1.2, -1.2, -1.2]), np.array([0.6, 1.2, 1.2, 1.2])
+        if self.flags.data_set == 'Chen': 
+            dim = 5
+        elif self.flags.data_set == 'Peurifoy': 
+            dim = 3
+        elif self.flags.data_set == 'Yang_sim': 
+            dim = 14
         else:
-            sys.exit("In NA, during initialization from uniform to dataset distrib: Your data_set entry is not correct, check again!")
+            sys.exit("In Tandem, during getting the boundary loss boundaries, Your data_set entry is not correct, check again!")
+        
+        return np.array([2 for i in range(dim)]), np.array([-1 for i in range(dim)]), np.array([1 in range(dim)])
 
 
     def predict(self, Xpred_file, no_save=False, load_state_dict=None):

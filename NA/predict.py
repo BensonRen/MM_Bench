@@ -146,7 +146,7 @@ def ensemble_predict_master(model_dir, Xpred_file, no_plot, plot_dir=None):
 
 def predict_ensemble_for_all(model_dir, Xpred_file_dirs, no_plot):
     for files in os.listdir(Xpred_file_dirs):
-        if 'Xpred' in files and 'Yang_sim' in files:
+        if 'Xpred' in files and 'Yang' in files:
             # If this has already been predicted, skip this file!
             if os.path.isfile(Xpred_file_dirs.replace('Xpred','Ypred')):
                 continue
@@ -200,10 +200,11 @@ if __name__ == '__main__':
    
     # Single evaluation in the data folder of each method
     #method_list = ['MDN','INN_FrEIA','cINN','VAE']
-    #method_list = ['Tandem','MDN','INN_FrEIA','cINN','NA','VAE']
+    #method_list = ['Tandem','MDN','INN_FrEIA','cINN','VAE']
     #for method in method_list:
-    #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../'+ method + '/data/', no_plot=False)  
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../cINN/data/', no_plot=False)  
+    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
+    
+    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']
@@ -216,9 +217,8 @@ if __name__ == '__main__':
     #method_list_multi = get_folder_modulized()
     #for method in method_list_multi:
     #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', os.path.join(method, 'meta_material/'), no_plot=True)  
-
-
-    #predict_from_model("models/retrain0ballistics", 'data/Xpred_ball.csv', no_plot=False, load_state_dict=None)
-    #predict_from_model("models/retrain0robotic_arm", 'data/Xpred_robo.csv', no_plot=False, load_state_dict=None)
-    #predict_from_model("models/retrain0sine_wave", 'data/Xpred_sine.csv', no_plot=False, load_state_dict=None)
-    #predict_from_model("models/retrain0meta_material", 'data/test_Xpred_retrain0meta_material.csv', no_plot=False, load_state_dict=None)
+    
+    
+    #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
+    predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
+    #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
