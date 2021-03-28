@@ -24,7 +24,7 @@ def get_test_ratio_helper(flags):
         return 0.004
         #return 0.1
         #return 0.0625                        # 500 in total
-    elif flags.data_set == 'Yang':
+    elif 'Yang' in flags.data_set:
         #return 0.02
         return 0.02                        # 10000 in total for Meta material
     else:
@@ -70,7 +70,7 @@ def compare_truth_pred(pred_file, truth_file, cut_off_outlier_thres=None, quiet_
     return mae, mse
 
 
-def plotMSELossDistrib(pred_file, truth_file, flags, save_dir='data/'):
+def plotMSELossDistrib(pred_file, truth_file, flags=None, save_dir='data/'):
     """
     Function to plot the MSE distribution histogram
     :param: pred_file: The Y prediction file
@@ -84,7 +84,13 @@ def plotMSELossDistrib(pred_file, truth_file, flags, save_dir='data/'):
     plt.xlabel('Mean Squared Error')
     plt.ylabel('cnt')
     plt.suptitle('(Avg MSE={:.4e}, 25%={:.3e}, 75%={:.3e})'.format(np.mean(mse), np.percentile(mse, 25), np.percentile(mse, 75)))
-    eval_model_str = flags.eval_model.replace('/','_')
+    if flags is not None:
+        eval_model_str = flags.eval_model.replace('/','_')
+    else:
+        if isinstance(pred_file, str):
+            eval_model_str = pred_file.split('Ypred')[-1].split('.')[0]
+        else:
+            eval_model_str = 'MSE_unknon_name'
     plt.savefig(os.path.join(save_dir,
                             '{}.png'.format(eval_model_str)))
     print('(Avg MSE={:.4e})'.format(np.mean(mse)))

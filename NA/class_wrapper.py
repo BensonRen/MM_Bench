@@ -335,10 +335,7 @@ class Network(object):
         # Initialize the geometry_eval or the initial guess xs
         geometry_eval = self.initialize_geometry_eval(init_from_Xpred)
         # Set up the learning schedule and optimizer
-        ######################################################
-        # 02.02 for emperically proff of NA bound, SGD optim #
-        ######################################################
-        self.optm_eval = self.make_optimizer_eval(geometry_eval , optimizer_type='SGD')
+        self.optm_eval = self.make_optimizer_eval(geometry_eval)
         self.lr_scheduler = self.make_lr_scheduler(self.optm_eval)
         
         # expand the target spectra to eval batch size
@@ -377,10 +374,6 @@ class Network(object):
             mse_loss += BDY_strength * np.reshape(BDY_loss, [-1, 1])
             # The strategy of re-using the BPed result. Save two versions of file: one with FF and one without
             mse_loss = np.concatenate((mse_loss, np.reshape(np.arange(self.flags.eval_batch_size), [-1, 1])), axis=1)
-            ###########################################
-            # 02.02 for emperically proff of NA bound #
-            ###########################################
-            #loss_sort = mse_loss
             loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
             loss_sort_FF_off = mse_loss
             exclude_top = 0
@@ -422,14 +415,7 @@ class Network(object):
                 if 'BP_on_FF_on' in save_dir:
                     with open(Xpred_file_FF_off, 'a') as fxp:
                         np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index_FF_off, :])
-            
-            ###########################################
-            # 02.02 for emperically proff of NA bound #
-            ###########################################
-            # Save the fake Yp as well
-            #with open(Yfake_file, 'a') as fypf:
-            #    np.savetxt(fypf, logit.cpu().data.numpy()[good_index, :])
-
+           
         ###################################
         # From candidates choose the best #
         ###################################

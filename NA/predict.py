@@ -204,7 +204,7 @@ if __name__ == '__main__':
     #for method in method_list:
     #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
     
-    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']
@@ -220,5 +220,5 @@ if __name__ == '__main__':
     
     
     #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
-    predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
+    #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
