@@ -111,8 +111,8 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
      """
      This function is to evaluate all different datasets in the model with one function call
      """
-     #lr_list = [10, 1,0.5,0.1]
-     lr_list = [0.01]
+     #lr_list = [10, 1]
+     lr_list = [0.01, 0.1]
      #BDY_list = [0.001]
      #BDY_list = [0.05, 0.01, 0.001]
      #data_set_list = ["robotic_arm"]
