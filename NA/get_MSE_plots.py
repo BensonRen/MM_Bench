@@ -13,7 +13,7 @@ for folder in os.listdir(big_folder):
     
     print('going into folder ', folder)
     # Loop over the data folder 
-    for file in os.listdir(os. join(big_folder, folder)):
+    for file in os.listdir(os.path.join(big_folder, folder)):
         if 'test_Ytruth' not in file:
             continue
         truth_file = os.path.join(big_folder, folder, file)

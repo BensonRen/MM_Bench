@@ -93,9 +93,18 @@ class DefaultConfig(object):
         self.model = 'v1'
         self.env_title = ''
         self.polar = 0
-
+        
+        #########################
+        # Normal geometry bound #
+        #########################
         self.thick_0 = 5
         self.thick_1 = 50
+
+        ################################
+        # Extended geometry bound (50%)#
+        ################################
+        #self.thick_0 = 5
+        #self.thick_1 = 50 + 22.5
 
         self.tic_type = "cheb_"
         # self.tic_type = "cheb_2"

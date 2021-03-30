@@ -890,11 +890,11 @@ if __name__ == '__main__':
         
     
     # NIPS version 
-    #MeanAvgnMinMSEvsTry_all('/work/sr365/multi_eval/')
-    #datasets = ['robotic_arm','ballistics']
-    ##datasets = ['meta_material', 'robotic_arm','sine_wave','ballistics']
-    #for dataset in datasets:
-    #    DrawAggregateMeanAvgnMSEPlot('/work/sr365/multi_eval/', dataset)
+    work_dir = '/home/sr365/MM_bench_multi_eval/'
+    MeanAvgnMinMSEvsTry_all(work_dir)
+    datasets = ['Yang_sim','Chen','Peurifoy']
+    for dataset in datasets:
+        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
     
     """
     # NIPS version on Groot
@@ -917,6 +917,7 @@ if __name__ == '__main__':
     #MeanAvgnMinMSEvsTry_all('/home/sr365/ICML_exp_cINN_ball/')
     #DrawAggregateMeanAvgnMSEPlot('/home/sr365/ICML_exp_cINN_ball', dataset)
 
+    """
     # Modulized version (ICML)
     #data_dir = '/data/users/ben/'  # I am groot!
     data_dir = '/home/sr365/' # quad
@@ -930,6 +931,7 @@ if __name__ == '__main__':
         datasets = ['robotic_arm','sine_wave','ballistics','meta_material']
         for dataset in datasets:
             DrawAggregateMeanAvgnMSEPlot(data_dir+ 'ICML_exp/'+algo+'/', dataset)
+    """
     
     # Modulized version plots (ICML_0120)
     #data_dir = '/data/users/ben/'

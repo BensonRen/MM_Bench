@@ -204,13 +204,19 @@ if __name__ == '__main__':
     #for method in method_list:
     #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
     
-    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
+    """
+    #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr0.01/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr0.1/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr1/', no_plot=False)  
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data_lr10/', no_plot=False)  
+    """
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']
-    #method_list_multi = ['Tandem','MDN','INN','cINN','NA','VAE']
-    #for method in method_list_multi:
-    #    predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '/work/sr365/multi_eval/'+ method + '/meta_material/', no_plot=True)  
+    method_list_multi = ['Tandem','MDN','INN','cINN','NA','VAE']
+    for method in method_list_multi:
+        predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_bench_multi_eval/'+ method + '/Yang_sim/', no_plot=True)  
         #predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../multi_eval/'+ method + '/meta_material/', no_plot=True)  
     
     # This is for the modulized multi evaluation in the ICML_EXP folder

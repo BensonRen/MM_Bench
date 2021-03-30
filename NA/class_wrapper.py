@@ -312,12 +312,12 @@ class Network(object):
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
-                if self.flags.data_set != 'Yang':
+                if 'Yang' not in self.flags.data_set:
                     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
         return Ypred_file, Ytruth_file
 
-    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True):
+    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True, save_MSE_each_epoch=True):
         """
         The function which being called during evaluation and evaluates one target y using # different trails
         :param target_spectra: The target spectra/y to backprop to 
@@ -341,6 +341,18 @@ class Network(object):
         # expand the target spectra to eval batch size
         target_spectra_expand = target_spectra.expand([self.flags.eval_batch_size, -1])
         
+        # Extra for early stopping
+        loss_list = []
+        end_lr = self.flags.lr / 8
+        print(self.optm_eval)
+        param_group_1 = self.optm_eval.param_groups[0]
+        if self.flags.data_set == 'Chen':
+            stop_threshold = 1e-4
+        elif self.flags.data_set == 'Peurifoy':
+            stop_threshold = 1e-3
+        else:
+            stop_threshold = 1e-3
+
         # Begin NA
         for i in range(self.flags.backprop_step):
             # Make the initialization from [-1, 1], can only be in loop due to gradient calculator constraint
@@ -358,16 +370,18 @@ class Network(object):
             loss = self.make_loss(logit, target_spectra_expand, G=geometry_eval_input)         # Get the loss
             loss.backward()                                             # Calculate the Gradient
             # update weights and learning rate scheduler
-            if i != self.flags.backprop_step - 1:
-                self.optm_eval.step()  # Move one step the optimizer
-                self.lr_scheduler.step(loss.data)
+            self.optm_eval.step()  # Move one step the optimizer
+            loss_np = loss.data
+            self.lr_scheduler.step(loss_np)
+            # Extra step of recording the MSE loss of each epoch
+            loss_list.append(np.copy(loss_np.cpu()))
+            if loss_np < stop_threshold or param_group_1['lr'] < end_lr:
+                break; 
+        if save_MSE_each_epoch:
+            with open('data/{}_MSE_progress_point_{}.txt'.format(self.flags.data_set ,ind),'a') as epoch_file:
+                np.savetxt(epoch_file, loss_list)
         
         if save_all:                # If saving all the results together instead of the first one
-            ##############################################################
-            # Choose the top "trail_nums" points from NA solutions #
-            ##############################################################
-            # This is not ok because the filtering should take the boundary loss as well!
-            # Disabling the sorting!!
             mse_loss = np.reshape(np.sum(np.square(logit.cpu().data.numpy() - target_spectra_expand.cpu().data.numpy()), axis=1), [-1, 1])
             BDY_loss = self.get_boundary_loss_list_np(geometry_eval_input.cpu().data.numpy())
             BDY_strength = 0.5
@@ -393,17 +407,12 @@ class Network(object):
                 save_model_str_FF_off = saved_model_str.replace('BP_on_FF_on', 'BP_on_FF_off')
                 Ypred_file_FF_off = Ypred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
                 Xpred_file_FF_off = Xpred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
-            if self.flags.data_set != 'Yang':  # This is for meta-meterial dataset, since it does not have a simple simulator
+            if 'Yang' not in self.flags.data_set:  # This is for meta-meterial dataset, since it does not have a simple simulator
                 # 2 options: simulator/logit
                 Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
-                if not save_Simulator_Ypred:            # The default is the simulator Ypred output
-                    Ypred = logit.cpu().data.numpy()
-                if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
-                    Ypred = np.reshape(Ypred, [-1, 1])
                 with open(Xpred_file, 'a') as fxp, open(Ypred_file, 'a') as fyp:
                     np.savetxt(fyp, Ypred[good_index, :])
                     np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index, :])
-
                 if 'BP_on_FF_on' in save_dir:
                     print("outputting files for FF_off as well")
                     with open(Xpred_file_FF_off, 'a') as fxp, open(Ypred_file_FF_off, 'a') as fyp:
@@ -420,10 +429,6 @@ class Network(object):
         # From candidates choose the best #
         ###################################
         Ypred = logit.cpu().data.numpy()
-
-        if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
-            Ypred = np.reshape(Ypred, [-1, 1])
-        
         # calculate the MSE list and get the best one
         MSE_list = np.mean(np.square(Ypred - target_spectra_expand.cpu().data.numpy()), axis=1)
         BDY_list = self.get_boundary_loss_list_np(geometry_eval_input.cpu().data.numpy())
@@ -431,11 +436,11 @@ class Network(object):
         best_estimate_index = np.argmin(MSE_list)
         #print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input.cpu().data.numpy()[best_estimate_index, :]), [1, -1])
-        if save_Simulator_Ypred and self.flags.data_set != 'Yang':
-            Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
-            if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
-                Ypred = np.reshape(Ypred, [-1, 1])
-        Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])
+        if save_Simulator_Ypred and 'Yang' not in self.flags.data_set:
+            best_x = np.reshape(geometry_eval_input.cpu().data.numpy()[best_estimate_index,:], [1, -1])
+            Ypred_best = simulator(self.flags.data_set, best_x) 
+        else:
+            Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])
 
         return Xpred_best, Ypred_best, MSE_list
 
@@ -475,8 +480,6 @@ class Network(object):
         """
         X_range, X_lower_bound, X_upper_bound = self.get_boundary_lower_bound_uper_bound()
         geometry_eval_input = geometry_eval * self.build_tensor(X_range) + self.build_tensor(X_lower_bound)
-        if self.flags.data_set == 'robotic_arm' or self.flags.data_set == 'ballistics':
-            return geometry_eval
         return geometry_eval_input
         #return geometry_eval
 

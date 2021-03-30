@@ -22,7 +22,7 @@ from thop import profile, clever_format
 
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, 
-                        MSE_Simulator=False, save_Simulator_Ypred=True, init_lr=0.1, BDY_strength=1, save_dir='data/'):
+                        MSE_Simulator=False, save_Simulator_Ypred=True, init_lr=0.01, BDY_strength=1, save_dir='data/'):
 
     """
     Evaluating interface. 1. Retreive the flags 2. get data 3. initialize network 4. eval
@@ -82,6 +82,9 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     else:
         pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
 
+
+    if 'Yang' in flags.data_set:
+        return
     # Plot the MSE distribution
     plotMSELossDistrib(pred_file, truth_file, flags)
     print("Evaluation finished")
@@ -135,10 +138,10 @@ if __name__ == '__main__':
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     
     
     
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
-    evaluate_trail_BDY_lr(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    #evaluate_trail_BDY_lr(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
