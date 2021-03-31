@@ -50,7 +50,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.batch_size = 1                            # For backprop eval mode, batchsize is always 1
     flags.lr = init_lr
     flags.BDY_strength = BDY_strength
-    flags.eval_batch_size = 2048
+    flags.eval_batch_size = 4096
     flags.train_step = eval_flags.train_step
 
     print(flags)
@@ -106,7 +106,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
      """
      ## Evaluate all models with "reatrain" and dataset name in models/
      for model in os.listdir('models/'):
-         if 'best' in model:
+         if 'best' in model and 'Yang' not in model:
              evaluate_from_model(model, multi_flag=multi_flag, 
                           eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
@@ -115,7 +115,7 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
      This function is to evaluate all different datasets in the model with one function call
      """
      #lr_list = [10, 1]
-     lr_list = [0.01, 0.1]
+     lr_list = [0.001]
      #BDY_list = [0.001]
      #BDY_list = [0.05, 0.01, 0.001]
      #data_set_list = ["robotic_arm"]
@@ -123,7 +123,7 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
      #for eval_model in data_set_list:
      for lr in lr_list:
          for model in os.listdir('models/'):
-             if 'best' in model:
+             if 'best' in model and 'Yang' not in model:
                  evaluate_from_model(model, multi_flag=multi_flag, 
                               eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, 
                               MSE_Simulator=MSE_Simulator, init_lr = lr, save_dir='data_lr'+str(lr))#, BDY_strength=BDY)

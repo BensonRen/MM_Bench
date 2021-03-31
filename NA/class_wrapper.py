@@ -375,8 +375,9 @@ class Network(object):
             self.lr_scheduler.step(loss_np)
             # Extra step of recording the MSE loss of each epoch
             loss_list.append(np.copy(loss_np.cpu()))
-            if loss_np < stop_threshold or param_group_1['lr'] < end_lr:
-                break; 
+            # Comment the below 2 for maximum performance
+            #if loss_np < stop_threshold or param_group_1['lr'] < end_lr:
+            #    break; 
         if save_MSE_each_epoch:
             with open('data/{}_MSE_progress_point_{}.txt'.format(self.flags.data_set ,ind),'a') as epoch_file:
                 np.savetxt(epoch_file, loss_list)
@@ -391,7 +392,7 @@ class Network(object):
             loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
             loss_sort_FF_off = mse_loss
             exclude_top = 0
-            trail_nums = 2048
+            trail_nums = 200 
             good_index = loss_sort[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             good_index_FF_off = loss_sort_FF_off[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             #print("In save all funciton, the top 10 index is:", good_index[:10])
@@ -402,28 +403,15 @@ class Network(object):
             Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
             Yfake_file = os.path.join(save_dir, 'test_Yfake_point{}.csv'.format(saved_model_str))
             Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}.csv'.format(saved_model_str))
-            if 'BP_on_FF_on' in save_dir:
-                # The strategy of re-using the BPed result. Save two versions of file: one with FF and one without
-                save_model_str_FF_off = saved_model_str.replace('BP_on_FF_on', 'BP_on_FF_off')
-                Ypred_file_FF_off = Ypred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
-                Xpred_file_FF_off = Xpred_file.replace('BP_on_FF_on', 'BP_on_FF_off')
             if 'Yang' not in self.flags.data_set:  # This is for meta-meterial dataset, since it does not have a simple simulator
                 # 2 options: simulator/logit
-                Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
+                Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy()[good_index, :])
                 with open(Xpred_file, 'a') as fxp, open(Ypred_file, 'a') as fyp:
-                    np.savetxt(fyp, Ypred[good_index, :])
+                    np.savetxt(fyp, Ypred)
                     np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index, :])
-                if 'BP_on_FF_on' in save_dir:
-                    print("outputting files for FF_off as well")
-                    with open(Xpred_file_FF_off, 'a') as fxp, open(Ypred_file_FF_off, 'a') as fyp:
-                        np.savetxt(fyp, Ypred[good_index_FF_off, :])
-                        np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index_FF_off, :])
             else:
                 with open(Xpred_file, 'a') as fxp:
                     np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index, :])
-                if 'BP_on_FF_on' in save_dir:
-                    with open(Xpred_file_FF_off, 'a') as fxp:
-                        np.savetxt(fxp, geometry_eval_input.cpu().data.numpy()[good_index_FF_off, :])
            
         ###################################
         # From candidates choose the best #

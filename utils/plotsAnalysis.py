@@ -744,7 +744,7 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
                 quan2575_dict[dirs] = mse_quan2575_list
     #print("printing the min_dict", min_dict)
        
-    def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, plot_points=2000, avg_dict=None, resolution=50, err_dict=None, color_assign=False):
+    def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, plot_points=51, avg_dict=None, resolution=5, err_dict=None, color_assign=False):
         """
         :param name: the name to save the plot
         :param dict: the dictionary to plot
