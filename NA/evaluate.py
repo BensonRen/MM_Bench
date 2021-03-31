@@ -17,8 +17,8 @@ from utils.evaluation_helper import plotMSELossDistrib
 from utils.evaluation_helper import get_test_ratio_helper
 # Libs
 import numpy as np
-import matplotlib.pyplot as plt
-from thop import profile, clever_format
+#import matplotlib.pyplot as plt
+#from thop import profile, clever_format
 
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, MSE_Simulator=False, save_Simulator_Ypred=True, init_lr=0.5, BDY_strength=1):
@@ -117,7 +117,7 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
      lr_list = [0.5]
      BDY_list = [0.001]
      #BDY_list = [0.05, 0.01, 0.001]
-     #data_set_list = ["robotic_arm"]
+     data_set_list = ["Chen"]
      #data_set_list = ["robotic_arm", "ballistics"]
      for eval_model in data_set_list:
         for lr in lr_list:

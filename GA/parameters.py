@@ -3,18 +3,16 @@ Params for Genetic Algorithm
 """
 
 # Define which data set you are using
-#DATA_SET = 'Yang_sim'
-#DATA_SET = 'Chen'
-DATA_SET = 'Peurifoy'
+DATA_SET = 'Peurifoy' #'Chen', 'Yang_sim'
 TEST_RATIO = 0.2
 
 # GA SPECIFIC PARAMETERS
 # Essential Params
-POP_SIZE = 40
-ELITISM = 1
+POP_SIZE = 2048
+ELITISM = 500
 MUTATION = 0.05
 CROSSOVER = 0.8
-K = 5
+K = 500
 
 # Categorical Params
 SELECT_OPS = 'roulette' # 'decimation' 'tournament'

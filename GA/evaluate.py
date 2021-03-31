@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, MSE_Simulator=False,
-                        save_Simulator_Ypred=True, init_lr=0.5, BDY_strength=1):
+                        save_Simulator_Ypred=False, preset_flag=None,init_lr=0.5, BDY_strength=1):
     """
     Evaluating interface. 1. Retreive the flags 2. get data 3. initialize network 4. eval
     :param model_dir: The folder to retrieve the model
@@ -41,10 +41,12 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.generations = eval_flags.generations
     flags.test_ratio = get_test_ratio_helper(flags)
 
-    if flags.data_set == 'meta_material':
+    if flags.data_set == 'Yang_sim':
         save_Simulator_Ypred = False
         print("this is MM dataset, setting the save_Simulator_Ypred to False")
-    flags.batch_size = 1  # For backprop eval mode, batchsize is always 1
+
+    flags = preset_flag if preset_flag else flags
+    flags.batch_size = 1 # For backprop eval mode, batchsize is always 1
     print(flags)
 
     # Get the data
@@ -56,6 +58,8 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
 
     # Evaluation process
     print("Start eval now:")
+    dname = 'data/' + flags.data_set + flags.cross_operator + flags.selection_operator
+    os.mkdir(dname)
     if multi_flag:
         dest_dir = './multi_eval/GA/'
         if not os.path.isdir(dest_dir):
@@ -68,11 +72,11 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                               save_misc=save_misc, MSE_Simulator=MSE_Simulator,
                                               save_Simulator_Ypred=save_Simulator_Ypred)
     else:
-        pred_file, truth_file = Genetic_Algorithm.evaluate(save_misc=save_misc, MSE_Simulator=MSE_Simulator,
+        pred_file, truth_file = Genetic_Algorithm.evaluate(save_misc=save_misc, save_dir=dname,MSE_Simulator=MSE_Simulator,
                                               save_Simulator_Ypred=save_Simulator_Ypred)
 
     # Plot the MSE distribution
-    plotMSELossDistrib(pred_file, truth_file, flags)
+    plotMSELossDistrib(pred_file, truth_file, flags,save_dir=dname)
     print("Evaluation finished")
 
 
@@ -91,7 +95,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     This function is to evaluate all different datasets in the model with one function call
     """
-    data_set_list = ["peurifoy"]
+    data_set_list = ["Peurifoy"]
     for eval_model in data_set_list:
         for j in range(5):
             useless_flags = flag_reader.read_flag()
@@ -99,15 +103,42 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
             evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, eval_data_all=eval_data_all,
                                 save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
+def test_categorical_variables():
+    data_set_list = ["Yang_sim"]
+    SOps = ["roulette","decimation","tournament"]
+    XOps = ["uniform","single-point"]
+
+    for d in data_set_list:
+        for x in XOps:
+            for s in SOps:
+                dir = d + '_best_model'
+                flags = load_flags(os.path.join("models", dir))
+                flags.cross_operator = x
+                flags.selection_operator = s
+                flags.data_set = d
+                flags.eval_model = dir
+                flags.crossover = 0.8
+                flags.elitism = 500
+                flags.k = 500
+                flags.mutation = 0.05
+                flags.population = flags.eval_batch_size
+                flags.ga_eval = False
+                flags.generations = 5
+
+                evaluate_from_model(flags.eval_model,preset_flag=flags,save_Simulator_Ypred=False)
+
+
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
     eval_flags = flag_reader.read_flag()
+
+    test_categorical_variables()
 
     #####################
     # different dataset #
     #####################
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
-    evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=False, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
     # evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
 

@@ -50,7 +50,7 @@ class GA_manager(object):
         else:
             self.model.load_state_dict(torch.load(os.path.join(self.ckpt_dir, 'best_model.pt'), map_location=torch.device('cpu')))
 
-    def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=True):
+    def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=False):
         """
         The function to evaluate how good the Neural Adjoint is and output results
         :param save_dir: The directory to save the results
@@ -87,6 +87,7 @@ class GA_manager(object):
                 open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
             # Loop through the eval data and evaluate
             for ind, (geometry, spectra) in enumerate(self.test_loader):
+                print("\nSAMPLE: {}".format(ind))
                 if cuda:
                     geometry = geometry.cuda()
                     spectra = spectra.cuda()
@@ -97,14 +98,19 @@ class GA_manager(object):
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
-                if self.flags.data_set != 'Yang':
-                    np.savetxt(fyp, Ypred)
+                #if self.flags.data_set != 'Yang_sim':
+                np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
-                plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
+
+                if (ind+1)%self.flags.eval_step == 0:
+                    plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
+                if ind==100:
+                    break
+
         return Ypred_file, Ytruth_file
 
     def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False, save_all=False, ind=None,
-                     save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True):
+                     save_misc=False, save_Simulator_Ypred=False, init_from_Xpred=None, FF=True):
         """
         The function which being called during evaluation and evaluates one target y using # different trails
         :param target_spectra: The target spectra/y to backprop to
@@ -123,7 +129,11 @@ class GA_manager(object):
         target_spectra_expand = target_spectra.expand([self.flags.population, -1])
 
         self.algorithm.set_pop_and_target(target_spectra_expand)
+        strt = time.time()
         for i in range(self.flags.generations):
+            curr = time.time()
+            #print('{}\t'.format(i),end='')
+            print("\r\tGEN: {}\tTIME: {}".format(i,curr-strt),end='')
             logit = self.algorithm.evolve()
             loss = self.make_loss(logit,target_spectra_expand)
 
@@ -134,7 +144,7 @@ class GA_manager(object):
             saved_model_str = self.saved_model.replace('/', '_')
             Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
             Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}.csv'.format(saved_model_str))
-            if self.flags.data_set != 'Yang':  # This is for meta-meterial dataset, since it does not have a simple simulator
+            if self.flags.data_set != 'Yang_sim':  # This is for meta-meterial dataset, since it does not have a simple simulator
                 # 2 options: simulator/logit
                 Ypred = simulator(self.flags.data_set, geometry_eval_input)
                 if not save_Simulator_Ypred:  # The default is the simulator Ypred output
@@ -163,7 +173,7 @@ class GA_manager(object):
         best_estimate_index = np.argmin(MSE_list)
         # print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input[best_estimate_index, :]), [1, -1])
-        if save_Simulator_Ypred and self.flags.data_set != 'Yang':
+        if save_Simulator_Ypred and self.flags.data_set != 'Yang_sim':
             Ypred = simulator(self.flags.data_set, geometry_eval_input)
             if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])
@@ -200,19 +210,23 @@ class GA(object):
         self.p_child = None
 
     def get_boundary_lower_bound_upper_bound(self):
-        if self.data_set == 'Yang':
-            return torch.tensor([2.272, 2.272, 2.272, 2.272, 2, 2, 2, 2], device=self.device,requires_grad=False), \
-                   torch.tensor([-1, -1, -1, -1, -1, -1, -1, -1],device=self.device,requires_grad=False), \
-                   torch.tensor([1.272, 1.272, 1.272, 1.272, 1, 1, 1, 1],device=self.device,requires_grad=False)
+        """
+        Due to the fact that the batched dataset is a random subset of the training set, mean and range would fluctuate.
+        Therefore we pre-calculate the mean, lower boundary and upper boundary to avoid that fluctuation. Replace the
+        mean and bound of your dataset here
+        :return:
+        """
+        if self.data_set == 'Chen':
+            dim = 5
+        elif self.data_set == 'Peurifoy':
+            dim = 3
+        elif self.data_set == 'Yang_sim':
+            dim = 14
         else:
-            '''
-            return torch.tensor(self.n_params * [8], device=self.device, requires_grad=False), \
-                   torch.tensor(self.n_params * [0], device=self.device, requires_grad=False), \
-                   torch.tensor(self.n_params * [8], device=self.device, requires_grad=False)
-            '''
-            return torch.tensor(self.n_params*[2],device=self.device,requires_grad=False),\
-                   torch.tensor(self.n_params*[-1],device=self.device,requires_grad=False), \
-                   torch.tensor(self.n_params*[1],device=self.device,requires_grad=False)
+            sys.exit(
+                "In GA, during getting the boundary loss boundaries, Your data_set entry is not correct, check again!")
+        return 2*torch.ones(dim,device=self.device,requires_grad=False), -torch.ones(dim,device=self.device,requires_grad=False),\
+               torch.ones(dim, device=self.device, requires_grad=False)
 
     def initialize_in_range(self, n_samples):
         return torch.rand(n_samples,self.n_params,device=self.device,requires_grad=False)*self.span + self.lower
@@ -346,12 +360,11 @@ class GA(object):
         self.generation = self.generation[sorter]
         self.selector()
 
-
         # Do crossover followed by mutation to create children from parents
         self.X_op()
         self.mutate()
 
         # Combine children and elites into new generation
         self.generation[self.n_elite:] = self.p_child[:self.n_kids]
-        #print(self.fitness[0])
+        #print(self.fitness[0].item())
         return logit
