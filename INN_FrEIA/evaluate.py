@@ -17,6 +17,46 @@ from NA import predict
 
 # Libs
 
+def predict(model_dir, Ytruth_file ,multi_flag=False):
+    """
+    Predict the output from given spectra
+    """
+    print("Retrieving flag object for parameters")
+    if (model_dir.startswith("models")):
+        model_dir = model_dir[7:]
+        print("after removing prefix models/, now model_dir is:", model_dir)
+    if model_dir.startswith('/'):                   # It is a absolute path
+        flags = helper_functions.load_flags(model_dir)
+    else:
+        flags = helper_functions.load_flags(os.path.join("models", model_dir))
+    flags.eval_model = model_dir                    # Reset the eval mode
+    
+    ntwk = Network(INN, flags, train_loader=None, test_loader=None, inference_mode=True, saved_model=flags.eval_model)
+    print("number of trainable parameters is :")
+    pytorch_total_params = sum(p.numel() for p in ntwk.model.parameters() if p.requires_grad)
+    print(pytorch_total_params)
+    # Evaluation process
+    pred_file, truth_file = ntwk.predict(Ytruth_file)
+    if 'Yang' not in flags.data_set:
+        plotMSELossDistrib(pred_file, truth_file, flags)
+
+
+def predict_different_dataset(multi_flag=False):
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    step_func_dir = '/home/sr365/MM_Bench/Data/step_func'
+    for model in os.listdir('models/'):
+        if 'best' in model:
+            if 'Yang' in model:
+                Ytruth_file = os.path.join(step_func_dir, 'Yang'+'step_function.txt')
+            elif 'Chen' in model:
+                Ytruth_file = os.path.join(step_func_dir, 'Chen'+'step_function.txt')
+            elif 'Peurifoy' in model:
+                Ytruth_file = os.path.join(step_func_dir, 'Peurifoy'+'step_function.txt')
+            predict(model, Ytruth_file, multi_flag=multi_flag)
+
+
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, modulized_flag=False):
     """
     Evaluating interface. 1. Retreive the flags 2. get data 3. initialize network 4. eval
@@ -112,7 +152,7 @@ if __name__ == '__main__':
     
     #evaluate_different_dataset(modulized_flag=True)
     
-    evaluate_different_dataset(multi_flag=True)
+    #evaluate_different_dataset(multi_flag=True)
     #evaluate_all("models/Peurifoy_layer_9/")
     #evaluate_all("models/Yang/2nd_sweep/")
     
@@ -120,3 +160,7 @@ if __name__ == '__main__':
     # Call the evaluate function from model
     #evaluate_from_model(useless_flags.eval_model)
 
+    ###########
+    # Predict #
+    ###########
+    predict_different_dataset(multi_flag=False)

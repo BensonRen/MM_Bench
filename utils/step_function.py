@@ -1,11 +1,12 @@
 # This function is to generate step function for the testing of H1 condition
 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 dataset_list = ['Yang','Peurifoy','Chen']
 x_dim_dict = {'Yang': 14, 'Peurifoy': 3, 'Chen': 5 }
-y_dim_dict = {'Yang': 2000, 'Peurifoy': 201, 'Chen': 265 }
+y_dim_dict = {'Yang': 2000, 'Peurifoy': 201, 'Chen': 256 }
 
 
 def get_step_function(dataset, orientation='s', amplitude=1, step_pos=0.5):
@@ -41,7 +42,10 @@ def generate_step_functions():
         # print('len of y_tot = ', len(y_tot))
         y_tot = np.array(y_tot)
         print('shape of np version = ', np.shape(y_tot))
-        np.savetxt(dataset+'step_function.txt', y_tot)
+        save_dir = '/home/sr365/MM_Bench/Data/step_func/'
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
+        np.savetxt(os.path.join(save_dir ,dataset+'step_function.txt'), y_tot)
 
 
 if __name__ == '__main__':

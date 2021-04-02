@@ -482,7 +482,9 @@ def get_mse_mat_from_folder(data_dir):
     ####################################################################
     if 'NA' in data_dir or 'on' in data_dir: 
         l, w = np.shape(Yt)
-        num_trails = 2048
+        print("shape of Yt", l,' ', w)
+        num_trails = 50
+        #num_trails = 2048
         Ypred_mat = np.zeros([l, num_trails, w])
         check_full = np.zeros(l)                                     # Safety check for completeness
         for files in os.listdir(data_dir):
@@ -499,7 +501,7 @@ def get_mse_mat_from_folder(data_dir):
                 number = int(files.split('inference')[-1][:-4])
                 Ypred_mat[number, :, :] = Yp
                 check_full[number] = 1
-        assert np.sum(check_full) == l, 'Your list is not complete'
+        assert np.sum(check_full) == l, 'Your list is not complete, {} Ypred files out of {} are present'.format(np.sum(check_full), l)
         # Finished fullfilling the Ypred mat, now fill in the Ypred list as before
         for i in range(num_trails):
             Ypred_list.append(Ypred_mat[:, i, :])
@@ -891,8 +893,11 @@ if __name__ == '__main__':
     
     # NIPS version 
     work_dir = '/home/sr365/MM_bench_multi_eval/'
+    #lr_list = [10, 1, 0.1, 0.01, 0.001]
     MeanAvgnMinMSEvsTry_all(work_dir)
-    datasets = ['Yang_sim','Chen','Peurifoy']
+    ##datasets = ['Yang_sim','Chen','Peurifoy']
+    datasets = ['Chen','Peurifoy']
+    #for lr in lr_list:
     for dataset in datasets:
         DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
     

@@ -374,7 +374,7 @@ class Network(object):
             loss_np = loss.data
             self.lr_scheduler.step(loss_np)
             # Extra step of recording the MSE loss of each epoch
-            loss_list.append(np.copy(loss_np.cpu()))
+            #loss_list.append(np.copy(loss_np.cpu()))
             # Comment the below 2 for maximum performance
             #if loss_np < stop_threshold or param_group_1['lr'] < end_lr:
             #    break; 
@@ -392,7 +392,7 @@ class Network(object):
             loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
             loss_sort_FF_off = mse_loss
             exclude_top = 0
-            trail_nums = 200 
+            trail_nums = 60 
             good_index = loss_sort[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             good_index_FF_off = loss_sort_FF_off[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             #print("In save all funciton, the top 10 index is:", good_index[:10])
@@ -543,3 +543,48 @@ class Network(object):
         plt.suptitle('(Avg MSE={:4e})'.format(np.mean(loss)))
         plt.savefig(os.path.join('data','loss{}.png'.format(ind)))
         return None
+
+    def predict_inverse(self, Ytruth_file, multi_flag, save_dir='data/', prefix=''):
+        self.load()                             # load the model as constructed
+        cuda = True if torch.cuda.is_available() else False
+        if cuda:
+            self.model.cuda()
+        self.model.eval()
+        saved_model_str = self.saved_model.replace('/', '_') + prefix
+
+        Ytruth = pd.read_csv(Ytruth_file, header=None, delimiter=',')     # Read the input
+        if len(Ytruth.columns) == 1: # The file is not delimitered by ',' but ' '
+            Ytruth = pd.read_csv(Ytruth_file, header=None, delimiter=' ')
+        Ytruth_tensor = torch.from_numpy(Ytruth.values).to(torch.float)
+        print('shape of Ytruth tensor :', Ytruth_tensor.shape)
+
+        # Get the file names
+        Ypred_file = os.path.join(save_dir, 'test_Ypred_{}.csv'.format(saved_model_str))
+        Ytruth_file = os.path.join(save_dir, 'test_Ytruth_{}.csv'.format(saved_model_str))
+        Xpred_file = os.path.join(save_dir, 'test_Xpred_{}.csv'.format(saved_model_str))
+        # keep time
+        tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
+
+        # Set the save_simulator_ytruth
+        save_Simulator_Ypred = True
+        if 'Yang' in self.flags.data_set :
+            save_Simulator_Ypred = False
+        
+        if cuda:
+            Ytruth_tensor = Ytruth_tensor.cuda()
+        print('model in eval:', self.model)
+        for ind in range(len(Ytruth_tensor)):
+            spectra = Ytruth_tensor[ind, :]
+            Xpred, Ypred, loss = self.evaluate_one(spectra, save_dir=save_dir, save_all=multi_flag, ind=ind,
+                                                            MSE_Simulator=False, save_misc=False, 
+                                                            save_Simulator_Ypred=save_Simulator_Ypred)
+
+            # Open those files to append
+            with open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
+                np.savetxt(fyt, Ytruth_tensor.cpu().data.numpy())
+                np.savetxt(fxp, Xpred)
+                if self.flags.data_set != 'Yang_sim':
+                    Ypred = simulator(self.flags.data_set, Xpred)
+                    np.savetxt(fyp, Ypred)
+            tk.record(1)
+        return Ypred_file, Ytruth_file

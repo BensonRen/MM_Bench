@@ -10,14 +10,14 @@ import numpy
 ###############
 # QUAD MACHINE#
 ###############
-input_dir =  '/home/sr365/MM_bench_multi_eval/'   # quad
+input_dir =  '/home/sr365/MM_bench_multi_eval/NA_small_lr/'   # quad
 #input_dir = '/home/sr365/ICML_exp_cINN_ball/'    # For quad
 #input_dir =  '/home/sr365/ICML_exp/'   # quad
 #input_dir =  '/home/sr365/multi_eval/'   # quad
 #input_dir = '/data/users/ben/ICML_exp/'                #  I am Groot!
 #input_dir = '/data/users/ben/ICML_exp_mm/'                #  I am Groot!
 #input_dir = '/work/sr365/ICML_mm/'                # ICML code version --- MM special
-delete_mse_file_mode = True                            # Deleting the mse file for the forward filtering
+delete_mse_file_mode = False                           # Deleting the mse file for the forward filtering
 
 
 # For all the architectures

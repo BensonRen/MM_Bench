@@ -20,6 +20,7 @@ import mdn
 import numpy as np
 from math import inf
 import matplotlib.pyplot as plt
+import pandas as pd
 # Own module
 from utils.time_recorder import time_keeper
 
@@ -271,3 +272,42 @@ class Network(object):
         for i in range(time):
             self.evaluate(save_dir=save_dir, prefix='inference' + str(i))
             tk.record(i)
+    
+    
+    def predict(self, Ytruth_file, save_dir='data/', prefix=''):
+        self.load()                             # load the model as constructed
+        cuda = True if torch.cuda.is_available() else False
+        if cuda:
+            self.model.cuda()
+        self.model.eval()
+        saved_model_str = self.saved_model.replace('/', '_') + prefix
+
+        Ytruth = pd.read_csv(Ytruth_file, header=None, delimiter=',')     # Read the input
+        if len(Ytruth.columns) == 1: # The file is not delimitered by ',' but ' '
+            Ytruth = pd.read_csv(Ytruth_file, header=None, delimiter=' ')
+        Ytruth_tensor = torch.from_numpy(Ytruth.values).to(torch.float)
+        print('shape of Ytruth tensor :', Ytruth_tensor.shape)
+
+        # Get the file names
+        Ypred_file = os.path.join(save_dir, 'test_Ypred_{}.csv'.format(saved_model_str))
+        Ytruth_file = os.path.join(save_dir, 'test_Ytruth_{}.csv'.format(saved_model_str))
+        Xpred_file = os.path.join(save_dir, 'test_Xpred_{}.csv'.format(saved_model_str))
+        # keep time
+        tk = time_keeper(os.path.join(save_dir, 'evaluation_time.txt'))
+    
+        if cuda:
+            Ytruth_tensor = Ytruth_tensor.cuda()
+        print('model in eval:', self.model)
+        pi, sigma, mu = self.model(Ytruth_tensor)  # Get the output
+        Xpred = mdn.sample(pi, sigma, mu).detach().cpu().numpy()
+
+        # Open those files to append
+        with open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
+            np.savetxt(fyt, Ytruth_tensor.cpu().data.numpy())
+            np.savetxt(fxp, Xpred)
+            if self.flags.data_set != 'Yang_sim':
+                Ypred = simulator(self.flags.data_set, Xpred)
+                np.savetxt(fyp, Ypred)
+        tk.record(1)
+        return Ypred_file, Ytruth_file
+        

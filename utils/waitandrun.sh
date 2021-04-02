@@ -24,7 +24,7 @@ COMMAND=plotsAnalysis.py
 #COMMAND=plot_swipe.py
 SPACE='        '
 SECONDS=0
-#python delete.py
+python delete.py
 #python generate_random_solutions.py
 nohup python $COMMAND 1>output.out 2>error.err & 
 echo $! > pidfile.txt
