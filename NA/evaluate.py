@@ -50,7 +50,7 @@ def predict_different_dataset(multi_flag=False):
     """
     step_func_dir = '/home/sr365/MM_Bench/Data/step_func'
     for model in os.listdir('models/'):
-        if 'best' in model:
+        if 'best' in model and 'Peurifoy' in model:
             if 'Yang' in model:
                 Ytruth_file = os.path.join(step_func_dir, 'Yang'+'step_function.txt')
             elif 'Chen' in model:

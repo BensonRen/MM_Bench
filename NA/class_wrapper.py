@@ -317,7 +317,7 @@ class Network(object):
                 np.savetxt(fxp, Xpred)
         return Ypred_file, Ytruth_file
 
-    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True, save_MSE_each_epoch=True):
+    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True, save_MSE_each_epoch=False):
         """
         The function which being called during evaluation and evaluates one target y using # different trails
         :param target_spectra: The target spectra/y to backprop to 
@@ -573,18 +573,20 @@ class Network(object):
         if cuda:
             Ytruth_tensor = Ytruth_tensor.cuda()
         print('model in eval:', self.model)
-        for ind in range(len(Ytruth_tensor)):
-            spectra = Ytruth_tensor[ind, :]
-            Xpred, Ypred, loss = self.evaluate_one(spectra, save_dir=save_dir, save_all=multi_flag, ind=ind,
-                                                            MSE_Simulator=False, save_misc=False, 
-                                                            save_Simulator_Ypred=save_Simulator_Ypred)
+        
 
-            # Open those files to append
-            with open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
-                np.savetxt(fyt, Ytruth_tensor.cpu().data.numpy())
+        # Open those files to append
+        with open(Ytruth_file, 'a') as fyt, open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
+            np.savetxt(fyt, Ytruth_tensor.cpu().data.numpy())
+            for ind in range(len(Ytruth_tensor)):
+                spectra = Ytruth_tensor[ind, :]
+                Xpred, Ypred, loss = self.evaluate_one(spectra, save_dir=save_dir, save_all=multi_flag, ind=ind,
+                                                                MSE_Simulator=False, save_misc=False, 
+                                                                save_Simulator_Ypred=save_Simulator_Ypred)
+
                 np.savetxt(fxp, Xpred)
                 if self.flags.data_set != 'Yang_sim':
                     Ypred = simulator(self.flags.data_set, Xpred)
                     np.savetxt(fyp, Ypred)
-            tk.record(1)
+                tk.record(1)
         return Ypred_file, Ytruth_file

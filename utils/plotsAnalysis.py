@@ -746,7 +746,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
                 quan2575_dict[dirs] = mse_quan2575_list
     #print("printing the min_dict", min_dict)
        
-    def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, plot_points=51, avg_dict=None, resolution=5, err_dict=None, color_assign=False):
+    def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, avg_dict=None, 
+                    plot_points=51,  resolution=None, err_dict=None, color_assign=False, dash_group=None):
         """
         :param name: the name to save the plot
         :param dict: the dictionary to plot
@@ -757,10 +758,11 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
         :param resolution: The resolution of points
         :param err_dict: The error bar dictionary which takes the error bar input
         :param avg_dict: The average dict for plotting the starting point
+        :param dash_group: The group of plots to use dash line
         """
+        
         color_dict = {"NA":"g", "Tandem": "b", "VAE": "r","cINN":"m", 
-                        "INN":"k", "Random": "y","MDN": "violet", "Tandem__with_boundary":"orange", "NA__boundary_prior":"violet","NA__no_boundary_prior":"m","INN_new":"violet",
-                        "NA__boundary_no_prior": "grey", "NA_noboundary": "olive"}
+                        "INN":"k", "Random": "y","MDN": "violet"}
         f = plt.figure()
         text_pos = 0.01
         for key in sorted(dict.keys()):
@@ -771,8 +773,12 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             #print("printing message on the plot now")
             #plt.text(1, text_pos, text, wrap=True)
             #text_pos /= 5
-
-
+            
+            # Linestyle
+            if dash_group is not None and dash_group in key:
+                linestyle = 'dashed'
+            else:
+                linestyle = 'solid'
 
             x_axis = np.arange(len(dict[key])).astype('float')
             x_axis += 1
@@ -783,16 +789,20 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             #print(dict[key])
             if err_dict is None:
                 if color_assign:
-                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key],label=key)
+                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]],label=key, linestyle=linestyle)
                 else:
-                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],label=key)
+                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],label=key, linestyle=linestyle)
             else:
-                print(np.shape(err_dict[key]))
-                if color_assign:
-                    plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5)#, errorevery=resolution)#,
+                # This is the case where we plot the continuous error curve
+                if resolution is None:
+                    plt.plot(x_axis[:plot_points], dict[key][:plot_points], linestyle=linestyle)
+                    plt.fill_between(x_axis, err_dict[key][:plot_points, 0], err_dict[key][:plot_points, 1], color=olor_dict[key.split('_')[0]])
                 else:
-                    plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5)#, errorevery=resolution)#,
-                        #dash_capstyle='round')#, uplims=True, lolims=True)
+                    if color_assign:
+                        plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
+                    else:
+                        plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
+                            #dash_capstyle='round')#, uplims=True, lolims=True)
         if logy:
             ax = plt.gca()
             ax.set_yscale('log')
@@ -803,21 +813,12 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             plt.xlabel('inference time (s)')
         else:
             plt.xlabel('# of inference made (T)')
-        #plt.ylabel('MSE')
-        plt.xlim([-1, plot_points+2])
-        if 'ball' in data_name:
-            data_name = 'D1: ' + data_name
-        elif 'sine' in data_name:
-            data_name = 'D2: ' + data_name
-        elif 'robo' in data_name:
-            data_name = 'D3: ' + data_name
-        elif 'meta' in data_name:
-            data_name = 'D4: ' + data_name
-
         plt.title(data_name.replace('_',' '), fontsize=20)
         plt.grid(True, axis='both',which='both',color='b',alpha=0.3)
         plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True)
         plt.close('all')
+
+
     plotDict(min_dict,'_minlog_quan2575.png', logy=True, avg_dict=avg_dict, err_dict=quan2575_dict, data_name=data_name)
     #plotDict(min_dict,'_min_quan2575.png', logy=False, avg_dict=avg_dict, err_dict=quan2575_dict)
     #plotDict(min_dict,'_minlog_std.png', logy=True, avg_dict=avg_dict, err_dict=std_dict)
