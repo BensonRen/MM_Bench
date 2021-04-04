@@ -4,7 +4,8 @@ import os
 from utils.evaluation_helper import plotMSELossDistrib
 
 
-big_folder = '/home/sr365/MM_Bench/NA/'
+big_folder = '/home/sr365/MM_Bench/'
+#big_folder = '/home/sr365/MM_Bench/NA/'
 
 for folder in os.listdir(big_folder):
     # ignore if not a folder or no data in folder name
@@ -16,10 +17,12 @@ for folder in os.listdir(big_folder):
     for file in os.listdir(os.path.join(big_folder, folder)):
         if 'test_Ytruth' not in file:
             continue
+        print('going in file', file)
         truth_file = os.path.join(big_folder, folder, file)
         pred_file = os.path.join(big_folder, folder, file.replace('Ytruth', 'Ypred'))
         # Make sure Ypred is also present
         if not os.path.isfile(pred_file):
+            print('no Ypred file, abort!')
             continue
         
         print('doing MSE plot for file ', file, 'in folder ', os.path.join(big_folder, folder))

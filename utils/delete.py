@@ -10,7 +10,7 @@ import numpy
 ###############
 # QUAD MACHINE#
 ###############
-input_dir =  '/home/sr365/MM_bench_multi_eval/NA_small_lr/'   # quad
+input_dir =  '/home/sr365/MM_bench_multi_eval/NA_init/'   # quad
 #input_dir = '/home/sr365/ICML_exp_cINN_ball/'    # For quad
 #input_dir =  '/home/sr365/ICML_exp/'   # quad
 #input_dir =  '/home/sr365/multi_eval/'   # quad

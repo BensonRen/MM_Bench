@@ -92,7 +92,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     ############################# Thing that are changing #########################
     flags.lr = init_lr
     flags.lr_decay_rate = lr_decay
-    flags.eval_batch_size = 4096
+    flags.eval_batch_size = 8000
     flags.optim = 'Adam'
     ###############################################################################
     
@@ -112,7 +112,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     # Evaluation process
     print("Start eval now:")
     if multi_flag:
-        dest_dir = '/home/sr365/MM_bench_multi_eval/NA_init_lr_{}_decay_{}/'.format(init_lr, lr_decay)
+        dest_dir = '/home/sr365/MM_bench_multi_eval/NA_init_lr_{}_decay_{}_batch_{}/'.format(init_lr, lr_decay, flags.eval_batch_size)
         #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
         if not os.path.isdir(dest_dir):
@@ -158,9 +158,9 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
      """
      This function is to evaluate all different datasets in the model with one function call
      """
-     lr_list = [1e-4]
+     lr_list = [5e-4]
      #lr_list = [0.001, 0.01, 0.1, 1, 10]
-     lr_decay_rate_list = [0.9]
+     lr_decay_rate_list = [0.5]
      #data_set_list = ["robotic_arm"]
      #data_set_list = ["robotic_arm", "ballistics"]
      #for eval_model in data_set_list:
@@ -188,9 +188,9 @@ if __name__ == '__main__':
     
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
-    #evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
 
     ###########
     # Predict #
     ###########
-    predict_different_dataset(multi_flag=False)
+    #predict_different_dataset(multi_flag=False)

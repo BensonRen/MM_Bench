@@ -12,7 +12,7 @@ from pandas.plotting import table
 from scipy.spatial import distance_matrix
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
-
+from matplotlib.lines import Line2D
 
 def InferenceAccuracyExamplePlot(model_name, save_name, title, sample_num=10,  fig_size=(15,5), random_seed=1,
                                  target_region=[0,300 ]):
@@ -701,12 +701,16 @@ def DrawBoxPlots_multi_eval(data_dir, data_name, save_name='Box_plot'):
     return None
 
 
-def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot', gif_flag=False): # Depth=2 now based on current directory structure
+def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot', 
+                                gif_flag=False, plot_points=51,resolution=None, dash_group='nobody',
+                                dash_label='', solid_label=''): # Depth=2 now based on current directory structure
     """
     The function to draw the aggregate plot for Mean Average and Min MSEs
     :param data_dir: The mother directory to call
     :param data_name: The data set name
     :param git_flag: Plot are to be make a gif
+    :param plot_points: Number of points to be plot
+    :param resolution: The resolution of points
     :return:
     """
     # Predefined name of the avg lists
@@ -747,7 +751,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
     #print("printing the min_dict", min_dict)
        
     def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, avg_dict=None, 
-                    plot_points=51,  resolution=None, err_dict=None, color_assign=False, dash_group=None):
+                    plot_points=51,  resolution=None, err_dict=None, color_assign=False, dash_group='nobody',
+                    dash_label='', solid_label=''):
         """
         :param name: the name to save the plot
         :param dict: the dictionary to plot
@@ -761,10 +766,12 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
         :param dash_group: The group of plots to use dash line
         """
         
-        color_dict = {"NA":"g", "Tandem": "b", "VAE": "r","cINN":"m", 
-                        "INN":"k", "Random": "y","MDN": "violet"}
-        f = plt.figure()
+        color_dict = {"VAE": "blueviolet","cINN":"crimson", 
+                        "INN":"cornflowerblue", "Random": "limegreen","MDN": "darkorange"}
+        f = plt.figure(figsize=[6,3])
         text_pos = 0.01
+        # List for legend
+        legend_list = []
         for key in sorted(dict.keys()):
             ######################################################
             # This is for 02.02 getting the T=1, 50, 1000 result #
@@ -779,6 +786,7 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
                 linestyle = 'dashed'
             else:
                 linestyle = 'solid'
+            
 
             x_axis = np.arange(len(dict[key])).astype('float')
             x_axis += 1
@@ -789,40 +797,62 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             #print(dict[key])
             if err_dict is None:
                 if color_assign:
-                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]],label=key, linestyle=linestyle)
+                    line_axis, = plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]],label=key, linestyle=linestyle)
                 else:
-                    plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],label=key, linestyle=linestyle)
+                    line_axis, = plt.plot(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],label=key, linestyle=linestyle)
             else:
                 # This is the case where we plot the continuous error curve
                 if resolution is None:
-                    plt.plot(x_axis[:plot_points], dict[key][:plot_points], linestyle=linestyle)
-                    plt.fill_between(x_axis, err_dict[key][:plot_points, 0], err_dict[key][:plot_points, 1], color=olor_dict[key.split('_')[0]])
+                    label = key.split('_')[0] 
+                    if linestyle == 'dashed':
+                        label = None
+                    line_axis, = plt.plot(x_axis[:plot_points], dict[key][:plot_points], color=color_dict[key.split('_')[0]], linestyle=linestyle, label=label)
+                    lower = - err_dict[key][0, :plot_points] + np.ravel(dict[key][:plot_points])
+                    higher = err_dict[key][1, :plot_points] + np.ravel(dict[key][:plot_points])
+                    plt.fill_between(x_axis[:plot_points], lower, higher, color=color_dict[key.split('_')[0]], alpha=0.2)
                 else:
                     if color_assign:
-                        plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
+                        line_axis = plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
                     else:
-                        plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
+                        line_axis = plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
                             #dash_capstyle='round')#, uplims=True, lolims=True)
+            legend_list.append(line_axis)
         if logy:
             ax = plt.gca()
             ax.set_yscale('log')
-        plt.legend(loc=1)
+        print(legend_list)
+        legend_list.append(Line2D([0], [0], color='k', linestyle='dashed', lw=1, label=dash_label))
+        legend_list.append(Line2D([0], [0], color='k', linestyle='solid', lw=1, label=solid_label))
+        ax.legend(handles=legend_list, loc=1, ncol=2, prop={'size':8})
+
         
         
         if time_in_s_table is not None:
             plt.xlabel('inference time (s)')
         else:
             plt.xlabel('# of inference made (T)')
+        #plt.ylabel('MSE')
+        plt.xlim([-1, plot_points+2])
+        if 'ball' in data_name:
+            data_name = 'D1: ' + data_name
+        elif 'sine' in data_name:
+            data_name = 'D2: ' + data_name
+        elif 'robo' in data_name:
+            data_name = 'D3: ' + data_name
+        elif 'meta' in data_name:
+            data_name = 'D4: ' + data_name
+
         plt.title(data_name.replace('_',' '), fontsize=20)
         plt.grid(True, axis='both',which='both',color='b',alpha=0.3)
-        plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True)
+        plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True, dpi=1000)
         plt.close('all')
 
 
-    plotDict(min_dict,'_minlog_quan2575.png', logy=True, avg_dict=avg_dict, err_dict=quan2575_dict, data_name=data_name)
-    #plotDict(min_dict,'_min_quan2575.png', logy=False, avg_dict=avg_dict, err_dict=quan2575_dict)
-    #plotDict(min_dict,'_minlog_std.png', logy=True, avg_dict=avg_dict, err_dict=std_dict)
-    #plotDict(min_dict,'_min_std.png', logy=False, avg_dict=avg_dict, err_dict=std_dict)
+    plotDict(min_dict,'_minlog_quan2575.png', plot_points=plot_points, logy=True, avg_dict=avg_dict, err_dict=quan2575_dict, data_name=data_name,
+            dash_group=dash_group, dash_label=dash_label, solid_label=solid_label, resolution=resolution)
+    #plotDict(min_dict,'_min_quan2575.png', plot_points, resolution, logy=False, avg_dict=avg_dict, err_dict=quan2575_dict)
+    #plotDict(min_dict,'_minlog_std.png', plot_points, resolution, logy=True, avg_dict=avg_dict, err_dict=std_dict)
+    #plotDict(min_dict,'_min_std.png', plot_points, resolution, logy=False, avg_dict=avg_dict, err_dict=std_dict)
 
     # if plot gifs
     if not gif_flag:
@@ -832,6 +862,7 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             plotDict(min_dict, str(i), logy=True, plot_points=i)
         for i in range(20,1000,20):
             plotDict(min_dict, str(i), logy=True, plot_points=i)
+
 
 
 
@@ -893,14 +924,15 @@ if __name__ == '__main__':
         
     
     # NIPS version 
-    work_dir = '/home/sr365/MM_bench_multi_eval/'
+    work_dir = '/home/sr365/MM_bench_multi_eval/NA_init'
     #lr_list = [10, 1, 0.1, 0.01, 0.001]
     MeanAvgnMinMSEvsTry_all(work_dir)
     ##datasets = ['Yang_sim','Chen','Peurifoy']
-    datasets = ['Chen','Peurifoy']
+    datasets = ['Peurifoy']
+    #datasets = ['Chen','Peurifoy']
     #for lr in lr_list:
     for dataset in datasets:
-        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
+        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)
     
     """
     # NIPS version on Groot

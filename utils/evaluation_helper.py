@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
+import pandas as pd
 from utils.helper_functions import simulator
 
 
@@ -39,8 +40,14 @@ def compare_truth_pred(pred_file, truth_file, cut_off_outlier_thres=None, quiet_
     :return: mae and mse
     """
     if isinstance(pred_file, str):      # If input is a file name (original set up)
-        pred = np.loadtxt(pred_file, delimiter=' ')
-        truth = np.loadtxt(truth_file, delimiter=' ')
+        pred = pd.read_csv(pred_file, header=None, sep=' ').values
+        print(np.shape(pred))
+        if np.shape(pred)[1] == 1:
+            pred = pd.read_csv(pred_file, header=None, sep=',').values
+        truth = pd.read_csv(truth_file, header=None, sep=' ').values
+        print(np.shape(truth))
+        if np.shape(truth)[1] == 1:
+            truth = pd.read_csv(truth_file, header=None, sep=',').values
     elif isinstance(pred_file, np.ndarray):
         pred = pred_file
         truth = truth_file
