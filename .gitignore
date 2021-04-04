@@ -16,4 +16,4 @@ Data/Yang_sim/state_dicts/*.png
 **.pt
 **event
 **pidfile.txt
-exp*   # Experimental data folders
+exp_data/
