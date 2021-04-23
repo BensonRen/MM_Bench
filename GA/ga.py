@@ -85,9 +85,11 @@ class GA_manager(object):
         # Open those files to append
         with open(Xtruth_file, 'a') as fxt,open(Ytruth_file, 'a') as fyt,\
                 open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
+
             # Loop through the eval data and evaluate
             for ind, (geometry, spectra) in enumerate(self.test_loader):
-                print("\nSAMPLE: {}".format(ind))
+                print("SAMPLE: {}".format(ind))
+
                 if cuda:
                     geometry = geometry.cuda()
                     spectra = spectra.cuda()
@@ -96,15 +98,17 @@ class GA_manager(object):
                                                         MSE_Simulator=MSE_Simulator, save_misc=save_misc, save_Simulator_Ypred=save_Simulator_Ypred)
                 tk.record(ind)                          # Keep the time after each evaluation for backprop
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
+
                 np.savetxt(fxt, geometry.cpu().data.numpy())
                 np.savetxt(fyt, spectra.cpu().data.numpy())
-                #if self.flags.data_set != 'Yang_sim':
-                np.savetxt(fyp, Ypred)
+                if self.flags.data_set != 'Yang_sim':
+                    np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
 
-                if (ind+1)%self.flags.eval_step == 0:
-                    plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
-                if ind==100:
+                #if (ind+1)%self.flags.eval_step == 0:
+                #    plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
+
+                if ind>(self.flags.xtra-1):
                     break
 
         return Ypred_file, Ytruth_file
@@ -129,16 +133,28 @@ class GA_manager(object):
         target_spectra_expand = target_spectra.expand([self.flags.population, -1])
 
         self.algorithm.set_pop_and_target(target_spectra_expand)
-        strt = time.time()
+        # select_gen = [0,5,10,25,50,75,99]
+        # store = np.empty((1,len(select_gen)))
+        begin = time.time()
         for i in range(self.flags.generations):
-            curr = time.time()
+            #curr = time.time()
             #print('{}\t'.format(i),end='')
-            print("\r\tGEN: {}\tTIME: {}".format(i,curr-strt),end='')
+            #print("\r\tGEN: {}\tTIME: {}".format(i,curr-strt),end='')
             logit = self.algorithm.evolve()
             loss = self.make_loss(logit,target_spectra_expand)
 
+        print("Evolution: {}".format(time.time() - begin))
+            # if i in select_gen:
+            #     good_index = torch.argmin(loss, dim=0).cpu().data.item()
+            #     best_val = loss[good_index].cpu().item()
+            #     idx = select_gen.index(i)
+            #     store[0][idx] = best_val
+
+        # with open(os.path.join(save_dir, 'best_val_by_gen_and_sample.csv'), 'a') as bfile:
+        #     np.savetxt(bfile,store,delimiter=',')
+
         good_index = torch.argmin(loss,dim=0).cpu().data.numpy()
-        geometry_eval_input = self.algorithm.generation.cpu().data.numpy()
+        geometry_eval_input = self.algorithm.old_gen.cpu().data.numpy()
 
         if save_all:  # If saving all the results together instead of the first one
             saved_model_str = self.saved_model.replace('/', '_')
@@ -174,7 +190,9 @@ class GA_manager(object):
         # print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input[best_estimate_index, :]), [1, -1])
         if save_Simulator_Ypred and self.flags.data_set != 'Yang_sim':
+            begin = time.time()
             Ypred = simulator(self.flags.data_set, geometry_eval_input)
+            print("Simulation: ", time.time()-begin)
             if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])
         Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])
@@ -205,6 +223,7 @@ class GA(object):
         self.model = model
         self.calculate_spectra = self.sim if self.eval else self.model
         self.target = None
+        self.old_gen = None
         self.generation = None
         self.fitness = None
         self.p_child = None
@@ -264,7 +283,6 @@ class GA(object):
 
     def roulette(self):
         ' Performs roulette-wheel selection from self.generation using self.fitness '
-        #mock_fit = self.fitness
         mock_fit = 1/self.fitness
         total = torch.sum(mock_fit)
         mock_fit = mock_fit/total
@@ -318,14 +336,6 @@ class GA(object):
         idcs = (rand_vec < self.cross_p).nonzero().squeeze()
         n_selected = idcs.shape[0]
 
-        #idcs = (rand_vec < self.cross_p).nonzero()
-        #if idcs.shape[0] != 1:
-        #    idcs = idcs.squeeze()
-        #    n_selected = idcs.shape[0]
-        #else:
-        #    n_selected = 0
-        #    idcs = ()
-
         siteX = torch.randint(1, self.n_params, (n_selected,), device=self.device, requires_grad=False)
 
         parentC = self.p_child.clone()
@@ -351,13 +361,16 @@ class GA(object):
         if self.target is None:
             raise(Exception('Set target spectra before running the GA'))
 
+        self.old_gen = self.generation.clone()
+
         # Evaluate fitness of current population
         logit = self.calculate_spectra(self.generation)
         self.fitness = self.loss_fn(logit,self.target)
 
         # Select parents for mating and sort individuals in generation
-        self.fitness, sorter = torch.sort(self.fitness,descending=False) #descending=True)
+        self.fitness, sorter = torch.sort(self.fitness,descending=False)
         self.generation = self.generation[sorter]
+
         self.selector()
 
         # Do crossover followed by mutation to create children from parents
@@ -366,5 +379,5 @@ class GA(object):
 
         # Combine children and elites into new generation
         self.generation[self.n_elite:] = self.p_child[:self.n_kids]
-        #print(self.fitness[0].item())
+
         return logit

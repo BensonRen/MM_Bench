@@ -4,13 +4,20 @@ import sys
 import numpy as np
 sys.path.append('C:\\Users\\Lab User\\Desktop\\Ashwin\\MM_Bench\\utils')
 from utils.helper_functions import save_flags, load_flags
+from utils.evaluation_helper import plotMSELossDistrib as pl
+
 
 print('\n'.join(sys.path))
+flags = load_flags('.\\models\\Yang_sim_best_model')
+dir = 'data/sweep02/Yang_sim_1000/'
+pl(dir+'test_Ypred_Yang_sim_best_model.csv',dir+'test_Ytruth_Yang_sim_best_model.csv',flags,save_dir=dir)
+
+
 '''
 flags = flag_reader.read_flag()
 save_flags(flags,'.\\models\\peurifoy')
 '''
-
+'''
 flags = load_flags('.\\models\\Yang_sim_best_model')
 flags.data_dir = '../Data/'
 save_flags(flags,'.\\models\\Yang_sim_best_model')
@@ -18,7 +25,7 @@ flags = load_flags('.\\models\\Yang_sim_best_model')
 with open('.\\models\\Yang_sim_best_model\\parameters.txt','w') as file:
     print(vars(flags), file=file)
     print(vars(flags))
-
+'''
 '''
 flags = load_flags('.\\models\\peurifoy')
 flags.linear = [8,400,400,400,201]

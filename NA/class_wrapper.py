@@ -302,6 +302,7 @@ class Network(object):
                 open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
             # Loop through the eval data and evaluate
             for ind, (geometry, spectra) in enumerate(self.test_loader):
+
                 if cuda:
                     geometry = geometry.cuda()
                     spectra = spectra.cuda()
@@ -315,6 +316,10 @@ class Network(object):
                 if self.flags.data_set != 'Yang':
                     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
+
+                if ind>49:
+                    break
+
         return Ypred_file, Ytruth_file
 
     def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True):
@@ -345,6 +350,7 @@ class Network(object):
         target_spectra_expand = target_spectra.expand([self.flags.eval_batch_size, -1])
         
         # Begin NA
+        begin = time.time()
         for i in range(self.flags.backprop_step):
             # Make the initialization from [-1, 1], can only be in loop due to gradient calculator constraint
             if init_from_Xpred is None:
@@ -364,7 +370,9 @@ class Network(object):
             if i != self.flags.backprop_step - 1:
                 self.optm_eval.step()  # Move one step the optimizer
                 self.lr_scheduler.step(loss.data)
-        
+
+        print("NA ITERATION: ", time.time()-begin)
+
         if save_all:                # If saving all the results together instead of the first one
             ##############################################################
             # Choose the top "trail_nums" points from NA solutions #
@@ -446,7 +454,9 @@ class Network(object):
         #print("The best performing one is:", best_estimate_index)
         Xpred_best = np.reshape(np.copy(geometry_eval_input.cpu().data.numpy()[best_estimate_index, :]), [1, -1])
         if save_Simulator_Ypred and self.flags.data_set != 'Yang':
+            begin=time.time()
             Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
+            print("SIMULATOR: ",time.time()-begin)
             if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])
         Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])

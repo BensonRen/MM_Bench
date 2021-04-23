@@ -219,6 +219,7 @@ def read_data_peurifoy(flags, eval_data_all=False):
 
     # Read the data
     data_dir = os.path.join(flags.data_dir, 'Peurifoy')
+    #data_dir = '..\\..\\Data\\Peurifoy'
     data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
     data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None).astype('float32').values
 

@@ -58,8 +58,13 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
 
     # Evaluation process
     print("Start eval now:")
-    dname = 'data/' + flags.data_set + flags.cross_operator + flags.selection_operator
-    os.mkdir(dname)
+    dname = flags.save_to
+
+    try:
+        os.mkdir(dname)
+    except(Exception):
+        pass
+
     if multi_flag:
         dest_dir = './multi_eval/GA/'
         if not os.path.isdir(dest_dir):
@@ -104,35 +109,89 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
                                 save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
 def test_categorical_variables():
-    data_set_list = ["Yang_sim"]
+    data_set_list = ["Peurifoy","Chen","Yang_sim"]
     SOps = ["roulette","decimation","tournament"]
     XOps = ["uniform","single-point"]
 
+    for i in [1,2]:
+        for d in data_set_list:
+            for x in XOps:
+                for s in SOps:
+                    dir = d + '_best_model'
+                    flags = load_flags(os.path.join("models", dir))
+                    flags.cross_operator = x
+                    flags.selection_operator = s
+                    flags.data_set = d
+                    flags.eval_model = dir
+                    flags.crossover = 0.8
+                    flags.elitism = 500
+                    flags.k = 500
+                    flags.mutation = 0.05
+                    flags.population = flags.eval_batch_size
+                    flags.ga_eval = False
+                    flags.generations = 10
+                    flags.xtra = i
+
+                    evaluate_from_model(flags.eval_model,preset_flag=flags,save_Simulator_Ypred=True)
+
+def test_gen_pop():
+    data_set_list =["Peurifoy","Chen","Yang_sim"]
+    c = 0
+    l = os.listdir('data/sweep03')
     for d in data_set_list:
-        for x in XOps:
-            for s in SOps:
+        for p in [25,50,75,100,150]:
+            for g in [10,25,50,100,150]:
+
+                if d+'_'+str(g)+'_'+str(p) in l:
+                    continue
+
                 dir = d + '_best_model'
                 flags = load_flags(os.path.join("models", dir))
-                flags.cross_operator = x
-                flags.selection_operator = s
+                flags.cross_operator = 'single-point'
+                flags.selection_operator = 'roulette'
                 flags.data_set = d
                 flags.eval_model = dir
                 flags.crossover = 0.8
-                flags.elitism = 500
-                flags.k = 500
+                flags.elitism = int(p/5)
+                flags.k = int(p/5)
                 flags.mutation = 0.05
-                flags.population = flags.eval_batch_size
                 flags.ga_eval = False
-                flags.generations = 5
+                flags.generations = g
+                flags.population = p
+                flags.xtra = 50
 
-                evaluate_from_model(flags.eval_model,preset_flag=flags,save_Simulator_Ypred=False)
+                evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=True)
+
+def test_num_samples():
+    pop = [200, 200, 800]
+    elite = [50, 50, 200]
+    for i,dset in enumerate(['Peurifoy','Chen','Yang_sim']):
+        dxy = dset + '_best_model'
+        flags = load_flags(os.path.join("models", dxy))
+        flags.data_set = dset
+
+        flags.cross_operator = 'single-point'
+        flags.selection_operator = 'roulette'
+        flags.eval_model = dxy
+        flags.crossover = 0.8
+        flags.elitism = elite[i]
+        flags.k = elite[i]
+        flags.mutation = 0.05
+        flags.population = pop[i]
+        flags.ga_eval = False
+        flags.generations = 300
+        flags.xtra = 1000
+        flags.save_to = 'data/sweep05/'+flags.data_set
+
+        evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False)
 
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
     eval_flags = flag_reader.read_flag()
 
-    test_categorical_variables()
+    test_num_samples()
+    #test_categorical_variables()
 
     #####################
     # different dataset #

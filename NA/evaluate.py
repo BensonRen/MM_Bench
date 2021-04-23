@@ -82,7 +82,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
         pred_file, truth_file = ntwk.evaluate(save_dir=dest_dir, save_all=True,
                                                 save_misc=save_misc, MSE_Simulator=MSE_Simulator,save_Simulator_Ypred=save_Simulator_Ypred)
     else:
-        pred_file, truth_file = ntwk.evaluate(save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
+        pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
 
     # Plot the MSE distribution
     plotMSELossDistrib(pred_file, truth_file, flags)
@@ -105,8 +105,8 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
      """
      ## Evaluate all models with "reatrain" and dataset name in models/
      for model in os.listdir('models/'):
-         if 'best' in model:
-             evaluate_from_model(model, multi_flag=multi_flag, 
+         if 'Peurifoy_best' in model:
+             evaluate_from_model(model, multi_flag=multi_flag,
                           eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
 def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
