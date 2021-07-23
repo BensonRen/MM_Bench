@@ -83,8 +83,8 @@ class GA_manager(object):
         tk = time_keeper(time_keeping_file=os.path.join(save_dir, 'evaluation_time.txt'))
 
         # Open those files to append
-        with open(Xtruth_file, 'a') as fxt,open(Ytruth_file, 'a') as fyt,\
-                open(Ypred_file, 'a') as fyp, open(Xpred_file, 'a') as fxp:
+        with open(Xtruth_file, 'w') as fxt,open(Ytruth_file, 'w') as fyt,\
+                open(Ypred_file, 'w') as fyp, open(Xpred_file, 'w') as fxp:
 
             # Loop through the eval data and evaluate
             for ind, (geometry, spectra) in enumerate(self.test_loader):
@@ -109,6 +109,7 @@ class GA_manager(object):
                 #    plotMSELossDistrib(Ypred_file,Ytruth_file,self.flags)
 
                 if ind>(self.flags.xtra-1):
+                    print("THIS BREAK IS HIT!",self.flags.xtra)
                     break
 
         return Ypred_file, Ytruth_file
@@ -157,20 +158,23 @@ class GA_manager(object):
         geometry_eval_input = self.algorithm.old_gen.cpu().data.numpy()
 
         if save_all:  # If saving all the results together instead of the first one
-            saved_model_str = self.saved_model.replace('/', '_')
-            Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
-            Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}.csv'.format(saved_model_str))
-            if self.flags.data_set != 'Yang_sim':  # This is for meta-meterial dataset, since it does not have a simple simulator
-                # 2 options: simulator/logit
-                Ypred = simulator(self.flags.data_set, geometry_eval_input)
-                if not save_Simulator_Ypred:  # The default is the simulator Ypred output
-                    Ypred = logit.cpu().data.numpy()
-                if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
-                    Ypred = np.reshape(Ypred, [-1, 1])
-                with open(Xpred_file, 'a') as fxp, open(Ypred_file, 'a') as fyp:
-                    np.savetxt(fyp, Ypred[good_index, :])
-                    np.savetxt(fxp, geometry_eval_input[good_index, :])
+            mse_loss = np.reshape(np.sum(np.square(logit.cpu().data.numpy() - target_spectra_expand.cpu().data.numpy()), axis=1), [-1, 1])
+            # The strategy of re-using the BPed result. Save two versions of file: one with FF and one without
+            mse_loss = np.concatenate((mse_loss, np.reshape(np.arange(self.flags.eval_batch_size), [-1, 1])), axis=1)
+            loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
+            exclude_top = 0
+            trail_nums = 2048
+            good_index = loss_sort[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
 
+            saved_model_str = self.saved_model.replace('/', '_')
+            Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}{}{}.csv'.format(saved_model_str,'inference',ind))
+            Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}{}{}.csv'.format(saved_model_str,'inference',ind))
+            print("HERE:\t",Ypred_file)
+            if self.flags.data_set != 'Yang_sim':  # This is for meta-meterial dataset, since it does not have a simple simulator
+                Ypred = simulator(self.flags.data_set, geometry_eval_input[good_index, :])
+                with open(Xpred_file, 'a') as fxp, open(Ypred_file, 'a') as fyp:
+                    np.savetxt(fyp, Ypred)
+                    np.savetxt(fxp, geometry_eval_input[good_index, :])
             else:
                 with open(Xpred_file, 'a') as fxp:
                     np.savetxt(fxp, geometry_eval_input[good_index, :])
@@ -180,9 +184,6 @@ class GA_manager(object):
         # From candidates choose the best #
         ###################################
         Ypred = logit.cpu().data.numpy()
-
-        if len(np.shape(Ypred)) == 1:  # If this is the ballistics dataset where it only has 1d y'
-            Ypred = np.reshape(Ypred, [-1, 1])
 
         # calculate the MSE list and get the best one
         MSE_list = np.mean(np.square(Ypred - target_spectra_expand.cpu().data.numpy()), axis=1)
@@ -238,7 +239,7 @@ class GA(object):
         if self.data_set == 'Chen':
             dim = 5
         elif self.data_set == 'Peurifoy':
-            dim = 3
+            dim = 8
         elif self.data_set == 'Yang_sim':
             dim = 14
         else:

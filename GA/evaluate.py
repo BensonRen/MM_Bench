@@ -4,8 +4,8 @@ This file serves as a evaluation interface for the network
 # Built in
 import os
 import sys
-
 sys.path.append('../utils/')
+
 # Torch
 
 # Own
@@ -49,6 +49,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.batch_size = 1 # For backprop eval mode, batchsize is always 1
     print(flags)
 
+    eval_data_all=True
     # Get the data
     train_loader, test_loader = data_reader.read_data(flags, eval_data_all=eval_data_all)
     print("Making network now")
@@ -60,13 +61,13 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print("Start eval now:")
     dname = flags.save_to
 
-    try:
-        os.mkdir(dname)
-    except(Exception):
-        pass
+    #try:
+    #    os.mkdir(dname)
+    #except(Exception):
+    #    pass
 
     if multi_flag:
-        dest_dir = './multi_eval/GA/'
+        dest_dir = './temp-dat/'+dname+'/'
         if not os.path.isdir(dest_dir):
             os.mkdir(dest_dir)
         dest_dir += flags.data_set
@@ -81,7 +82,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                               save_Simulator_Ypred=save_Simulator_Ypred)
 
     # Plot the MSE distribution
-    plotMSELossDistrib(pred_file, truth_file, flags,save_dir=dname)
+    #plotMSELossDistrib(pred_file, truth_file, flags,save_dir=dname)
     print("Evaluation finished")
 
 
@@ -163,9 +164,26 @@ def test_gen_pop():
                 evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=True)
 
 def test_num_samples():
-    pop = [200, 200, 800]
-    elite = [50, 50, 200]
-    for i,dset in enumerate(['Peurifoy','Chen','Yang_sim']):
+    # NA: Yang - 16.5, Peurifoy - 21.67, Chen -3.53
+    #gen = [164,165]#[30,28] #28 Chen, #120 Peurifoy, #Yang 120
+    #pop = [312,320] #[800, 180, 148] #? Peurifoy, #800 Yang, 148 Chen
+    #elite = [78,80] #[400, 45, 37]
+    #saveto = '_gen_50' #'_gen_lim_1'
+
+    # GPU 1
+    # gen = [300,120,300]
+    # ds = ['Peurifoy','Peurifoy','Chen']
+    # saveto = ['unres','res','unres']
+
+    # GPU 0
+    #gen = [300,28,120]
+    #ds = ['Yang_sim','Chen','Yang_sim']
+    #saveto = ['res','res','unres']
+    ds = ['Yang_sim','Yang_sim']
+    gen = [120,300,120,300]
+    saveto = ['GA2','GA1','GA2','GA1','GA2','GA1']
+
+    for i,dset in enumerate(ds):
         dxy = dset + '_best_model'
         flags = load_flags(os.path.join("models", dxy))
         flags.data_set = dset
@@ -174,16 +192,16 @@ def test_num_samples():
         flags.selection_operator = 'roulette'
         flags.eval_model = dxy
         flags.crossover = 0.8
-        flags.elitism = elite[i]
-        flags.k = elite[i]
+        flags.elitism = 500
+        flags.k = 500
         flags.mutation = 0.05
-        flags.population = pop[i]
+        flags.population = 2048
         flags.ga_eval = False
-        flags.generations = 300
-        flags.xtra = 1000
-        flags.save_to = 'data/sweep05/'+flags.data_set
+        flags.generations = gen[i]
+        flags.xtra = 20
+        flags.save_to = saveto[i]
 
-        evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False)
+        evaluate_from_model(flags.eval_model, preset_flag=flags, save_Simulator_Ypred=False, multi_flag=True)
 
 
 if __name__ == '__main__':

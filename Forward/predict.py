@@ -99,6 +99,8 @@ def ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remov
         return
 
     # saving the plot down
+    flags.eval_model = ''
+    model_dir = None
     if model_dir is None:
         return plotMSELossDistrib(save_name, truth_file, flags)
     else:
@@ -113,7 +115,7 @@ def predict_all(models_dir="data"):
     :return: None
     """
     for file in os.listdir(models_dir):
-        if 'Xpred' in file and 'Yang' in file:                     # Only meta material has this need currently
+        if 'Xpred' in file and 'meta_material' in file:                     # Only meta material has this need currently
             print("predicting for file", file)
             predict_from_model("models/meta_materialreg0.0005trail_2_complexity_swipe_layer1000_num6", 
             os.path.join(models_dir,file))
@@ -121,6 +123,7 @@ def predict_all(models_dir="data"):
 
 
 def ensemble_predict_master(model_dir, Xpred_file, no_plot, plot_dir=None):
+
     print("entering folder to predict:", model_dir)
     model_list = []
     
@@ -201,17 +204,9 @@ if __name__ == '__main__':
     #method_list = ['MDN','INN_FrEIA','cINN','VAE']
     #method_list = ['Tandem','MDN','INN_FrEIA','cINN','VAE']
     #for method in method_list:
-    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)
-
-    #dirx = ('unres_rev','res_rev')
-    #for d1 in dirx:
-    #    dx = os.path.join('multi_eval',d1,'Yang_sim')
-    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/',dx, no_plot=True)
-    dirx = os.path.join('temp-dat','GA2','Yang_sim')
-    Xpred_file = os.path.join(dirx,'test_Xpred_Yang_sim_best_model.csv')
-    no_plot = False
-    ensemble_predict_master('../Data/Yang_sim/state_dicts/', Xpred_file, no_plot, plot_dir=dirx)
-    #ensemble_predict(model_list, Xpred_file, model_dir=None, no_plot=True, remove_extra_files=True, state_dict=False):
+    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
+    
+    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/Yang_sim', no_plot=False)
     
     # Multi evaluation in the multi_eval folder of each method
     #method_list_multi = ['INN']
@@ -229,8 +224,3 @@ if __name__ == '__main__':
     #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Yang_sim_best_model", 'data/sweep04/Yang_sim/test_Xpred_Yang_sim_best_model.csv', no_plot=False, load_state_dict=None)
-
-    # dirx = ('unres','res')
-    # for d1 in dirx:
-    #     dx = os.path.join('multi_eval', d1, 'Yang_sim')
-    #     ensemble_predict_master('../Data/Yang_sim/state_dicts/', dx, no_plot=False, plot_dir=None)

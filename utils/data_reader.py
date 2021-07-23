@@ -158,6 +158,7 @@ def get_data_into_loaders(data_x, data_y, batch_size, DataSetClass, rand_seed=1,
     # Normalize the input
     x_train, x_test, y_train, y_test = train_test_split(data_x, data_y, test_size=test_ratio,
                                                         random_state=rand_seed)
+
     print('total number of training sample is {}, the dimension of the feature is {}'.format(len(x_train),
                                                                                              len(x_train[0])))
     print('total number of test sample is {}'.format(len(y_test)))
@@ -204,7 +205,7 @@ def read_data_chen(flags, eval_data_all=False):
     data_x = (data_x - 27.5) / 22.5
 
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
 
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
                                  test_ratio=flags.test_ratio)
@@ -220,6 +221,7 @@ def read_data_peurifoy(flags, eval_data_all=False):
     # Read the data
     data_dir = os.path.join(flags.data_dir, 'Peurifoy')
     #data_dir = '..\\..\\Data\\Peurifoy'
+    print(data_dir)
     data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
     data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None).astype('float32').values
 
@@ -229,7 +231,7 @@ def read_data_peurifoy(flags, eval_data_all=False):
     print("shape of data_x", np.shape(data_x))
     print("shape of data_y", np.shape(data_y))
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
 
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
                                  test_ratio=flags.test_ratio)
@@ -252,7 +254,7 @@ def read_data_Yang_sim(flags, eval_data_all=False):
     print("shape of data_x", np.shape(data_x))
     print("shape of data_y", np.shape(data_y))
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
 
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
                                  test_ratio=flags.test_ratio)

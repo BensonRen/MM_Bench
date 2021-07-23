@@ -39,9 +39,9 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags = load_flags(os.path.join("models", model_dir))
     flags.eval_model = model_dir                    # Reset the eval mode
     flags.backprop_step = eval_flags.backprop_step
-    flags.test_ratio = get_test_ratio_helper(flags)
+    flags.test_ratio = 0.02
 
-    if flags.data_set == 'Yang_sim':
+    if flags.data_set != None: #== 'Yang_sim':
         save_Simulator_Ypred = False
         print("this is Yang sim dataset, setting the save_Simulator_Ypred to False")
     flags.batch_size = 1                            # For backprop eval mode, batchsize is always 1
@@ -57,6 +57,15 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
 
     print(flags)
 
+    # if flags.data_set == 'Peurifoy':
+    #     flags.eval_batch_size = 10000
+    # elif flags.data_set == 'Chen':
+    #     flags.eval_batch_size = 10000
+    # elif flags.data_set == 'Yang' or flags.data_set == 'Yang_sim':
+    #     flags.eval_batch_size = 2000
+    #
+    # flags.batch_size = flags.eval_batch_size
+
     # Get the data
     train_loader, test_loader = data_reader.read_data(flags, eval_data_all=eval_data_all)
     print("Making network now")
@@ -66,7 +75,9 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print("number of trainable parameters is :")
     pytorch_total_params = sum(p.numel() for p in ntwk.model.parameters() if p.requires_grad)
     print(pytorch_total_params)
-    
+
+    # pred_file, truth_file = ntwk.validate_model(save_dir='data/' + flags.data_set+'_best_model', save_misc=save_misc,
+    #                                       MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
 
     # Evaluation process
     print("Start eval now:")
@@ -83,6 +94,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                                 save_misc=save_misc, MSE_Simulator=MSE_Simulator,save_Simulator_Ypred=save_Simulator_Ypred)
     else:
         pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
+
 
     # Plot the MSE distribution
     plotMSELossDistrib(pred_file, truth_file, flags)
@@ -105,6 +117,7 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
      """
      ## Evaluate all models with "reatrain" and dataset name in models/
      for model in os.listdir('models/'):
+         print(model)
          if 'Peurifoy_best' in model:
              evaluate_from_model(model, multi_flag=multi_flag,
                           eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)

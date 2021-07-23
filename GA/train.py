@@ -43,10 +43,9 @@ def retrain_different_dataset(index):
      This function is to evaluate all different datasets in the model with one function call
      """
      from utils.helper_functions import load_flags
-     data_set_list = ["peurifoy"]
-     #data_set_list = ["meta_material","peurifoy","chen"]
+     data_set_list = ['Peurifoy','Yang_sim','Chen']
      for eval_model in data_set_list:
-        flags = load_flags(os.path.join("models", eval_model))
+        flags = load_flags(os.path.join("models", eval_model+'_best_model'))
         flags.model_name = "retrain" + str(index) + eval_model
         flags.geoboundary = [-1, 1, -1, 1]     # the geometry boundary of meta-material dataset is already normalized in current version
         flags.train_step = 500

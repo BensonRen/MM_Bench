@@ -32,6 +32,7 @@ class Network(object):
         if inference_mode:                                      # If inference mode, use saved model
             if saved_model.startswith('models/'):
                 saved_model = saved_model.replace('models/','')
+            print(self.ckpt_dir,'\n',saved_model)
             self.ckpt_dir = os.path.join(ckpt_dir, saved_model)
             self.saved_model = saved_model
             print("This is inference mode, the ckpt is", self.ckpt_dir)

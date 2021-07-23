@@ -47,7 +47,7 @@ class Network(object):
         self.lr_scheduler = None                                # The lr scheduler: Initialized at train() due to GPU
         self.train_loader = train_loader                        # The train data loader
         self.test_loader = test_loader                          # The test data loader
-        #self.log = SummaryWriter(self.ckpt_dir)                 # Create a summary writer for keeping the summary to the tensor board
+        self.log = SummaryWriter(self.ckpt_dir)                 # Create a summary writer for keeping the summary to the tensor board
         if not os.path.isdir(self.ckpt_dir) and not inference_mode:
             os.mkdir(self.ckpt_dir)
         self.best_validation_loss = float('inf')                # Set the BVL to large number
@@ -164,6 +164,10 @@ class Network(object):
         The major training function. This would start the training using information given in the flags
         :return: None
         """
+
+        pytorch_total_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+        print("Total Number of Parameters: {}".format(pytorch_total_params))
+
         cuda = True if torch.cuda.is_available() else False
         if cuda:
             self.model.cuda()
@@ -175,6 +179,7 @@ class Network(object):
         # Time keeping
         tk = time_keeper(time_keeping_file=os.path.join(self.ckpt_dir, 'training time.txt'))
 
+        a = self.flags.train_step
         for epoch in range(self.flags.train_step):
             # Set to Training Mode
             train_loss = 0
@@ -196,7 +201,7 @@ class Network(object):
 
             if epoch % self.flags.eval_step == 0:                      # For eval steps, do the evaluations and tensor board
                 # Record the training loss to the tensorboard
-                #self.log.add_scalar('Loss/train', train_avg_loss, epoch)
+                self.log.add_scalar('Loss/train', train_avg_loss, epoch)
                 # self.log.add_scalar('Loss/BDY_train', boundary_avg_loss, epoch)
 
                 # Set to Evaluation Mode
@@ -213,7 +218,7 @@ class Network(object):
 
                 # Record the testing loss to the tensorboard
                 test_avg_loss = test_loss.cpu().data.numpy() / (j+1)
-                #self.log.add_scalar('Loss/test', test_avg_loss, epoch)
+                self.log.add_scalar('Loss/test', test_avg_loss, epoch)
 
                 print("This is Epoch %d, training loss %.5f, validation loss %.5f" \
                       % (epoch, train_avg_loss, test_avg_loss ))
@@ -231,8 +236,58 @@ class Network(object):
 
             # Learning rate decay upon plateau
             self.lr_scheduler.step(train_avg_loss)
-        #self.log.close()
+        self.log.close()
         tk.record(1)                    # Record at the end of the training
+
+    def validate_model(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=True):
+        """
+        The function to evaluate how good the models is (outputs validation loss)
+        Note that Ypred and Ytruth still refer to spectra, while Xpred and Xtruth still refer to geometries.
+        #Assumes testloader was modified to be one big tensor
+        :return:
+        """
+
+        self.load()                             # load the model as constructed
+
+        cuda = True if torch.cuda.is_available() else False
+        if cuda:
+            self.model.cuda()
+        self.model.eval()
+        saved_model_str = self.saved_model.replace('/','_')
+        # Get the file names
+        Ypred_file = os.path.join(save_dir, 'test_Ypred_{}.csv'.format(saved_model_str)) #Input associated? No real value
+        Xtruth_file = os.path.join(save_dir, 'test_Xtruth_{}.csv'.format(saved_model_str)) #Output to compare against
+        Ytruth_file = os.path.join(save_dir, 'test_Ytruth_{}.csv'.format(saved_model_str)) #Input of Neural Net
+        Xpred_file = os.path.join(save_dir, 'test_Xpred_{}.csv'.format(saved_model_str)) #Output of Neural Net
+        print("evalution output pattern:", Ypred_file)
+
+        # Time keeping
+        tk = time_keeper(time_keeping_file=os.path.join(save_dir, 'evaluation_time.txt'))
+
+        # Open those files to append
+        with open(Xtruth_file, 'w') as fxt,open(Ytruth_file, 'w') as fyt, open(Ypred_file, 'w') as fyp:
+
+            # Loop through the eval data and evaluate
+            geometry, spectra = next(iter(self.test_loader))
+
+            if cuda:
+                geometry = geometry.cuda()
+                spectra = spectra.cuda()
+
+            # Initialize the geometry first
+            Ypred = self.model(geometry).cpu().data.numpy()
+            Ytruth = spectra.cpu().data.numpy()
+
+            MSE_List = np.mean(np.power(Ypred - Ytruth, 2), axis=1)
+            mse = np.mean(MSE_List)
+            print(mse)
+
+            np.savetxt(fxt, geometry.cpu().data.numpy())
+            np.savetxt(fyt, Ytruth)
+            if self.flags.data_set != 'Yang':
+                np.savetxt(fyp, Ypred)
+
+        return Ypred_file, Ytruth_file
 
     def modulized_bp_ff(self, X_init_mat, Ytruth, FF, save_dir='data/', save_all=True):
         """
@@ -316,9 +371,6 @@ class Network(object):
                 if self.flags.data_set != 'Yang':
                     np.savetxt(fyp, Ypred)
                 np.savetxt(fxp, Xpred)
-
-                if ind>49:
-                    break
 
         return Ypred_file, Ytruth_file
 
@@ -515,7 +567,7 @@ class Network(object):
         if self.flags.data_set == 'Chen': 
             dim = 5
         elif self.flags.data_set == 'Peurifoy': 
-            dim = 3
+            dim = 8
         elif self.flags.data_set == 'Yang_sim': 
             dim = 14
         else:
