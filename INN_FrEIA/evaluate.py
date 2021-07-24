@@ -120,8 +120,13 @@ def evaluate_all(models_dir="models"):
     :return: None
     """
     for file in os.listdir(models_dir):
-        if os.path.isfile(os.path.join(models_dir, file, 'flags.obj')):
+        if not os.path.isfile(os.path.join(models_dir, file, 'flags.obj')):
+            continue
+        try:
             evaluate_from_model(os.path.join(models_dir, file))
+        except:
+            print("Your current evalutation failed!")
+            print(file)
     return None
 
 def evaluate_different_dataset(multi_flag=False, eval_data_all=False, modulized_flag=False):
@@ -140,21 +145,22 @@ if __name__ == '__main__':
     useless_flags = flag_reader.read_flag()
 
     print(useless_flags.eval_model)
-    #evaluate_from_model(useless_flags.eval_model)
+    #evaluate_from_model("models/Peurifoy_best_model")
     #evaluate_from_model(useless_flags.eval_model, multi_flag=True)
     #evaluate_from_model(useless_flags.eval_model, multi_flag=False, eval_data_all=True)
+    
     
     ##############################################
     # evaluate multiple dataset at the same time!#
     ##############################################
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False)
-    #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
+    evaluate_different_dataset(multi_flag=True, eval_data_all=False)
     
     #evaluate_different_dataset(modulized_flag=True)
     
     #evaluate_different_dataset(multi_flag=True)
     #evaluate_all("models/Peurifoy_layer_9/")
-    #evaluate_all("models/Yang/2nd_sweep/")
+    #evaluate_all("models/Peurifoy_2nd/")
     
     
     # Call the evaluate function from model
@@ -163,4 +169,4 @@ if __name__ == '__main__':
     ###########
     # Predict #
     ###########
-    predict_different_dataset(multi_flag=False)
+    #predict_different_dataset(multi_flag=False)

@@ -146,6 +146,7 @@ if __name__ == '__main__':
     ### Call the evaluate function from model, this "evaluate_from_model" uses the eval_model field in your
     ### "useless_flag" that reads out from your current parameters.py file in case you want to evaluate single model
     #evaluate_from_model(useless_flags.eval_model)
+    evaluate_from_model("models/Peurifoy_best_model")
     #evaluate_from_model(useless_flags.eval_model, multi_flag=True)
     #evaluate_from_model(useless_flags.eval_model, multi_flag=False, eval_data_all=True)
     
@@ -160,4 +161,4 @@ if __name__ == '__main__':
     ###########
     # Predict #
     ###########
-    predict_different_dataset(multi_flag=False)
+    #predict_different_dataset(multi_flag=False)

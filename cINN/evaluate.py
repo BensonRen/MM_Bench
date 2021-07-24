@@ -149,6 +149,8 @@ if __name__ == '__main__':
     #evaluate_from_model(useless_flags.eval_model, multi_flag=True)
     #evaluate_from_model(useless_flags.eval_model, multi_flag=False, eval_data_all=True)
     
+    #evaluate_from_model("models/Peurifoy_best_model")
+    
     ############################
     #Multiple model evaluation #
     ############################
@@ -157,15 +159,17 @@ if __name__ == '__main__':
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False)
     
     
-    #evaluate_different_dataset(multi_flag=True)
+    evaluate_different_dataset(multi_flag=True)
     
+    #evaluate_from_model("models/retrain0Chen_best_model")
+
     #evaluate_all("models/Chen_nocup_reg")
     #evaluate_all("models/Yang/reg1e-4/")
     #evaluate_all("models/Yang/reg5e-4/")
     #evaluate_all("models/Yang/reg1e-5/")
-    #evaluate_all("models/Peurifoy_new_swipe")
+    #evaluate_all("models/Peurifoy0521")
 
     ###########
     # Predict #
     ###########
-    predict_different_dataset(multi_flag=False)
+    #predict_different_dataset(multi_flag=False)

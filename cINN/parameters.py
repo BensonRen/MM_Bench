@@ -3,9 +3,9 @@ The parameter file storing the parameters for INN Model
 """
 
 # Define which data set you are using
-DATA_SET = 'Yang_sim'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
-#DATA_SET = 'Peurifoy'
+DATA_SET = 'Peurifoy'
 
 TEST_RATIO = 0.2
 
@@ -15,15 +15,17 @@ TEST_RATIO = 0.2
 DIM_Z = 5
 DIM_X = 5
 DIM_Y = 256
+"""
 # Peurifoy
-DIM_Z = 3
-DIM_X = 3
+DIM_Z = 8
+DIM_X = 8
 DIM_Y = 201
 """
 # Yang
 DIM_Z = 14
 DIM_X = 14
 DIM_Y = 2000
+"""
 
 COUPLE_LAYER_NUM = 13
 DIM_SPEC = None
@@ -39,23 +41,15 @@ CONV_STRIDE_SE = []
 #CONV_KERNEL_SIZE_SE = [5, 5, 8]
 #CONV_STRIDE_SE = [1, 1, 2]
 
-# Loss ratio
-LAMBDA_MSE = 3.             # The Loss factor of the MSE loss (reconstruction loss)
-LAMBDA_Z = 300.             # The Loss factor of the latent dimension (converging to normal distribution)
-LAMBDA_REV = 400.           # The Loss factor of the reverse transformation (let x converge to input distribution)
-ZEROS_NOISE_SCALE = 5e-2          # The noise scale to add to
-Y_NOISE_SCALE = 1e-1
-
-
 # Optimization params
 OPTIM = "Adam"
 REG_SCALE = 5e-3
 BATCH_SIZE = 2048
 EVAL_BATCH_SIZE = 2048
-EVAL_STEP = 20
+EVAL_STEP = 50
 GRAD_CLAMP = 15
-TRAIN_STEP = 300
-VERB_STEP = 20
+TRAIN_STEP = 500
+VERB_STEP = 50
 LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
 LR_DECAY_RATE = 0.8

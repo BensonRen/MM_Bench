@@ -4,12 +4,12 @@ import os
 from utils.evaluation_helper import plotMSELossDistrib
 
 
-big_folder = '/home/sr365/MM_Bench/'
+big_folder = '/home/sr365/MM_Bench/NA/'
 #big_folder = '/home/sr365/MM_Bench/NA/'
 
 for folder in os.listdir(big_folder):
     # ignore if not a folder or no data in folder name
-    if 'data' not in folder or not os.path.isdir(os.path.join(big_folder, folder)):
+    if 'data' not in folder or not os.path.isdir(os.path.join(big_folder, folder)) or 'Chen' not in folder:
         continue
     
     print('going into folder ', folder)

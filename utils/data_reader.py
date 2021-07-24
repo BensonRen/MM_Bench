@@ -226,6 +226,23 @@ def read_data_peurifoy(flags, eval_data_all=False):
 
     return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
 
+def read_data_Omar_bowtie_MMPA(flags, eval_data_all=False):
+    """
+    Omar data for 1d lorentzian peak checking, 2021.07.11
+
+    """
+    # Read the data
+    data_dir = os.path.join(flags.data_dir, 'Omar_bowtie')
+    data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None, sep=' ').astype('float32').values
+    data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None, sep=' ').astype('float32').values
+
+    print("shape of data_x", np.shape(data_x))
+    print("shape of data_y", np.shape(data_y))
+    if eval_data_all:
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+
+    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
+
 def read_data_Yang_sim(flags, eval_data_all=False):
     """
     Data reader function for the Yang_simulated data set
@@ -282,6 +299,8 @@ def read_data(flags, eval_data_all=False):
             flags.geoboundary_norm = [-1, 1, -1, 1]
     elif flags.data_set == 'Peurifoy':
         train_loader, test_loader = read_data_peurifoy(flags,eval_data_all=eval_data_all)
+    elif flags.data_set == 'Omar':
+        train_loader, test_loader = read_data_Omar_bowtie_MMPA(flags,eval_data_all=eval_data_all)
     elif flags.data_set == 'Chen':
         train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
     elif flags.data_set == 'Yang_sim':

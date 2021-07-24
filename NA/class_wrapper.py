@@ -264,7 +264,8 @@ class Network(object):
         return None
             
 
-    def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, save_Simulator_Ypred=True):
+    def evaluate(self, save_dir='data/', save_all=False, MSE_Simulator=False, save_misc=False, 
+                    save_Simulator_Ypred=True, noise_level=0):
         """
         The function to evaluate how good the Neural Adjoint is and output results
         :param save_dir: The directory to save the results
@@ -307,7 +308,9 @@ class Network(object):
                     spectra = spectra.cuda()
                 # Initialize the geometry first
                 Xpred, Ypred, loss = self.evaluate_one(spectra, save_dir=save_dir, save_all=save_all, ind=ind,
-                                                        MSE_Simulator=MSE_Simulator, save_misc=save_misc, save_Simulator_Ypred=save_Simulator_Ypred)
+                                                        MSE_Simulator=MSE_Simulator, save_misc=save_misc, 
+                                                        save_Simulator_Ypred=save_Simulator_Ypred, 
+                                                        noise_level=noise_level)
                 tk.record(ind)                          # Keep the time after each evaluation for backprop
                 # self.plot_histogram(loss, ind)                                # Debugging purposes
                 np.savetxt(fxt, geometry.cpu().data.numpy())
@@ -317,7 +320,9 @@ class Network(object):
                 np.savetxt(fxp, Xpred)
         return Ypred_file, Ytruth_file
 
-    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, FF=True, save_MSE_each_epoch=False):
+    def evaluate_one(self, target_spectra, save_dir='data/', MSE_Simulator=False ,save_all=False, 
+                    ind=None, save_misc=False, save_Simulator_Ypred=True, init_from_Xpred=None, 
+                    FF=True, save_MSE_each_epoch=False, noise_level=0):
         """
         The function which being called during evaluation and evaluates one target y using # different trails
         :param target_spectra: The target spectra/y to backprop to 
@@ -326,6 +331,7 @@ class Network(object):
         :param save_all: The multi_evaluation where each trail is monitored (instad of the best) during backpropagation
         :param ind: The index of this target_spectra in the batch
         :param save_misc: The flag to print misc information for degbugging purposes, usually printed to best_mse
+        :param noise_level: For datasets that need extra level of exploration, we add some gaussian noise to the resulting geometry
         :return: Xpred_best: The 1 single best Xpred corresponds to the best Ypred that is being backproped 
         :return: Ypred_best: The 1 singe best Ypred that is reached by backprop
         :return: MSE_list: The list of MSE at the last stage
@@ -392,7 +398,7 @@ class Network(object):
             loss_sort = mse_loss[mse_loss[:, 0].argsort(kind='mergesort')]                         # Sort the loss list
             loss_sort_FF_off = mse_loss
             exclude_top = 0
-            trail_nums = 60 
+            trail_nums = 200 
             good_index = loss_sort[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             good_index_FF_off = loss_sort_FF_off[exclude_top:trail_nums+exclude_top, 1].astype('int')                        # Get the indexs
             #print("In save all funciton, the top 10 index is:", good_index[:10])
@@ -400,6 +406,10 @@ class Network(object):
                 saved_model_str = self.saved_model.replace('/', '_') + 'inference' + str(ind)
             else:
                 saved_model_str = self.saved_model.replace('/', '_') + 'modulized_inference' + str(ind)
+            # Adding some random noise to the result
+            print("Adding random noise to the output for increasing the diversity!!")
+            geometry_eval_input += torch.randn_like(geometry_eval_input) * noise_level
+            
             Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
             Yfake_file = os.path.join(save_dir, 'test_Yfake_point{}.csv'.format(saved_model_str))
             Xpred_file = os.path.join(save_dir, 'test_Xpred_point{}.csv'.format(saved_model_str))
@@ -482,7 +492,7 @@ class Network(object):
         if self.flags.data_set == 'Chen': 
             dim = 5
         elif self.flags.data_set == 'Peurifoy': 
-            dim = 3
+            dim = 8
         elif self.flags.data_set == 'Yang_sim': 
             dim = 14
         else:

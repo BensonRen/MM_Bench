@@ -58,25 +58,27 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    layer_size_list = [600, 700]
+    layer_size_list = [5000, 1000]
+    #layer_size_list = [1750]
     #layer_size_list = [100, 250, 500]
-    reg_scale_list = [0, 1e-5, 1e-4]
+    reg_scale_list = [1e-4]
     #layer_num = 7
     for reg_scale in reg_scale_list:
-        for i in range(3):
-            for layer_num in range(8,16):
+        for i in range(1):
+            for layer_num in range(8, 25, 2):
                 for layer_size in layer_size_list:
                     flags = flag_reader.read_flag()  	#setting the base case
                     linear = [layer_size for j in range(layer_num)]        #Set the linear units
-                    linear[0] = 5                   # The start of linear
-                    linear[-1] = 256                # The end of linear
+                    linear[0] = 10                   # The start of linear
+                    linear[-1] = 1001                # The end of linear
                     flags.lr = 1e-4
                     flags.linear = linear
                     flags.reg_scale = reg_scale
-                    #flags.conv_kernel_size = [4, 3, 5]
-                    #flags.conv_stride = [2, 1, 1]
+                    #flags.conv_kernel_size = [3, 3, 5]
+                    #flags.conv_channel_out = [4, 4, 4]
+                    #flags.conv_stride = [1, 1, 1]
                     flags.model_name = flags.data_set + 'no_conv_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
-                    #flags.model_name = flags.data_set + 'conv_444_435_211_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
+                    #flags.model_name = flags.data_set + 'conv_444_335_111_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
                     training_from_flag(flags)
 
 if __name__ == '__main__':
@@ -92,6 +94,7 @@ if __name__ == '__main__':
         training_from_flag(flags)
     """
     hyperswipe()
+    #flags = flag_reader.read_flag()  	#setting the base case
     #training_from_flag(flags)
     # Do the retraining for all the data set to get the training 
     #for i in range(10):

@@ -3,13 +3,14 @@ Params for Back propagation model
 """
 # Define which data set you are using
 #DATA_SET = 'Yang_sim'
-DATA_SET = 'Chen'
+#DATA_SET = 'Chen'
 #DATA_SET = 'Peurifoy'
+DATA_SET = 'Omar'
 TEST_RATIO = 0.2
 
 # Model Architectural Params for meta_material data Set
 USE_LORENTZ = False
-LINEAR = [3, 400, 400, 400, 201]
+LINEAR = [10, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 1001]
 CONV_OUT_CHANNEL = []
 CONV_KERNEL_SIZE = []
 CONV_STRIDE = []

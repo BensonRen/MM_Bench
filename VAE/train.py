@@ -56,12 +56,13 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    reg_scale_list = [1e-3,  1e-4,  5e-3]
-    kl_coeff_list = [5e-4,1e-4,1e-3]
-    layer_size_list = [200, 500, 750]
-    dim_z_list = [6,7,8,9,10]
+    reg_scale_list = [1e-4]
+    #reg_scale_list = [1e-3,  1e-4,  5e-3]
+    kl_coeff_list = [5e-2, 0.1, 1, 5] 
+    layer_size_list = [1000]
+    dim_z_list = [12, 20, 50]
     for kl_coeff in kl_coeff_list:
-        for layer_num in range(4,10):
+        for layer_num in range(10, 15, 2):
             for layer_size in layer_size_list:
                 for dim_z in dim_z_list:
                     for reg_scale in reg_scale_list:

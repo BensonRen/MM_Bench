@@ -587,8 +587,10 @@ def generate(ndata):
 
 
 if __name__ == '__main__':
+    start = time.time()
     isTestLiteMORT = False
     isInverse = True
-    ndata = 50000
+    ndata = 2000
 
     generate(ndata)
+    print('The generation process of generating {} takes {}s'.format(ndata, time.time() - start))

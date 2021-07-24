@@ -60,7 +60,9 @@ def predict_different_dataset(multi_flag=False):
             predict(model, Ytruth_file, multi_flag=multi_flag)
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, 
-                        MSE_Simulator=False, save_Simulator_Ypred=True, init_lr=0.01, lr_decay=0.5, BDY_strength=1, save_dir='data/'):
+                        MSE_Simulator=False, save_Simulator_Ypred=True, 
+                        init_lr=0.1, lr_decay=0.5, BDY_strength=1, save_dir='data/',
+                        noise_level=0):
 
     """
     Evaluating interface. 1. Retreive the flags 2. get data 3. initialize network 4. eval
@@ -92,7 +94,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     ############################# Thing that are changing #########################
     flags.lr = init_lr
     flags.lr_decay_rate = lr_decay
-    flags.eval_batch_size = 8000
+    flags.eval_batch_size = 2048
     flags.optim = 'Adam'
     ###############################################################################
     
@@ -112,19 +114,24 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     # Evaluation process
     print("Start eval now:")
     if multi_flag:
-        dest_dir = '/home/sr365/MM_bench_multi_eval/NA_init_lr_{}_decay_{}_batch_{}/'.format(init_lr, lr_decay, flags.eval_batch_size)
+        dest_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/NA_init_lr_{}_decay_{}_batch_{}_bp_{}_noise_lvl_{}/'.format(init_lr, lr_decay, flags.eval_batch_size, flags.backprop_step, noise_level)
         #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
         if not os.path.isdir(dest_dir):
-            os.mkdir(dest_dir)
+            os.makedirs(dest_dir)
         dest_dir += flags.data_set
         if not os.path.isdir(dest_dir):
-            os.mkdir(dest_dir)
+            os.makedirs(dest_dir)
         #pred_file, truth_file = ntwk.evaluate(save_dir='/work/sr365/multi_eval/NA/' + flags.data_set, save_all=True,
         pred_file, truth_file = ntwk.evaluate(save_dir=dest_dir, save_all=True,
-                                                save_misc=save_misc, MSE_Simulator=MSE_Simulator,save_Simulator_Ypred=save_Simulator_Ypred)
+                                                save_misc=save_misc, MSE_Simulator=MSE_Simulator,
+                                                save_Simulator_Ypred=save_Simulator_Ypred,
+                                                noise_level=noise_level)
     else:
-        pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
+        pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc,
+                                             MSE_Simulator=MSE_Simulator, 
+                                             save_Simulator_Ypred=save_Simulator_Ypred,
+                                             noise_level=noise_level)
 
 
     if 'Yang' in flags.data_set:
@@ -145,32 +152,41 @@ def evaluate_all(models_dir="models"):
     return None
 
 def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     ## Evaluate all models with "reatrain" and dataset name in models/
-     for model in os.listdir('models/'):
-         if 'best' in model and 'Yang' not in model:
-             evaluate_from_model(model, multi_flag=multi_flag, 
-                          eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    ## Evaluate all models with "reatrain" and dataset name in models/
+    for model in os.listdir('models/'):
+        if 'best' in model and 'Chen' in model: 
+            evaluate_from_model(model, multi_flag=multi_flag, 
+                        eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
+    
+    # Single model evaluation
+    #model = 'Peurifoy_best_model'
+    #evaluate_from_model(model, multi_flag=multi_flag, 
+    #                 eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
 
 def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
-     """
-     This function is to evaluate all different datasets in the model with one function call
-     """
-     lr_list = [5e-4]
-     #lr_list = [0.001, 0.01, 0.1, 1, 10]
-     lr_decay_rate_list = [0.5]
-     #data_set_list = ["robotic_arm"]
-     #data_set_list = ["robotic_arm", "ballistics"]
-     #for eval_model in data_set_list:
-     for lr in lr_list:
-         for lr_decay_rate in lr_decay_rate_list:
-             for model in os.listdir('models/'):
-                 if 'best' in model and 'Peurifoy' in model:
-                     evaluate_from_model(model, multi_flag=multi_flag, 
-                                  eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, 
-                                  MSE_Simulator=MSE_Simulator, init_lr = lr, lr_decay = lr_decay_rate)#, BDY_strength=BDY)
+    """
+    This function is to evaluate all different datasets in the model with one function call
+    """
+    #lr_list = [0.01, 0.02, 0.03, 0.008]
+    lr_list = [0.01]
+    #lr_list = [0.001, 0.01, 0.1, 1, 10]
+    lr_decay_rate_list = [0.9]
+    noise_level_list = [8e-3, 9e-3]#, 1e-3, 1e-4, 1e-5]
+    #data_set_list = ["robotic_arm"]
+    #data_set_list = ["robotic_arm", "ballistics"]
+    #for eval_model in data_set_list:
+    for lr in lr_list:
+        for lr_decay_rate in lr_decay_rate_list:
+            for noise_level in noise_level_list:
+                for model in os.listdir('models/'):
+                    if 'best' in model and 'Chen' in model: 
+                        evaluate_from_model(model, multi_flag=multi_flag, 
+                                    eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, 
+                                    MSE_Simulator=MSE_Simulator, init_lr = lr, lr_decay = lr_decay_rate,
+                                    noise_level=noise_level)#, BDY_strength=BDY)
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used

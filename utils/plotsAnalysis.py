@@ -260,15 +260,43 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
         print("Your df list is empty, which means you probably mis-spelled the folder name or your folder does not have any parameters.txt?")
     #Concatenate all the dfs into a single aggregate one for 2 dimensional usee
     df_aggregate = pd.concat(df_list, ignore_index = True, sort = False)
-    df_aggregate.astype({heat_value_name: 'float'})
+    df_aggregate = df_aggregate.astype({heat_value_name: 'float'})
+
     print("before transformation:", df_aggregate)
     [h, w] = df_aggregate.shape
+    print('df_aggregate has shape {}, {}'.format(h, w))
+    # making the 2d ones with list to be the lenghth (num_layers)
     for i in range(h):
         for j in range(w):
-            if isinstance(df_aggregate.iloc[i,j], str) and (isinstance(eval(df_aggregate.iloc[i,j]), list)):
-                # print("This is a list!")
-                df_aggregate.iloc[i,j] = len(eval(df_aggregate.iloc[i,j]))
+            print('debugging for nan: ', df_aggregate.iloc[i,j])
+            if isinstance(df_aggregate.iloc[i,j], str) and 'nan' not in df_aggregate.iloc[i,j]:
+                if isinstance(eval(df_aggregate.iloc[i,j]), list):
+                    df_aggregate.iloc[i,j] = len(eval(df_aggregate.iloc[i,j]))
 
+    # If the grid is random (making too sparse a signal), aggregate them
+    # The signature of a random grid is the unique value of rows for feature is very large
+    if len(np.unique(df_aggregate.values[:, -1])) > 0.8 * h:        # If the number of unique features is more than 80%, this is random
+        df_aggregate = df_aggregate.astype('float')
+        num_bins = 5                                                # Put all random values into 5 bins
+        num_items = int(np.floor(h/num_bins))                            # each bins have num_item numbers inside, last one being more
+        feature_1_value_list = df_aggregate.values[:, -1]           # Get the values
+        feature_2_value_list = df_aggregate.values[:, -2]
+        feature_1_order = np.argsort(feature_1_value_list)          # Get the order
+        feature_2_order = np.argsort(feature_2_value_list)
+        for i in range(num_bins):
+            if i != num_bins - 1:
+                df_aggregate.iloc[feature_1_order[i*num_items: (i+1)*num_items], -1] = df_aggregate.iloc[feature_1_order[i*num_items], -1]
+                df_aggregate.iloc[feature_2_order[i*num_items: (i+1)*num_items], -2] = df_aggregate.iloc[feature_2_order[i*num_items], -2]
+            else:
+                df_aggregate.iloc[feature_1_order[i*num_items: ], -1] = df_aggregate.iloc[feature_1_order[i*num_items], -1]
+                df_aggregate.iloc[feature_2_order[i*num_items: ], -2] = df_aggregate.iloc[feature_2_order[i*num_items], -2]
+    
+        # df_aggregate.iloc[:, df.columns != heat_value_name] = df_aggregate.iloc[:, df.columns != heat_value_name].round(decimals=3)  
+    
+    print('type of last number of df_aggregate is', type(df_aggregate.iloc[-1, -1]))
+    
+    ########################################################################################################      
+    ########################################################################################################
     print("after transoformation:",df_aggregate)
     
     #Change the feature if it is a tuple, change to length of it
@@ -300,6 +328,7 @@ def HeatMapBVL(plot_x_name, plot_y_name, title,  save_name='HeatMap.png', HeatMa
     else: #Or this is a 2 dimension HeatMap
         print("plotting 2 dimension HeatMap")
         #point_df = pd.DataFrame.from_records([point.to_dict() for point in HMpoint_list])
+        df_aggregate = df_aggregate.round(decimals=3)
         df_aggregate = df_aggregate.reset_index()
         df_aggregate.sort_values(feature_1_name, axis=0, inplace=True)
         df_aggregate.sort_values(feature_2_name, axis=0, inplace=True)
@@ -480,10 +509,10 @@ def get_mse_mat_from_folder(data_dir):
     ####################################################################
     # Special handling for NA as it output file structure is different #
     ####################################################################
-    if 'NA' in data_dir or 'on' in data_dir: 
+    if 'NA' in data_dir or 'on' in data_dir or 'GA' in data_dir: 
         l, w = np.shape(Yt)
         print("shape of Yt", l,' ', w)
-        num_trails = 50
+        num_trails = 200
         #num_trails = 2048
         Ypred_mat = np.zeros([l, num_trails, w])
         check_full = np.zeros(l)                                     # Safety check for completeness
@@ -702,8 +731,8 @@ def DrawBoxPlots_multi_eval(data_dir, data_name, save_name='Box_plot'):
 
 
 def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot', 
-                                gif_flag=False, plot_points=51,resolution=None, dash_group='nobody',
-                                dash_label='', solid_label=''): # Depth=2 now based on current directory structure
+                                gif_flag=False, plot_points=200,resolution=None, dash_group='nobody',
+                                dash_label='', solid_label='',worse_model_mode=False): # Depth=2 now based on current directory structure
     """
     The function to draw the aggregate plot for Mean Average and Min MSEs
     :param data_dir: The mother directory to call
@@ -751,8 +780,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
     #print("printing the min_dict", min_dict)
        
     def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, avg_dict=None, 
-                    plot_points=51,  resolution=None, err_dict=None, color_assign=False, dash_group='nobody',
-                    dash_label='', solid_label=''):
+                    plot_points=50,  resolution=None, err_dict=None, color_assign=False, dash_group='nobody',
+                    dash_label='', solid_label='', plot_xlabel=False, worse_model_mode=False):
         """
         :param name: the name to save the plot
         :param dict: the dictionary to plot
@@ -764,14 +793,38 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
         :param err_dict: The error bar dictionary which takes the error bar input
         :param avg_dict: The average dict for plotting the starting point
         :param dash_group: The group of plots to use dash line
+        :param dash_label: The legend to write for dash line
+        :param solid_label: The legend to write for solid line
+        :param plot_xlabel: The True or False flag for plotting the x axis label or not
+        :param worse_model_mode: The True or False flag for plotting worse model mode (1X, 10X, 50X, 100X worse model)
         """
+        import matplotlib.colors as mcolors
+        if worse_model_mode:
+            color_dict = {"(1X": "limegreen", "(10X": "blueviolet", "(50X":"cornflowerblue", "(100X": "darkorange"}
+        else:
+            # # manual color setting
+            # color_dict = {"VAE": "blueviolet","cINN":"crimson", "INN":"cornflowerblue", "Random": "limegreen",
+            #                 "MDN": "darkorange", "NA_init_lr_0.1_decay_0.5_batch_2048":"limegreen"}
+            # Automatic color setting
+            color_dict = {}
+            if len(dict.keys()) < 10:
+                color_pool = mcolors.TABLEAU_COLORS.keys()
+            else:
+                color_pool = mcolors.CSS4_COLORS.keys()
+            for ind, key in enumerate(dict.keys()):
+                color_dict[key] = list(color_pool)[ind]
         
-        color_dict = {"VAE": "blueviolet","cINN":"crimson", 
-                        "INN":"cornflowerblue", "Random": "limegreen","MDN": "darkorange"}
         f = plt.figure(figsize=[6,3])
+        ax = plt.gca()
+        ax.spines['bottom'].set_color('black')
+        ax.spines['top'].set_color('black')
+        ax.spines['left'].set_color('black')
+        ax.spines['right'].set_color('black')
         text_pos = 0.01
         # List for legend
         legend_list = []
+        print("All the keys=", dict.keys())
+        print("All color keys=", color_dict.keys())
         for key in sorted(dict.keys()):
             ######################################################
             # This is for 02.02 getting the T=1, 50, 1000 result #
@@ -792,8 +845,9 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             x_axis += 1
             if time_in_s_table is not None:
                 x_axis *= time_in_s_table[data_name][key]
-            print("printing", name)
-            #print(key)
+            #print("printing", name)
+            
+            print('key = ', key)
             #print(dict[key])
             if err_dict is None:
                 if color_assign:
@@ -803,13 +857,18 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             else:
                 # This is the case where we plot the continuous error curve
                 if resolution is None:
-                    label = key.split('_')[0] 
+                    # For mm_bench, this is not needed
+                    #label = key.split('_')[0] 
+                    label = key
                     if linestyle == 'dashed':
                         label = None
-                    line_axis, = plt.plot(x_axis[:plot_points], dict[key][:plot_points], color=color_dict[key.split('_')[0]], linestyle=linestyle, label=label)
+                    #color_key = key.split('_')[0].split(')')[0] # '_' is for separating BP_ox_FF_ox and ')' is for worse model
+                    color_key = key
+                    #print("color key = ", color_key)
+                    line_axis, = plt.plot(x_axis[:plot_points], dict[key][:plot_points], color=color_dict[color_key], linestyle=linestyle, label=label)
                     lower = - err_dict[key][0, :plot_points] + np.ravel(dict[key][:plot_points])
                     higher = err_dict[key][1, :plot_points] + np.ravel(dict[key][:plot_points])
-                    plt.fill_between(x_axis[:plot_points], lower, higher, color=color_dict[key.split('_')[0]], alpha=0.2)
+                    plt.fill_between(x_axis[:plot_points], lower, higher, color=color_dict[color_key], alpha=0.2)
                 else:
                     if color_assign:
                         line_axis = plt.errorbar(x_axis[:plot_points:resolution], dict[key][:plot_points:resolution],c=color_dict[key.split('_')[0]], yerr=err_dict[key][:, :plot_points:resolution], label=key.replace('_',' '), capsize=5, linestyle=linestyle)#, errorevery=resolution)#,
@@ -823,16 +882,14 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
         print(legend_list)
         legend_list.append(Line2D([0], [0], color='k', linestyle='dashed', lw=1, label=dash_label))
         legend_list.append(Line2D([0], [0], color='k', linestyle='solid', lw=1, label=solid_label))
-        ax.legend(handles=legend_list, loc=1, ncol=2, prop={'size':8})
+        #ax.legend(handles=legend_list, loc=1, ncol=2, prop={'size':8})
 
-        
-        
-        if time_in_s_table is not None:
+        if time_in_s_table is not None and plot_xlabel:
             plt.xlabel('inference time (s)')
-        else:
+        elif plot_xlabel:
             plt.xlabel('# of inference made (T)')
         #plt.ylabel('MSE')
-        plt.xlim([-1, plot_points+2])
+        plt.xlim([1, plot_points])
         if 'ball' in data_name:
             data_name = 'D1: ' + data_name
         elif 'sine' in data_name:
@@ -841,15 +898,30 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             data_name = 'D3: ' + data_name
         elif 'meta' in data_name:
             data_name = 'D4: ' + data_name
-
-        plt.title(data_name.replace('_',' '), fontsize=20)
-        plt.grid(True, axis='both',which='both',color='b',alpha=0.3)
-        plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True, dpi=1000)
+        else: # This is not a standard dataset
+            plt.legend(prop={'size': 2})
+            plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True, dpi=300)
+            plt.close('all')
+            return
+        
+        plt.grid(True, axis='both',which='major',color='b',alpha=0.2)
+        #plt.title(data_name.replace('_',' '), fontsize=20)
+        ax = plt.gca()
+        
+        data_index = int(data_name.split(':')[0].split('D')[-1])
+        if data_index % 2 == 0: # If this is a even number
+            ax.yaxis.tick_right()
+        else:
+            ax.yaxis.tick_left()
+        if data_index < 3:
+            ax.xaxis.tick_top()
+        plt.xticks([1, 10, 20, 30, 40, 50])
+        plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True, dpi=300)
         plt.close('all')
 
 
-    plotDict(min_dict,'_minlog_quan2575.png', plot_points=plot_points, logy=True, avg_dict=avg_dict, err_dict=quan2575_dict, data_name=data_name,
-            dash_group=dash_group, dash_label=dash_label, solid_label=solid_label, resolution=resolution)
+    ax = plotDict(min_dict,'_minlog_quan2575.png', plot_points=plot_points, logy=True, avg_dict=avg_dict, err_dict=quan2575_dict, data_name=data_name,
+            dash_group=dash_group, dash_label=dash_label, solid_label=solid_label, resolution=resolution, worse_model_mode=worse_model_mode)
     #plotDict(min_dict,'_min_quan2575.png', plot_points, resolution, logy=False, avg_dict=avg_dict, err_dict=quan2575_dict)
     #plotDict(min_dict,'_minlog_std.png', plot_points, resolution, logy=True, avg_dict=avg_dict, err_dict=std_dict)
     #plotDict(min_dict,'_min_std.png', plot_points, resolution, logy=False, avg_dict=avg_dict, err_dict=std_dict)
@@ -862,7 +934,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             plotDict(min_dict, str(i), logy=True, plot_points=i)
         for i in range(20,1000,20):
             plotDict(min_dict, str(i), logy=True, plot_points=i)
-
+    
+    return ax
 
 
 
@@ -922,18 +995,21 @@ if __name__ == '__main__':
     #        
     #DrawAggregateMeanAvgnMSEPlot('/work/sr365/NA_compare/', 'ballistics')
         
-    
+
     # NIPS version 
-    work_dir = '/home/sr365/MM_bench_multi_eval/NA_init'
+    work_dir = '/home/sr365/mm_bench_multi_eval'
+    #work_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep'
     #lr_list = [10, 1, 0.1, 0.01, 0.001]
     MeanAvgnMinMSEvsTry_all(work_dir)
-    ##datasets = ['Yang_sim','Chen','Peurifoy']
-    datasets = ['Peurifoy']
+    #datasets = ['Yang_sim','Chen','Peurifoy']
+    #datasets = ['Yang_sim']
+    datasets = ['Chen']
     #datasets = ['Chen','Peurifoy']
     #for lr in lr_list:
     for dataset in datasets:
-        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)
-    
+        #DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)
+        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
+
     """
     # NIPS version on Groot
     #work_dir = '/data/users/ben/robotic_stuck/retrain5/'
@@ -944,14 +1020,14 @@ if __name__ == '__main__':
     for dataset in datasets:
         DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
     """
-    
+
     # NIPS version for INN robo
     #MeanAvgnMinMSEvsTry_all('/work/sr365/multi_eval/special/')
     #datasets = ['robotic_arm']
     #datasets = ['meta_material', 'robotic_arm','sine_wave','ballistics']
     #for dataset in datasets:
     #    DrawAggregateMeanAvgnMSEPlot('/work/sr365/multi_eval/special', dataset)
-    
+
     #MeanAvgnMinMSEvsTry_all('/home/sr365/ICML_exp_cINN_ball/')
     #DrawAggregateMeanAvgnMSEPlot('/home/sr365/ICML_exp_cINN_ball', dataset)
 
@@ -970,7 +1046,7 @@ if __name__ == '__main__':
         for dataset in datasets:
             DrawAggregateMeanAvgnMSEPlot(data_dir+ 'ICML_exp/'+algo+'/', dataset)
     """
-    
+
     # Modulized version plots (ICML_0120)
     #data_dir = '/data/users/ben/'
     ##data_dir = '/work/sr365/'

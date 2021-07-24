@@ -59,7 +59,8 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    reg_scale_list = [0, 1e-5, 5e-5, 1e-4, 5e-4, 1e-3]
+    reg_scale_list = [1e-4]
+    #reg_scale_list = [0, 1e-5, 5e-5, 1e-4, 5e-4, 1e-3]
     layer_size_list = [1500]
     for reg_scale in reg_scale_list:
         for i in range(3):
@@ -68,15 +69,15 @@ def hyperswipe():
                         flags = flag_reader.read_flag()  	#setting the base case
                         # Decoder arch
                         linear_b = [layer_size  for j in range(layer_num)]
-                        linear_b[0] = 1000
-                        linear_b[-1] = 14
-                        flags.conv_out_channel_b = [4, 4, 4]
-                        flags.conv_kernel_size_b = [3,3,4]
-                        flags.conv_stride_b = [1,1,2]
+                        linear_b[0] = 201
+                        linear_b[-1] = 8
+                        #flags.conv_out_channel_b = [4, 4, 4]
+                        #flags.conv_kernel_size_b = [3,3,4]
+                        #flags.conv_stride_b = [1,1,2]
                         flags.linear_b = linear_b
                         flags.reg_scale = reg_scale
-                        #flags.model_name = flags.data_set + '_Backward_no_conv_layer_num_' + str(layer_num) + '_unit_' + str(layer_size)  + '_reg_scale_' + str(flags.reg_scale) + '_trail_' + str(i)
-                        flags.model_name = flags.data_set + '_Backward_conv_444_334_112_layer_num_' + str(layer_num) + '_unit_' + str(layer_size)  + '_reg_scale_' + str(flags.reg_scale) + '_trail_' + str(i)
+                        flags.model_name = flags.data_set + '_Backward_no_conv_layer_num_' + str(layer_num) + '_unit_' + str(layer_size)  + '_reg_scale_' + str(flags.reg_scale) + '_trail_' + str(i)
+                        #flags.model_name = flags.data_set + '_Backward_conv_444_334_112_layer_num_' + str(layer_num) + '_unit_' + str(layer_size)  + '_reg_scale_' + str(flags.reg_scale) + '_trail_' + str(i)
                         training_from_flag(flags)
 
 

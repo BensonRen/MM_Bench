@@ -10,7 +10,8 @@ import numpy
 ###############
 # QUAD MACHINE#
 ###############
-input_dir =  '/home/sr365/MM_bench_multi_eval/NA_init/'   # quad
+input_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/'
+#input_dir =  '/home/sr365/mm_bench_multi_eval'   # quad
 #input_dir = '/home/sr365/ICML_exp_cINN_ball/'    # For quad
 #input_dir =  '/home/sr365/ICML_exp/'   # quad
 #input_dir =  '/home/sr365/multi_eval/'   # quad
@@ -38,12 +39,12 @@ for folders in os.listdir(input_dir):
                 print('deleting file {} due to empty'.format(current_file))
                 os.remove(current_file)
             elif '_Ytruth_' in file:
-                if 'ce0.csv' in file or 'NA' in folders:
+                if 'ce0.csv' in file or 'NA' in folders or 'GA' in folders:
                     os.rename(current_file, os.path.join(current_folder, 'Ytruth.csv'))
                 else:
                     os.remove(current_file)
             elif '_Xtruth_' in file:
-                if 'ce0.csv' in file or 'NA' in folders:
+                if 'ce0.csv' in file or 'NA' in folders or 'GA' in folders:
                     os.rename(current_file, os.path.join(current_folder, 'Xtruth.csv'))
                 else:
                     os.remove(current_file)

@@ -122,7 +122,7 @@ class Network(object):
         if self.flags.data_set == 'Chen': 
             dim = 5
         elif self.flags.data_set == 'Peurifoy': 
-            dim = 3
+            dim = 8
         elif self.flags.data_set == 'Yang_sim': 
             dim = 14
         else:

@@ -32,12 +32,6 @@ def read_flag():
     parser.add_argument('--conv-out-channel-se', type=list, default=CONV_OUT_CHANNEL_SE, help='The output channel of your 1d conv for spectra encoder model')
     parser.add_argument('--conv-kernel-size-se', type=list, default=CONV_KERNEL_SIZE_SE, help='The kernel size of your 1d conv for spectra encoder model')
     parser.add_argument('--conv-stride-se', type=list, default=CONV_STRIDE_SE, help='The strides of your 1d conv fro spectra encoder model')
-    # Loss ratio
-    parser.add_argument('--lambda-mse', type=float, default=LAMBDA_MSE, help='the coefficient for mse loss lambda')
-    parser.add_argument('--lambda-z', type=float, default=LAMBDA_Z, help='the coefficient for latent variable MMD loss lambda')
-    parser.add_argument('--lambda-rev', type=float, default=LAMBDA_REV, help='the coefficient for reverse MMD loss lambda')
-    parser.add_argument('--zeros-noise-scale', type=float, default=ZEROS_NOISE_SCALE, help='the noise scale of random variables for zeros')
-    parser.add_argument('--y-noise-scale', type=float, default=Y_NOISE_SCALE, help='the noise scale on y')
     # Optimization Params
     parser.add_argument('--optim', default=OPTIM, type=str, help='the type of optimizer that you want to use')
     parser.add_argument('--reg-scale', type=float, default=REG_SCALE, help='#scale for regularization of dense layers')

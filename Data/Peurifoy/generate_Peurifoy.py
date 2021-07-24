@@ -162,12 +162,11 @@ def generate(low_bound,up_bound,num_samples,num_layers):
 
 if __name__ == '__main__':
     # Normal bound
-    """
     start = time.time()
     low_bound = 30
     up_bound = 70
-    num_layers = 3
-    num_samples = 50000
+    num_layers = 8
+    num_samples = 2000
 
     data_x, data_y = generate(low_bound,up_bound,num_samples,num_layers)
     np.savetxt("data_x.csv",data_x,delimiter=',')
@@ -180,9 +179,10 @@ if __name__ == '__main__':
     low_bound = 30
     up_bound = 90
     num_layers = 3
-    num_samples = 50000
+    num_samples = 2000
 
     data_x, data_y = generate(low_bound,up_bound,num_samples,num_layers)
     np.savetxt("data_x_extended.csv",data_x,delimiter=',')
     np.savetxt("data_y_extended.csv",data_y,delimiter=',')
     print(time.time()-start)
+    """

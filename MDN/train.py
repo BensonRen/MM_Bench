@@ -60,19 +60,21 @@ def hyperswipe():
     """
     This is for doing hyperswiping for the model parameters
     """
-    reg_scale_list =  [1e-4, 5e-4, 5e-5, 0]
-    layer_size_list = [250, 500, 1000]
-    num_gauss_list = [2,3,4,5, 6,7,8,9]
+    reg_scale_list =  [1e-4]
+    #reg_scale_list =  [1e-4, 5e-4, 5e-5, 0]
+    layer_size_list = [1000]
+    #layer_size_list = [500, 1000]
+    num_gauss_list = [8]
     #num_gauss_list = [5, 10, 15, 20, 25, 30]
     for reg_scale in reg_scale_list:
-        for layer_num in range(4,10):
+        for layer_num in range(10, 17, 2):
             for layer_size in layer_size_list:
                 for num_gaussian in num_gauss_list:
                     flags = flag_reader.read_flag()  	#setting the base case
                     flags.reg_scale = reg_scale
                     linear = [layer_size  for j in range(layer_num)]
-                    linear[0] = 2000
-                    linear[-1] = 14
+                    linear[0] = 201
+                    linear[-1] = 8
                     flags.linear = linear
                     flags.num_gaussian = num_gaussian
                     flags.model_name = flags.data_set + '_gaussian_'+str(num_gaussian) + '_layer_num_' + str(layer_num) + '_unit_' + str(layer_size) + '_lr_' + str(flags.lr) + '_reg_scale_' + str(reg_scale)

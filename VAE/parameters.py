@@ -3,9 +3,9 @@ The parameter file storing the parameters for VAE Model
 """
 
 # Define which data set you are using
-DATA_SET = 'Yang_sim'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
-#DATA_SET = 'Peurifoy'
+DATA_SET = 'Peurifoy'
 
 TEST_RATIO = 0.2
 
@@ -15,15 +15,17 @@ TEST_RATIO = 0.2
 DIM_Z = 5
 DIM_X = 5
 DIM_Y = 256
+"""
 # Peurifoy
-DIM_Z = 3
-DIM_X = 3
+DIM_Z = 8
+DIM_X = 8
 DIM_Y = 201
 """
 # Yang
 DIM_Z = 14
 DIM_X = 14
 DIM_Y = 2000
+"""
 DIM_SPEC = None
 LINEAR_D = [DIM_Y + DIM_Z, 500, 500, 500, 500, 500, 500, 500,    DIM_X]           # Linear units for Decoder
 LINEAR_E = [DIM_Y + DIM_X, 500, 500, 500, 500, 500, 500, 500, 2*DIM_Z]                   # Linear units for Encoder

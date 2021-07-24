@@ -3,30 +3,32 @@ The parameter file storing the parameters for INN Model
 """
 
 # Define which data set you are using
-DATA_SET = 'Yang_sim'
+#DATA_SET = 'Yang_sim'
 #DATA_SET = 'Chen'
-#DATA_SET = 'Peurifoy'
+DATA_SET = 'Peurifoy'
 
 TEST_RATIO = 0.2
 
 # Architectural Params
-# Chen
 """
+# Chen
 DIM_X = 5
 DIM_Y = 256
 DIM_Z = 1 
 DIM_TOT = 300
+"""
 # Peurifoy
-DIM_X = 3
+DIM_X = 8
 DIM_Y = 201
 DIM_Z = 1 
-DIM_TOT = 4
+DIM_TOT = 9
 """
 # Yang
 DIM_X = 14
 DIM_Y = 2000
 DIM_Z = 1 
 DIM_TOT = 4
+"""
 
 # Architectural Params
 COUPLE_LAYER_NUM = 6

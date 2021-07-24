@@ -5,6 +5,7 @@ This file serves as a prediction interface for the network
 import os
 import sys
 sys.path.append('../utils/')
+import time
 # Torch
 
 # Own
@@ -195,15 +196,17 @@ def creat_mm_dataset():
 
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
+    #start = time.time()
     #creat_mm_dataset()
+    #print('Time is spend on producing MM dataset is {}'.format(time.time()-start))
     
    
     # Single evaluation in the data folder of each method
     #method_list = ['MDN','INN_FrEIA','cINN','VAE']
     #method_list = ['Tandem','MDN','INN_FrEIA','cINN','VAE']
-    method_list = ['NA']
-    for method in method_list:
-        predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
+    #method_list = ['NA']
+    #for method in method_list:
+    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '../' + method + '/data/', no_plot=False)  
     
     """
     #predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', 'data/', no_plot=False)  
@@ -214,11 +217,15 @@ if __name__ == '__main__':
     """
     
     # Multi evaluation in the multi_eval folder of each method
-    #method_list_multi = ['INN']
-    #method_list_multi = ['Tandem','MDN','INN','cINN','NA','VAE']
-    #for method in method_list_multi:
-    #    predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/MM_bench_multi_eval/'+ method + '/Yang_sim/', no_plot=True)  
-    #    #predict_ensemble_for_all('../Simulated_DataSets/Meta_material_Neural_Simulator/state_dicts/', '../multi_eval/'+ method + '/meta_material/', no_plot=True)  
+    # method_list_multi = ['NA_init_lr_0.01_decay_0.9_batch_2048']
+
+
+    #'NA_init_lr_0.05_decay_0.9_batch_2048']
+    #['NA_init_lr_0.0001_decay_0.9_batch_2048']
+    #'NA_init_lr_0.001_decay_0.9_batch_2048']
+    # #method_list_multi = ['MDN','INN','cINN','VAE']
+    # for method in method_list_multi:
+    #     predict_ensemble_for_all('../Data/Yang_sim/state_dicts/', '/home/sr365/mm_bench_multi_eval/NA_compare/'+ method + '/Yang_sim/', no_plot=True)  
     
     # This is for the modulized multi evaluation in the ICML_EXP folder
     #method_list_multi = get_folder_modulized()
@@ -229,3 +236,9 @@ if __name__ == '__main__':
     #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
+
+
+    predict_from_model('/home/sr365/MM_Bench/NA/models/Omar/Omarno_conv_5000_num_22_lr_0.0001reg_scale_0.001trail_0', '/home/sr365/MM_Bench/NA/data/Xpred.csv', no_plot=False, load_state_dict=None)
+
+
+

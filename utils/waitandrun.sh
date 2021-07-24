@@ -1,15 +1,15 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=1
 export PYTHONPATH="/home/sr365/MM_Bench/:$PYTHONPATH"
 
 # Waiting orders
-#PID=294818
-#while [ -e /proc/$PID ]
-#do
-#    echo "Process: $PID is still running" 
-#        sleep 10m
-#done
+PID=3044418
+while [ -e /proc/$PID ]
+do
+    echo "Process: $PID is still running" 
+        sleep 10m
+done
 
 TIME=`date`
 PWD=`pwd`
@@ -68,7 +68,6 @@ CURRENTTIME=`date`
         StartTime:   $TIME \n 
         ENDTIME: $CURRENTTIME \n
 	PWD:  $PWD\n"
-        cat parameters.py
 } | ssmtp rensimiao.ben@gmail.com
 
 echo "Process $PID has finished"
