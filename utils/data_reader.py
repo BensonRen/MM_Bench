@@ -3,11 +3,13 @@ import sys
 import numpy as np
 import pandas as pd
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 from sklearn.model_selection import train_test_split
 import torch
+
 
 def importData(directory, x_range, y_range):
     # pull data into python, should be either for training set or eval set
@@ -36,9 +38,10 @@ def importData(directory, x_range, y_range):
         print('For feature {}, the max is {} and min is {}'.format(i, np.max(ftr[:, i]), np.min(ftr[:, i])))
     return ftr, lbl
 
-def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
-                 data_dir=os.path.abspath(''), rand_seed=1234, normalize_input = True, test_ratio=0.02,
-                             eval_data_all=False):
+
+def read_data_meta_material(x_range, y_range, geoboundary, batch_size=128,
+                            data_dir=os.path.abspath(''), rand_seed=1234, normalize_input=True, test_ratio=0.02,
+                            eval_data_all=False):
     """
       :param input_size: input size of the arrays
       :param output_size: output size of the arrays
@@ -63,7 +66,7 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
         test_ratio = 0.999
     # get data files
     print('getting data files...')
-    ftrTrain, lblTrain = importData(os.path.join(data_dir,'Yang', 'dataIn'), x_range, y_range)
+    ftrTrain, lblTrain = importData(os.path.join(data_dir, 'Yang', 'dataIn'), x_range, y_range)
     if (test_ratio > 0):
         print("Splitting training data into test set, the ratio is:", str(test_ratio))
         ftrTrain, ftrTest, lblTrain, lblTest = train_test_split(ftrTrain, lblTrain,
@@ -76,7 +79,7 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
     print('total number of test samples is {}'.format(len(ftrTest)),
           'length of an input spectrum is {}'.format(len(lblTest[0])))
     print('downsampling output curves')
-    
+
     """
     # resample the output curves so that there are not so many output points
     # drop the beginning of the curve so that we have a multiple of 300 points
@@ -85,7 +88,7 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
         lblTest = lblTest[::, len(lblTest[0])-1800::6]
     """
     # If the length is over 2000, only take 2000
-    if len(lblTrain[0]) > 2000:                                
+    if len(lblTrain[0]) > 2000:
         lblTrain = lblTrain[::, :2000]
         lblTest = lblTest[::, :2000]
 
@@ -93,19 +96,19 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
                                                                                        len(lblTrain[-1])),
           'set final layer size to be compatible with this number')
     print('length of downsampled test spectra is {}, '.format(len(lblTest[0]),
-                                                         len(lblTest[-1])),
+                                                              len(lblTest[-1])),
           'set final layer size to be compatible with this number')
 
     # determine lengths of training and validation sets
     num_data_points = len(ftrTrain)
-    #train_length = int(.8 * num_data_points)
+    # train_length = int(.8 * num_data_points)
 
     print('generating torch dataset')
     assert np.shape(ftrTrain)[0] == np.shape(lblTrain)[0]
     assert np.shape(ftrTest)[0] == np.shape(lblTest)[0]
-    
+
     # This is for Yang's dataset
-    if normalize_input and np.max(np.max(ftrTrain)) > 1: 
+    if normalize_input and np.max(np.max(ftrTrain)) > 1:
         ftrTrain[:, 0:1] = (ftrTrain[:, 0:1] - geoboundary[0]) / (geoboundary[1] - geoboundary[0])
         ftrTrain[:, 0:1] = (ftrTrain[:, 0:1] - 0.5) / 0.5
         ftrTest[:, 0:1] = (ftrTest[:, 0:1] - geoboundary[0]) / (geoboundary[1] - geoboundary[0])
@@ -136,8 +139,8 @@ def read_data_meta_material( x_range, y_range, geoboundary,  batch_size=128,
     for i in range(len(ftrTrain[0, :])):
         print('For feature {}, the max is {} and min is {}'.format(i, np.max(ftrTrain[:, i]), np.min(ftrTrain[:, i])))
 
-    train_data = MetaMaterialDataSet(ftrTrain, lblTrain, bool_train= True)
-    test_data = MetaMaterialDataSet(ftrTest, lblTest, bool_train= False)
+    train_data = MetaMaterialDataSet(ftrTrain, lblTrain, bool_train=True)
+    test_data = MetaMaterialDataSet(ftrTest, lblTest, bool_train=False)
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size)
     return train_loader, test_loader
@@ -155,7 +158,9 @@ def get_data_into_loaders(data_x, data_y, batch_size, DataSetClass, rand_seed=1,
     # Normalize the input
     x_train, x_test, y_train, y_test = train_test_split(data_x, data_y, test_size=test_ratio,
                                                         random_state=rand_seed)
-    print('total number of training sample is {}, the dimension of the feature is {}'.format(len(x_train), len(x_train[0])))
+
+    print('total number of training sample is {}, the dimension of the feature is {}'.format(len(x_train),
+                                                                                             len(x_train[0])))
     print('total number of test sample is {}'.format(len(y_test)))
 
     # Construct the dataset using a outside class
@@ -178,7 +183,7 @@ def normalize_np(x):
     for i in range(len(x[0])):
         x_max = np.max(x[:, i])
         x_min = np.min(x[:, i])
-        x_range = (x_max - x_min ) /2.
+        x_range = (x_max - x_min) / 2.
         x_avg = (x_max + x_min) / 2.
         x[:, i] = (x[:, i] - x_avg) / x_range
         print("In normalize_np, row ", str(i), " your max is:", np.max(x[:, i]))
@@ -198,11 +203,13 @@ def read_data_chen(flags, eval_data_all=False):
 
     # The geometric boundary of Chen dataset is [5, 50], normalizing manually
     data_x = (data_x - 27.5) / 22.5
-    
-    if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
 
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
+    if eval_data_all:
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
+
+    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
+                                 test_ratio=flags.test_ratio)
+
 
 def read_data_peurifoy(flags, eval_data_all=False):
     """
@@ -213,6 +220,8 @@ def read_data_peurifoy(flags, eval_data_all=False):
 
     # Read the data
     data_dir = os.path.join(flags.data_dir, 'Peurifoy')
+    #data_dir = '..\\..\\Data\\Peurifoy'
+    print(data_dir)
     data_x = pd.read_csv(os.path.join(data_dir, 'data_x.csv'), header=None).astype('float32').values
     data_y = pd.read_csv(os.path.join(data_dir, 'data_y.csv'), header=None).astype('float32').values
 
@@ -222,9 +231,11 @@ def read_data_peurifoy(flags, eval_data_all=False):
     print("shape of data_x", np.shape(data_x))
     print("shape of data_y", np.shape(data_y))
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
 
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
+    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
+                                 test_ratio=flags.test_ratio)
+
 
 def read_data_Omar_bowtie_MMPA(flags, eval_data_all=False):
     """
@@ -260,9 +271,11 @@ def read_data_Yang_sim(flags, eval_data_all=False):
     print("shape of data_x", np.shape(data_x))
     print("shape of data_y", np.shape(data_y))
     if eval_data_all:
-        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.999)
+        return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=0.8) #0.999
 
-    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress, test_ratio=flags.test_ratio)
+    return get_data_into_loaders(data_x, data_y, flags.batch_size, SimulatedDataSet_regress,
+                                 test_ratio=flags.test_ratio)
+
 
 def read_data(flags, eval_data_all=False):
     """
@@ -281,7 +294,7 @@ def read_data(flags, eval_data_all=False):
     print("In read_data, flags.data_set =", flags.data_set)
     if flags.data_set == 'Yang':
         print("This is a Yang dataset")
-        if flags.geoboundary[0] == -1:          # ensemble produced ones
+        if flags.geoboundary[0] == -1:  # ensemble produced ones
             print("reading from ensemble place")
             train_loader, test_loader = read_data_ensemble_MM(flags, eval_data_all=eval_data_all)
         else:
@@ -302,15 +315,17 @@ def read_data(flags, eval_data_all=False):
     elif flags.data_set == 'Omar':
         train_loader, test_loader = read_data_Omar_bowtie_MMPA(flags,eval_data_all=eval_data_all)
     elif flags.data_set == 'Chen':
-        train_loader, test_loader =read_data_chen(flags,eval_data_all=eval_data_all)
+        train_loader, test_loader = read_data_chen(flags, eval_data_all=eval_data_all)
     elif flags.data_set == 'Yang_sim':
-        train_loader, test_loader =read_data_Yang_sim(flags,eval_data_all=eval_data_all)
+        train_loader, test_loader = read_data_Yang_sim(flags, eval_data_all=eval_data_all)
     else:
         sys.exit("Your flags.data_set entry is not correct, check again!")
     return train_loader, test_loader
 
+
 class MetaMaterialDataSet(Dataset):
     """ The Meta Material Dataset Class """
+
     def __init__(self, ftr, lbl, bool_train):
         """
         Instantiate the Dataset Object
@@ -332,6 +347,7 @@ class MetaMaterialDataSet(Dataset):
 
 class SimulatedDataSet_class_1d_to_1d(Dataset):
     """ The simulated Dataset Class for classification purposes"""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -346,6 +362,7 @@ class SimulatedDataSet_class_1d_to_1d(Dataset):
 
 class SimulatedDataSet_class(Dataset):
     """ The simulated Dataset Class for classification purposes"""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -360,6 +377,7 @@ class SimulatedDataSet_class(Dataset):
 
 class SimulatedDataSet_regress(Dataset):
     """ The simulated Dataset Class for regression purposes"""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -370,4 +388,3 @@ class SimulatedDataSet_regress(Dataset):
 
     def __getitem__(self, ind):
         return self.x[ind, :], self.y[ind, :]
-

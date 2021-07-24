@@ -17,8 +17,8 @@ from utils.evaluation_helper import plotMSELossDistrib
 from utils.evaluation_helper import get_test_ratio_helper
 # Libs
 import numpy as np
-import matplotlib.pyplot as plt
-from thop import profile, clever_format
+#import matplotlib.pyplot as plt
+#from thop import profile, clever_format
 
 def predict(model_dir, Ytruth_file ,multi_flag=False):
     """
@@ -81,9 +81,14 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print(model_dir)
     flags = load_flags(os.path.join("models", model_dir))
     flags.eval_model = model_dir                    # Reset the eval mode
+<<<<<<< HEAD
     flags.test_ratio = get_test_ratio_helper(flags)
+=======
+    flags.backprop_step = eval_flags.backprop_step
+    flags.test_ratio = 0.02
+>>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13
 
-    if flags.data_set == 'Yang_sim':
+    if flags.data_set != None: #== 'Yang_sim':
         save_Simulator_Ypred = False
         print("this is Yang sim dataset, setting the save_Simulator_Ypred to False")
     flags.batch_size = 1                            # For backprop eval mode, batchsize is always 1
@@ -100,6 +105,15 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     
     print(flags)
 
+    # if flags.data_set == 'Peurifoy':
+    #     flags.eval_batch_size = 10000
+    # elif flags.data_set == 'Chen':
+    #     flags.eval_batch_size = 10000
+    # elif flags.data_set == 'Yang' or flags.data_set == 'Yang_sim':
+    #     flags.eval_batch_size = 2000
+    #
+    # flags.batch_size = flags.eval_batch_size
+
     # Get the data
     train_loader, test_loader = data_reader.read_data(flags, eval_data_all=eval_data_all)
     print("Making network now")
@@ -109,7 +123,9 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print("number of trainable parameters is :")
     pytorch_total_params = sum(p.numel() for p in ntwk.model.parameters() if p.requires_grad)
     print(pytorch_total_params)
-    
+
+    # pred_file, truth_file = ntwk.validate_model(save_dir='data/' + flags.data_set+'_best_model', save_misc=save_misc,
+    #                                       MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
 
     # Evaluation process
     print("Start eval now:")
@@ -128,10 +144,15 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                                 save_Simulator_Ypred=save_Simulator_Ypred,
                                                 noise_level=noise_level)
     else:
+<<<<<<< HEAD
         pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc,
                                              MSE_Simulator=MSE_Simulator, 
                                              save_Simulator_Ypred=save_Simulator_Ypred,
                                              noise_level=noise_level)
+=======
+        pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
+
+>>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13
 
 
     if 'Yang' in flags.data_set:
@@ -152,6 +173,7 @@ def evaluate_all(models_dir="models"):
     return None
 
 def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
+<<<<<<< HEAD
     """
     This function is to evaluate all different datasets in the model with one function call
     """
@@ -187,6 +209,34 @@ def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False,
                                     eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, 
                                     MSE_Simulator=MSE_Simulator, init_lr = lr, lr_decay = lr_decay_rate,
                                     noise_level=noise_level)#, BDY_strength=BDY)
+=======
+     """
+     This function is to evaluate all different datasets in the model with one function call
+     """
+     ## Evaluate all models with "reatrain" and dataset name in models/
+     for model in os.listdir('models/'):
+         print(model)
+         if 'Peurifoy_best' in model:
+             evaluate_from_model(model, multi_flag=multi_flag,
+                          eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
+
+def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
+     """
+     This function is to evaluate all different datasets in the model with one function call
+     """
+     #lr_list = [2, 1,0.5,0.1]
+     lr_list = [0.5]
+     BDY_list = [0.001]
+     #BDY_list = [0.05, 0.01, 0.001]
+     data_set_list = ["Chen"]
+     #data_set_list = ["robotic_arm", "ballistics"]
+     for eval_model in data_set_list:
+        for lr in lr_list:
+            for BDY in BDY_list:
+                useless_flags = flag_reader.read_flag()
+                useless_flags.eval_model = "retrain5" + eval_model
+                evaluate_from_model(useless_flags.eval_model, multi_flag=multi_flag, eval_data_all=eval_data_all, save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator, init_lr = lr, BDY_strength=BDY)
+>>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13
 
 if __name__ == '__main__':
     # Read the flag, however only the flags.eval_model is used and others are not used
@@ -199,9 +249,6 @@ if __name__ == '__main__':
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
     #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
-    
-    
-    
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
     evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)

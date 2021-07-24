@@ -235,6 +235,7 @@ if __name__ == '__main__':
     
     #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
+<<<<<<< HEAD
     #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
 
 
@@ -242,3 +243,6 @@ if __name__ == '__main__':
 
 
 
+=======
+    #predict_from_model("models/Yang_sim_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
+>>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13
