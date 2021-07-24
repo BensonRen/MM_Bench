@@ -66,6 +66,7 @@ def compare_truth_pred(pred_file, truth_file, cut_off_outlier_thres=None, quiet_
         # This is for the edge case of ballistic, where y value is 1 dimensional which cause dimension problem
         pred = np.reshape(pred, [-1,1])
         truth = np.reshape(truth, [-1,1])
+
     mae = np.mean(np.abs(pred-truth), axis=1)
     mse = np.mean(np.square(pred-truth), axis=1)
 

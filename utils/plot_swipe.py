@@ -1,5 +1,7 @@
 import torch
 from utils import plotsAnalysis
+import os
+import shutil
 if __name__ == '__main__':
     #pathnamelist = ['/home/sr365/MM_Bench/Tandem/models/Yang/sweep3/noconv/',
     #               '/home/sr365/MM_Bench/Tandem/models/Yang/sweep3/conv_444_334_112/',
@@ -14,6 +16,31 @@ if __name__ == '__main__':
                 #'/home/sr365/MM_Bench/INN_FrEIA/models/Peurifoy']# #'/home/sr365/MM_Bench/MDN/models/Peurifoy']
                     #'/home/sr365/MM_Bench/NA/models/Chen/sweep5/lr0.0001/reg0/']
     #pathnamelist= ['/home/sr365/MM_Bench/NA/models/Yang_sim/conv_444_435_211/']
+    pathnamelist = ['../Forward/models/filtered']
+    pathfrom = ['../Forward/models/Peurifoy']
+
+    filtered = []
+    for pathname in pathfrom:
+        folders = os.listdir(pathname)
+        for f in folders:
+            all = f.split('_')
+            el = tuple(map(float,all[:5]))
+            # 0 = # layers
+            # 1 = # nodes
+            # 2 = l_rate
+            # 3 = reg scale
+            # 4 = l_rate decay
+            # 5 = count
+
+            #layers-> 8,9,11,12;
+            #if el[0]>=10 and el[1]>=1500:
+            # FORWARD PEURIFOY: Nodes 1500 - 2000, layers = 7 - 15, lr_decay_rate = 0.1-0.2,
+            if (el[0] >= 10 and el[0] <= 15) and (el[1] >= 1500 and el[1] <= 2000) and el[3] in (1e-3,1e-4,0,1e-5) and el[2] in (0.1,0.01,1e-3,1e-4) and el[4] in [0.1,0.2,0.3]:
+                filtered.append(f)
+
+        for f in filtered:
+            shutil.copytree(os.path.join(pathname,f),os.path.join(pathnamelist[0],f))
+
     for pathname in pathnamelist:
         
         # Forward: Convolutional swipe
@@ -26,8 +53,15 @@ if __name__ == '__main__':
                                 HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='reg_scale')
 
         # General: Complexity swipe
+<<<<<<< HEAD
         plotsAnalysis.HeatMapBVL('num_layers','num_unit','layer vs unit Heat Map',save_name=pathname + 'layer vs unit_heatmap.png',
                                 HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='linear_unit')
+=======
+        plotsAnalysis.HeatMapBVL('num_layers','num_unit','layer vs unit Heat Map',save_name=pathname + 'Peurifoy_node_vs_layers_heatmap.png',
+                                 HeatMap_dir=pathname,feature_1_name='linear',feature_2_name='linear_unit')
+
+        shutil.rmtree(pathname)
+>>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13
         
         # General: lr vs layernum
         plotsAnalysis.HeatMapBVL('num_layers','lr','layer vs unit Heat Map',save_name=pathname + 'layer vs lr_heatmap.png',
