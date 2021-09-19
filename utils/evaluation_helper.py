@@ -17,7 +17,7 @@ def get_test_ratio_helper(flags):
     This is for easier changing for multi_eval
     """
     if flags.data_set == 'Chen':
-        return 0.00781                       # 10 in total
+        return 0.004                       # 10 in total
         #return 0.25
         #return 0.039                        # 500 in total
     elif flags.data_set == 'Peurifoy':

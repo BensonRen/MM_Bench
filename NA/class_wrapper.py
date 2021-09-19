@@ -116,6 +116,8 @@ class Network(object):
             pairwise_dist_mat = torch.cdist(G, G, p=2)
             #print('size of pairwise dist mat =', pairwise_dist_mat.size())
             MD_loss = self.flags.md_coeff * torch.mean(pairwise_dist_mat)
+            print('MD_loss = ', MD_loss)
+            print('MSE loss = ', MSE_loss)
 
         self.MSE_loss = MSE_loss
         self.Boundary_loss = BDY_loss

@@ -94,7 +94,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.backprop_step = 300 
 
     # MD Loss: new version
-    flags.md_coeff = 1
+    flags.md_coeff = -3e-5
 
     ############################# Thing that are changing #########################
     flags.lr = init_lr
@@ -131,7 +131,7 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print("Start eval now:")
     if multi_flag:
         #dest_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/NA_init_lr_{}_decay_{}_batch_{}_bp_{}_noise_lvl_{}/'.format(init_lr, lr_decay, flags.eval_batch_size, flags.backprop_step, noise_level)
-        dest_dir = '/home/sr365/mm_bench_compare_MD_loss/MD_loss_{}'.format(flags.md_coeff)
+        dest_dir = '/home/sr365/mm_bench_compare_MDNA_loss/NA_init_lr_{}_decay_{}_MD_loss_{}'.format(flags.lr, flags.lr_decay_rate, flags.md_coeff)
         #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
         dest_dir = os.path.join(dest_dir, flags.data_set)

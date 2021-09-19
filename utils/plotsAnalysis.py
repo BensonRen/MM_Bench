@@ -997,8 +997,8 @@ if __name__ == '__main__':
         
 
     # NIPS version 
-    work_dir = '/home/sr365/mm_bench_multi_eval'
-    #work_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep'
+    #work_dir = '/home/sr365/mm_bench_multi_eval'
+    work_dir = '/home/sr365/mm_bench_compare_MDNA_loss'
     #lr_list = [10, 1, 0.1, 0.01, 0.001]
     MeanAvgnMinMSEvsTry_all(work_dir)
     #datasets = ['Yang_sim','Chen','Peurifoy']
