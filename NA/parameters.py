@@ -3,14 +3,15 @@ Params for Back propagation model
 """
 # Define which data set you are using
 #DATA_SET = 'Yang_sim'
-#DATA_SET = 'Chen'
+DATA_SET = 'Chen'
 #DATA_SET = 'Peurifoy'
-DATA_SET = 'Omar'
+#DATA_SET = 'Omar'
 TEST_RATIO = 0.2
 
 # Model Architectural Params for meta_material data Set
 USE_LORENTZ = False
-LINEAR = [10, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 1001]
+LINEAR = [5, 500, 500, 256]
+#LINEAR = [10, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 1001]
 CONV_OUT_CHANNEL = []
 CONV_KERNEL_SIZE = []
 CONV_STRIDE = []
@@ -34,6 +35,7 @@ LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
 LR_DECAY_RATE = 0.8
 STOP_THRESHOLD = 1e-9
+MD_COEFF = 0.01
 
 # Data specific Params
 X_RANGE = [i for i in range(2, 16 )]

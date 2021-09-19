@@ -197,7 +197,7 @@ def creat_mm_dataset():
 if __name__ == '__main__':
     # To create Meta-material dataset, use this line 
     #start = time.time()
-    #creat_mm_dataset()
+    creat_mm_dataset()
     #print('Time is spend on producing MM dataset is {}'.format(time.time()-start))
     
    
@@ -235,14 +235,11 @@ if __name__ == '__main__':
     
     #predict_from_model("models/Peurifoy_best_model", 'data/test_Xpred_Peurifoy_best_model.csv', no_plot=False, load_state_dict=None)
     #predict_from_model("models/Chen_best_model", 'data/test_Xpred_Chen_best_model.csv', no_plot=False, load_state_dict=None)
-<<<<<<< HEAD
     #predict_from_model("models/Yang_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
 
 
-    predict_from_model('/home/sr365/MM_Bench/NA/models/Omar/Omarno_conv_5000_num_22_lr_0.0001reg_scale_0.001trail_0', '/home/sr365/MM_Bench/NA/data/Xpred.csv', no_plot=False, load_state_dict=None)
+    #predict_from_model('/home/sr365/MM_Bench/NA/models/Omar/Omarno_conv_5000_num_22_lr_0.0001reg_scale_0.001trail_0', '/home/sr365/MM_Bench/NA/data/Xpred.csv', no_plot=False, load_state_dict=None)
 
 
 
-=======
     #predict_from_model("models/Yang_sim_best_model", 'data/test_Xpred_Yang_best_model.csv', no_plot=False, load_state_dict=None)
->>>>>>> 59e71ae73cce8b748bde634d82480d2d2ba2af13

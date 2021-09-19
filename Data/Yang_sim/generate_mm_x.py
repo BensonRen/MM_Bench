@@ -11,7 +11,7 @@ def generate_meta_material(data_num):
     return data_x
 
 if __name__ == '__main__':
-    data_num = 2000
+    data_num = 100000
     data_x = generate_meta_material(data_num)
     np.savetxt('dataIn/data_x.csv', data_x)
 

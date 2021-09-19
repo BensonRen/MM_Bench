@@ -42,6 +42,8 @@ def read_flag():
                         help='decay learn rate by multiplying this factor')
     parser.add_argument('--stop_threshold', default=STOP_THRESHOLD, type=float,
                         help='The threshold below which training should stop')
+                        
+    parser.add_argument('--md-coeff', default=MD_COEFF, type=float, help='coefficient of the MD loss')
     #    parser.add_argument('--decay-step', default=DECAY_STEP, type=int,
     #                        help='decay learning rate at this number of steps')
 

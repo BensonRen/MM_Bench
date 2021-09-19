@@ -80,7 +80,7 @@ class Network(object):
         print(model)
         return model
 
-    def make_loss(self, logit=None, labels=None, G=None, return_long=False):
+    def make_loss(self, logit=None, labels=None, G=None, return_long=False, pairwise=False):
         """
         Create a tensor that represents the loss. This is consistant both at training time \
         and inference time for Backward model
@@ -89,12 +89,14 @@ class Network(object):
         :param larger_BDY_penalty: For only filtering experiments, a larger BDY penalty is added
         :param return_long: The flag to return a long list of loss in stead of a single loss value,
                             This is for the forward filtering part to consider the loss
+        :param pairwise: The addition of a pairwise loss in the loss term for the MD
         :return: the total loss
         """
         if logit is None:
             return None
         MSE_loss = nn.functional.mse_loss(logit, labels)          # The MSE Loss
         BDY_loss = 0
+        MD_loss = 0
         if G is not None:         # This is using the boundary loss
             X_range, X_lower_bound, X_upper_bound = self.get_boundary_lower_bound_uper_bound()
             X_mean = (X_lower_bound + X_upper_bound) / 2        # Get the mean
@@ -102,9 +104,22 @@ class Network(object):
             BDY_loss_all = 1 * relu(torch.abs(G - self.build_tensor(X_mean)) - 0.5 * self.build_tensor(X_range))
             BDY_loss = 0.1*torch.sum(BDY_loss_all)
             #BDY_loss = self.flags.BDY_strength*torch.sum(BDY_loss_all)
+        
+        # Adding a pairwise MD loss for back propagation
+        if pairwise and G is not None:
+            # The pdist version
+            #pdist = nn.PairwiseDistance(p=2)
+            #output = pdist(G, G)
+
+            # The cdist version
+            #print('entering MD loss, size of G = ', G.size())
+            pairwise_dist_mat = torch.cdist(G, G, p=2)
+            #print('size of pairwise dist mat =', pairwise_dist_mat.size())
+            MD_loss = self.flags.md_coeff * torch.mean(pairwise_dist_mat)
+
         self.MSE_loss = MSE_loss
         self.Boundary_loss = BDY_loss
-        return torch.add(MSE_loss, BDY_loss)
+        return torch.add(torch.add(MSE_loss, BDY_loss), MD_loss)
 
 
     def build_tensor(self, nparray, requires_grad=False):
@@ -431,7 +446,8 @@ class Network(object):
             ###################################################
             # Boundar loss controled here: with Boundary Loss #
             ###################################################
-            loss = self.make_loss(logit, target_spectra_expand, G=geometry_eval_input)         # Get the loss
+            loss = self.make_loss(logit, target_spectra_expand, 
+                                G=geometry_eval_input, pairwise=True)         # Get the loss
             loss.backward()                                             # Calculate the Gradient
             # update weights and learning rate scheduler
             self.optm_eval.step()  # Move one step the optimizer
@@ -585,20 +601,26 @@ class Network(object):
         print("Xpred shape", np.shape(Xpred.values))
         Xpred_tensor = torch.from_numpy(Xpred.values).to(torch.float)
         cuda = True if torch.cuda.is_available() else False
-        if cuda:
-            self.model.cuda()
-            Xpred_tensor = Xpred_tensor.cuda()
         # Put into evaluation mode
         self.model.eval()
-        Ypred = self.model(Xpred_tensor)
-        print(Ypred.cpu().data.numpy())
+        if cuda:
+            self.model.cuda()
+        # Get small chunks for the evaluation
+        chunk_size = 1000
+        Ypred_mat = np.zeros([len(Xpred_tensor), 2000])
+        for i in range(int(np.floor(len(Xpred_tensor) / chunk_size))):
+            Xpred = Xpred_tensor[i*chunk_size:(i+1)*chunk_size, :]
+            if cuda:
+                Xpred = Xpred.cuda()
+            Ypred = self.model(Xpred).cpu().data.numpy()
+            Ypred_mat[i*chunk_size:(i+1)*chunk_size, :] = Ypred
         if load_state_dict is not None:
             Ypred_file = Ypred_file.replace('Ypred', 'Ypred' + load_state_dict[-7:-4])
         elif self.flags.model_name is not None:
                 Ypred_file = Ypred_file.replace('Ypred', 'Ypred' + self.flags.model_name)
         if no_save:                             # If instructed dont save the file and return the array
-            return Ypred.cpu().data.numpy(), Ytruth_file
-        np.savetxt(Ypred_file, Ypred.cpu().data.numpy())
+            return Ypred_mat, Ytruth_file
+        np.savetxt(Ypred_file, Ypred_mat)
 
         return Ypred_file, Ytruth_file
 

@@ -89,6 +89,6 @@ if __name__ == '__main__':
     #hyperswipe()
     #training_from_flag(flags)
     # Do the retraining for all the data set to get the training 
-    for i in range(1):
+    for i in range(2, 5):
         retrain_different_dataset(i)
 

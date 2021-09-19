@@ -82,8 +82,8 @@ def hyperswipe(dataset, rep=1):
                     flags.model_name = flags.data_set + 'no_conv_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
                     #flags.model_name = flags.data_set + 'conv_444_335_111_linear_' + str(layer_size) + '_num_' + str(layer_num) + '_lr_' + str(flags.lr) + 'reg_scale_' + str(reg_scale) + 'trail_' + str(i)
                     training_from_flag(flags)
-                except:
-                    print("Probably a bad configuration")
+                #except:
+                #    print("Probably a bad configuration")
 
                 dirs = os.listdir(spec_dir)
 
@@ -312,15 +312,15 @@ if __name__ == '__main__':
         #flags.reg_scale = 1e-4
         training_from_flag(flags)
     """
-    hyperswipe()
-    #flags = flag_reader.read_flag()  	#setting the base case
+    #hyperswipe()
+    flags = flag_reader.read_flag()  	#setting the base case
    
     # Ashwin part
     #random_grid_search(['Peurifoy'],rep=2)
-    hyperswipe(['Peurifoy'])
+    #hyperswipe(['Peurifoy'])
     #retrain_different_dataset(0)
     
-    #training_from_flag(flags)
+    training_from_flag(flags)
     # Do the retraining for all the data set to get the training 
     #for i in range(10):
     #    retrain_different_dataset(i)
