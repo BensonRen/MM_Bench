@@ -3,6 +3,9 @@ Params for Back propagation model
 """
 # Define which data set you are using
 #DATA_SET = 'Yang_sim'
+from math import inf
+
+
 DATA_SET = 'Chen'
 #DATA_SET = 'Peurifoy'
 #DATA_SET = 'Omar'
@@ -15,6 +18,13 @@ LINEAR = [5, 500, 500, 256]
 CONV_OUT_CHANNEL = []
 CONV_KERNEL_SIZE = []
 CONV_STRIDE = []
+
+
+# MD loss related params
+MD_COEFF = 5e-5
+MD_RADIUS = 0.2
+MD_START = -inf
+MD_END = inf
 
 # Model Architectural Params for Yang dataset
 #LINEAR = [4, 500, 500, 500, 500, 1]                 # Dimension of data set cross check with data generator
@@ -35,7 +45,6 @@ LEARN_RATE = 1e-3
 # DECAY_STEP = 25000 # This is for step decay, however we are using dynamic decaying
 LR_DECAY_RATE = 0.8
 STOP_THRESHOLD = 1e-9
-MD_COEFF = 0.01
 
 # Data specific Params
 X_RANGE = [i for i in range(2, 16 )]

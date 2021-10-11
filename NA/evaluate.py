@@ -2,6 +2,7 @@
 This file serves as a evaluation interface for the network
 """
 # Built in
+from math import inf
 import os
 import sys
 sys.path.append('../utils/')
@@ -17,6 +18,7 @@ from utils.evaluation_helper import plotMSELossDistrib
 from utils.evaluation_helper import get_test_ratio_helper
 # Libs
 import numpy as np
+import shutil
 #import matplotlib.pyplot as plt
 #from thop import profile, clever_format
 
@@ -61,8 +63,10 @@ def predict_different_dataset(multi_flag=False):
 
 def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_misc=False, 
                         MSE_Simulator=False, save_Simulator_Ypred=True, 
-                        init_lr=0.1, lr_decay=0.5, BDY_strength=1, save_dir='data/',
-                        noise_level=0):
+                        init_lr=0.01, lr_decay=0.9, BDY_strength=1, save_dir='data/',
+                        noise_level=0, 
+                        md_coeff=0, md_start=None, md_end=None, md_radius=None,
+                        eval_batch_size=None):
 
     """
     Evaluating interface. 1. Retreive the flags 2. get data 3. initialize network 4. eval
@@ -71,8 +75,6 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     :param eval_data_all: The switch to turn on if you want to put all data in evaluation data
     :return: None
     """
-    if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
     # Retrieve the flag object
     print("Retrieving flag object for parameters")
     if (model_dir.startswith("models")):
@@ -94,12 +96,19 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     flags.backprop_step = 300 
 
     # MD Loss: new version
-    flags.md_coeff = -3e-5
+    if md_coeff is not None:
+        flags.md_coeff = md_coeff
+    if md_start is not None:
+        flags.md_start = md_start
+    if md_end is not None:
+        flags.md_end = md_end
+    if md_radius is not None:
+        flags.md_radius = md_radius
 
     ############################# Thing that are changing #########################
     flags.lr = init_lr
     flags.lr_decay_rate = lr_decay
-    flags.eval_batch_size = 2048
+    flags.eval_batch_size = 2048 if eval_batch_size is None else eval_batch_size
     flags.optim = 'Adam'
     ###############################################################################
     
@@ -131,9 +140,10 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
     print("Start eval now:")
     if multi_flag:
         #dest_dir = '/home/sr365/mm_bench_multi_eval_Chen_sweep/NA_init_lr_{}_decay_{}_batch_{}_bp_{}_noise_lvl_{}/'.format(init_lr, lr_decay, flags.eval_batch_size, flags.backprop_step, noise_level)
-        dest_dir = '/home/sr365/mm_bench_compare_MDNA_loss/NA_init_lr_{}_decay_{}_MD_loss_{}'.format(flags.lr, flags.lr_decay_rate, flags.md_coeff)
+        #dest_dir = '/home/sr365/mm_bench_compare_MDNA_loss/NA_init_lr_{}_decay_{}_MD_loss_{}'.format(flags.lr, flags.lr_decay_rate, flags.md_coeff)
         #dest_dir = '/home/sr365/MM_bench_multi_eval/NA_RMSprop/'
         #dest_dir = '/data/users/ben/multi_eval/NA_lr' + str(init_lr)  + 'bdy_' + str(BDY_strength)+'/' 
+        dest_dir = os.path.join('/home/sr365/MDNA_temp/', save_dir)
         dest_dir = os.path.join(dest_dir, flags.data_set)
         if not os.path.isdir(dest_dir):
             os.makedirs(dest_dir)
@@ -143,19 +153,21 @@ def evaluate_from_model(model_dir, multi_flag=False, eval_data_all=False, save_m
                                                 save_Simulator_Ypred=save_Simulator_Ypred,
                                                 noise_level=noise_level)
     else:
+        # Creat the directory is not exist
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         pred_file, truth_file = ntwk.evaluate(save_dir=save_dir, save_misc=save_misc,
                                              MSE_Simulator=MSE_Simulator, 
                                              save_Simulator_Ypred=save_Simulator_Ypred,
                                              noise_level=noise_level)
         #pred_file, truth_file = ntwk.evaluate(save_dir='data/'+flags.data_set,save_misc=save_misc, MSE_Simulator=MSE_Simulator, save_Simulator_Ypred=save_Simulator_Ypred)
 
-
-
     if 'Yang' in flags.data_set:
         return
     # Plot the MSE distribution
-    plotMSELossDistrib(pred_file, truth_file, flags)
+    MSE = plotMSELossDistrib(pred_file, truth_file, flags)
     print("Evaluation finished")
+    return MSE
 
 
 def evaluate_all(models_dir="models"):
@@ -174,7 +186,8 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     """
     ## Evaluate all models with "reatrain" and dataset name in models/
     for model in os.listdir('models/'):
-        if 'best' in model and 'Chen' in model: 
+        if 'best' in model and 'Peurifoy' in model: 
+        #if 'best' in model and 'Chen' in model: 
             evaluate_from_model(model, multi_flag=multi_flag, 
                         eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
     
@@ -182,6 +195,56 @@ def evaluate_different_dataset(multi_flag, eval_data_all, save_Simulator_Ypred=F
     #model = 'Peurifoy_best_model'
     #evaluate_from_model(model, multi_flag=multi_flag, 
     #                 eval_data_all=eval_data_all,save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator)
+
+
+def hyper_sweep_evaluation(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False,
+                         save_file='hypersweep_results.txt'):
+    """
+    hyper sweeping the evlauation parameters here
+    """
+    dataset = 'Chen'
+    #dataset = 'Peurifoy'
+    with open(save_file, 'a') as fout:
+        for model in os.listdir('models/'):
+            if 'best' in model and dataset in model: 
+            #if 'best' in model and 'Chen' in model: 
+                # Sweeping the eval batch size
+                #for eval_batch_size in [5, 10, 20, 50, 100, 200, 500]:
+                for eval_batch_size in [10,  50, 2048]:
+                #for eval_batch_size in [100, 500, 1000]:
+                #for eval_batch_size in [1000]:
+                #for eval_batch_size in [16384]:
+                    for md_coeff in [1e-5, 1e-4]:
+                    #for md_coeff in [1e-3, 1e-2]:
+                    #for md_coeff in [0]:
+                    #for md_coeff in [1e-3, 1e-2]:
+                    #for md_coeff in [1e-5, 1e-4, 1e-3, 1e-2]:
+                        #for md_radius in [ 0.001]:
+                        for md_radius in [ 0.5, 0.1, 0.01, 0.001]:
+                        #for md_radius in [0]:
+                            md_start = -1
+                            md_end = inf
+                            
+                            # Make the save directory
+                            save_dir = 'extreme_data_{}_bs_{}_md_coeff_{}_md_radius_{}_md_start_{}_md_end_{}'.format(model, eval_batch_size,
+                                    md_coeff, md_radius, md_start, md_end)
+                            if not os.path.isdir(save_dir):
+                                os.makedirs(save_dir)
+                            
+                            # Make the evaluation of the model
+                            MSE = evaluate_from_model(model, multi_flag=multi_flag, eval_data_all=eval_data_all,
+                                                save_Simulator_Ypred=save_Simulator_Ypred, MSE_Simulator=MSE_Simulator,
+                                                eval_batch_size=eval_batch_size, md_coeff=md_coeff, md_radius=md_radius,
+                                                md_start=md_start, md_end=md_end, save_dir=save_dir)
+                            
+                            # Writing this model to the recording file
+                            #fout.write('Dataset = {}, For eval_batch_size = {}, md_coeff={}, md_radius={}, md_start={}, md_end={}, MSE={}'.format(model, eval_batch_size,
+                            #        md_coeff, md_radius, md_start, md_end, MSE))
+                            #fout.write('\n')
+
+                            # # Deleting that diectory
+                            # shutil.rmtree(save_dir)
+                            # os.mkdir('data')
 
 def evaluate_trail_BDY_lr(multi_flag, eval_data_all, save_Simulator_Ypred=False, MSE_Simulator=False):
     """
@@ -242,11 +305,13 @@ if __name__ == '__main__':
     # This is to run the single evaluation, please run this first to make sure the current model is well-trained before going to the multiple evaluation code below
     #evaluate_different_dataset(multi_flag=False, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     # This is for multi evaluation for generating the Fig 3, evaluating the models under various T values
-    evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    #evaluate_different_dataset(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
     
     # This is to test the BDY and LR effect of the NA method specially for Robo and Ballistics dataset, 2021.01.09 code trail for investigating why sometimes NA constrait the other methods
     #evaluate_trail_BDY_lr(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
 
+    hyper_sweep_evaluation(multi_flag=True, eval_data_all=False, save_Simulator_Ypred=True, MSE_Simulator=False)
+    
     ###########
     # Predict #
     ###########

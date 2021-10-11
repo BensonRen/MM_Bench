@@ -116,7 +116,7 @@ class DefaultConfig(object):
         self.Init_lenda_tic()
 
 #xlabel, ylabel = 'lenda (nm)', ['Reflectivity', 'Transmissivity', 'Absorptivity']
-        self.noFeat4CMM = 2     #  CMM用来计算3个系数 0,1,2   三条曲线
+        self.noFeat4CMM = 5    #  CMM用来计算3个系数 0,1,2   三条曲线
         self.normal_Y = 0       #反而不行，需要对MLP重新认识
 
         self.dump_NN = True
@@ -307,7 +307,7 @@ class GraSi3N4(Thin_Film_Filters):
         t0 = time.time()
         nMostRow, nLayer = self.nMostPt(), len(self.layers)
         dataX = np.zeros((nMostRow, nLayer + 1))
-        dataY = np.zeros((nMostRow, 3))
+        dataY = np.zeros((nMostRow, 7))
         row = 0
         map2 = self.n_dict.map2
         polar = self.config.polar
@@ -348,6 +348,10 @@ class GraSi3N4(Thin_Film_Filters):
             dataY[row, 0] = R
             dataY[row, 1] = T
             dataY[row, 2] = A
+            dataY[row, 3] = r.real
+            dataY[row, 4] = r.imag
+            dataY[row, 5] = t.real
+            dataY[row, 6] = t.imag
 
             row = row + 1
             if row >= nMostRow:
@@ -370,19 +374,24 @@ def GraSi3N4_sample(nCase, r_seed, sKeyTitle, config, n_dict, x=None):
     t0 = time.time()
     # 进一步并行     https://stackoverflow.com/questions/9786102/how-do-i-parallelize-a-simple-python-loop
     for case in range(nCase):
+        print(case)
         # t1 = time.time()
         filter = GraSi3N4(n_dict, config)
         filter.CMM()
         # filter.Chebyshev()
         # filter.plot_scatter()
+        print(np.shape(filter.dataX))
+        print(np.shape(filter.dataY))
         arrX.append(filter.dataX), arrY.append(filter.dataY)
         # gc.collect()
         if case % 100 == 0:
-            print("\rno={} time={:.3f} arrX={}\t\t".format(case, time.time() - t0, filter.dataX.shape), end="")
+            print("rno={} time={:.3f} arrX={}\t\t".format(case, time.time() - t0, filter.dataX.shape), end="")
 
     # https://stackoverflow.com/questions/27516849/how-to-convert-list-of-numpy-arrays-into-single-numpy-array
     mX = np.vstack(arrX)
     mY = np.vstack(arrY)
+
+    print('shape of mX = {}, mY = {}'.format(np.shape(mX), np.shape(mY)))
     nRow = mY.shape[0]
     print("Y[{}] head=\n{} ".format(mY.shape, mY[0:5, :]))
     print("X[{}] head={} ".format(mX.shape, mX[0:5, :]))
@@ -399,19 +408,23 @@ def GraSi3N4_sample(nCase, r_seed, sKeyTitle, config, n_dict, x=None):
 
 
 def X_Curve_Y_thicks(config, mX, mY, nPt, pick_thick=-1):
-    pathX = "./data_x.csv"
-    pathY = "./data_y.csv"
+    pathX = "./JC_data_x.csv"
+    pathY = "./JC_data_t_real.csv"
     # if os.path.isfile(pathZ):
 
     nCase = (int)(mX.shape[0] / nPt)
     noY = config.noFeat4CMM  # 0,1,2   三条曲线
+    print('noY', noY)
     n0, n1, pos = 0, 0, pick_thick
     iX = np.zeros((nCase, nPt))
     nLayer = 5 if config.fix_graphene_thick else 10
     iY = np.zeros(nCase) if pick_thick >= 0 else np.zeros((nCase, nLayer))
     x_tic = mX[0:nPt, 10]
     for case in range(nCase):
+        print('For X curve Y thicks case = ', case)
         n1 = n0 + nPt
+        print('n1 = ', n1)
+        print('n0 = ', n0)
         if pos >= 0:
             thick = mX[n0, pos]
             for n in range(n0, n1):
@@ -429,6 +442,7 @@ def X_Curve_Y_thicks(config, mX, mY, nPt, pick_thick=-1):
             plt.show(block=True)
 
     if config.normal_Y == 1:
+        print('normal X is True!')
         s = (config.thick_1) / 2
         iY = (iY) / s - 1
 

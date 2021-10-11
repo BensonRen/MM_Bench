@@ -516,6 +516,10 @@ def get_mse_mat_from_folder(data_dir):
         #num_trails = 2048
         Ypred_mat = np.zeros([l, num_trails, w])
         check_full = np.zeros(l)                                     # Safety check for completeness
+        # A flag labelling whether the Ypred_mat has been updated, 
+        # if this is true and first dimension of Yp is still larger, 
+        # There is a problem and we would need to exit
+        update_Ypred_mat = False                                    
         for files in os.listdir(data_dir):
             if '_Ypred_' in files:
                 Yp = pd.read_csv(os.path.join(data_dir, files), header=None, delimiter=' ').values
@@ -523,8 +527,12 @@ def get_mse_mat_from_folder(data_dir):
                     Yp = np.reshape(Yp, [-1, 1])
                 print("shape of Ypred file is", np.shape(Yp))
                 # Truncating to the top num_trails inferences
-                if len(Yp) != num_trails:
+                if len(Yp) > num_trails:
                     Yp = Yp[:num_trails,:]
+                elif len(Yp) < num_trails and update_Ypred_mat is False:        # Only if this is the first time the num_trail is not equal to that
+                    num_trails = len(Yp)
+                    Ypred_mat = np.zeros([l, num_trails, w])
+                    update_Ypred_mat = True
                 number_str = files.split('inference')[-1][:-4]
                 print(number_str)
                 number = int(files.split('inference')[-1][:-4])
@@ -731,7 +739,7 @@ def DrawBoxPlots_multi_eval(data_dir, data_name, save_name='Box_plot'):
 
 
 def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot', 
-                                gif_flag=False, plot_points=200,resolution=None, dash_group='nobody',
+                                gif_flag=False, plot_points=200, resolution=None, dash_group='nobody',
                                 dash_label='', solid_label='',worse_model_mode=False): # Depth=2 now based on current directory structure
     """
     The function to draw the aggregate plot for Mean Average and Min MSEs
@@ -780,7 +788,7 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
     #print("printing the min_dict", min_dict)
        
     def plotDict(dict, name, data_name=None, logy=False, time_in_s_table=None, avg_dict=None, 
-                    plot_points=50,  resolution=None, err_dict=None, color_assign=False, dash_group='nobody',
+                    plot_points=200,  resolution=None, err_dict=None, color_assign=False, dash_group='nobody',
                     dash_label='', solid_label='', plot_xlabel=False, worse_model_mode=False):
         """
         :param name: the name to save the plot
@@ -810,10 +818,12 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             if len(dict.keys()) < 10:
                 color_pool = mcolors.TABLEAU_COLORS.keys()
             else:
-                color_pool = mcolors.CSS4_COLORS.keys()
+                color_pool = [*list(mcolors.TABLEAU_COLORS.keys()), *list(mcolors.BASE_COLORS), *list(mcolors.CSS4_COLORS.keys())]
+            print('length of color pool ', len(list(color_pool)))
             for ind, key in enumerate(dict.keys()):
                 color_dict[key] = list(color_pool)[ind]
         
+        print('number of points to be plotted = ', plot_points)
         f = plt.figure(figsize=[6,3])
         ax = plt.gca()
         ax.spines['bottom'].set_color('black')
@@ -889,7 +899,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
         elif plot_xlabel:
             plt.xlabel('# of inference made (T)')
         #plt.ylabel('MSE')
-        plt.xlim([1, plot_points])
+        #plt.xlim([1, plot_points])
+        plt.xlim([1, min(plot_points, len(dict[key]))])
         if 'ball' in data_name:
             data_name = 'D1: ' + data_name
         elif 'sine' in data_name:
@@ -915,7 +926,8 @@ def DrawAggregateMeanAvgnMSEPlot(data_dir, data_name, save_name='aggregate_plot'
             ax.yaxis.tick_left()
         if data_index < 3:
             ax.xaxis.tick_top()
-        plt.xticks([1, 10, 20, 30, 40, 50])
+        plt.xticks([1, 10, 20, 30, 40, 50, 100, 200])
+        #plt.xticks([1, 10, 20, 30, 40, 50])
         plt.savefig(os.path.join(data_dir, data_name + save_name + name), transparent=True, dpi=300)
         plt.close('all')
 
@@ -998,17 +1010,21 @@ if __name__ == '__main__':
 
     # NIPS version 
     #work_dir = '/home/sr365/mm_bench_multi_eval'
-    work_dir = '/home/sr365/mm_bench_compare_MDNA_loss'
+    #work_dir = '/home/sr365/MDNA_temp/'
+    work_dir = '/home/sr365/MDNA/Chen/'
     #lr_list = [10, 1, 0.1, 0.01, 0.001]
-    MeanAvgnMinMSEvsTry_all(work_dir)
+    #MeanAvgnMinMSEvsTry_all(work_dir)
     #datasets = ['Yang_sim','Chen','Peurifoy']
     #datasets = ['Yang_sim']
     datasets = ['Chen']
-    #datasets = ['Chen','Peurifoy']
+    #datasets = ['Peurifoy']
     #for lr in lr_list:
-    for dataset in datasets:
-        #DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)
-        DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
+    for bs in [2048]:
+    #for bs in [10, 50, 100, 500, 1000, 16384]:
+        for dataset in datasets:
+            #DrawAggregateMeanAvgnMSEPlot(work_dir, dataset, resolution=5)
+            DrawAggregateMeanAvgnMSEPlot(work_dir + 'bs_{}'.format(bs), dataset)
+            #DrawAggregateMeanAvgnMSEPlot(work_dir, dataset)
 
     """
     # NIPS version on Groot

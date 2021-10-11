@@ -80,7 +80,7 @@ class Network(object):
         print(model)
         return model
 
-    def make_loss(self, logit=None, labels=None, G=None, return_long=False, pairwise=False):
+    def make_loss(self, logit=None, labels=None, G=None, return_long=False, epoch=None):
         """
         Create a tensor that represents the loss. This is consistant both at training time \
         and inference time for Backward model
@@ -105,19 +105,13 @@ class Network(object):
             BDY_loss = 0.1*torch.sum(BDY_loss_all)
             #BDY_loss = self.flags.BDY_strength*torch.sum(BDY_loss_all)
         
-        # Adding a pairwise MD loss for back propagation
-        if pairwise and G is not None:
-            # The pdist version
-            #pdist = nn.PairwiseDistance(p=2)
-            #output = pdist(G, G)
-
-            # The cdist version
-            #print('entering MD loss, size of G = ', G.size())
-            pairwise_dist_mat = torch.cdist(G, G, p=2)
-            #print('size of pairwise dist mat =', pairwise_dist_mat.size())
-            MD_loss = self.flags.md_coeff * torch.mean(pairwise_dist_mat)
-            print('MD_loss = ', MD_loss)
-            print('MSE loss = ', MSE_loss)
+        # Adding a pairwise MD loss for back propagation, it needs to be open as well as in the signified start and end epoch
+        if  self.flags.md_coeff > 0 and G is not None and epoch > self.flags.md_start and epoch < self.flags.md_end:
+            pairwise_dist_mat = torch.cdist(G, G, p=2)      # Calculate the pairwise distance
+            MD_loss = torch.mean(relu(- pairwise_dist_mat + self.flags.md_radius))
+            MD_loss *= self.flags.md_coeff
+            #print('MD_loss = ', MD_loss)
+            #print('MSE loss = ', MSE_loss)
 
         self.MSE_loss = MSE_loss
         self.Boundary_loss = BDY_loss
@@ -223,7 +217,7 @@ class Network(object):
 
                 # Set to Evaluation Mode
                 self.model.eval()
-                print("Doing Evaluation on the model now")
+                #print("Doing Evaluation on the model now")
                 test_loss = 0
                 for j, (geometry, spectra) in enumerate(self.test_loader):  # Loop through the eval set
                     if cuda:
@@ -421,17 +415,17 @@ class Network(object):
         # expand the target spectra to eval batch size
         target_spectra_expand = target_spectra.expand([self.flags.eval_batch_size, -1])
         
-        # Extra for early stopping
+        # # Extra for early stopping
         loss_list = []
-        end_lr = self.flags.lr / 8
-        print(self.optm_eval)
-        param_group_1 = self.optm_eval.param_groups[0]
-        if self.flags.data_set == 'Chen':
-            stop_threshold = 1e-4
-        elif self.flags.data_set == 'Peurifoy':
-            stop_threshold = 1e-3
-        else:
-            stop_threshold = 1e-3
+        # end_lr = self.flags.lr / 8
+        # print(self.optm_eval)
+        # param_group_1 = self.optm_eval.param_groups[0]
+        # if self.flags.data_set == 'Chen':
+        #     stop_threshold = 1e-4
+        # elif self.flags.data_set == 'Peurifoy':
+        #     stop_threshold = 1e-3
+        # else:
+        #     stop_threshold = 1e-3
 
         # Begin NA
         begin = time.time()
@@ -449,7 +443,7 @@ class Network(object):
             # Boundar loss controled here: with Boundary Loss #
             ###################################################
             loss = self.make_loss(logit, target_spectra_expand, 
-                                G=geometry_eval_input, pairwise=True)         # Get the loss
+                                G=geometry_eval_input, epoch=i)         # Get the loss
             loss.backward()                                             # Calculate the Gradient
             # update weights and learning rate scheduler
             self.optm_eval.step()  # Move one step the optimizer
@@ -483,7 +477,7 @@ class Network(object):
             else:
                 saved_model_str = self.saved_model.replace('/', '_') + 'modulized_inference' + str(ind)
             # Adding some random noise to the result
-            print("Adding random noise to the output for increasing the diversity!!")
+            #print("Adding random noise to the output for increasing the diversity!!")
             geometry_eval_input += torch.randn_like(geometry_eval_input) * noise_level
             
             Ypred_file = os.path.join(save_dir, 'test_Ypred_point{}.csv'.format(saved_model_str))
@@ -513,7 +507,7 @@ class Network(object):
         if save_Simulator_Ypred and self.flags.data_set != 'Yang':
             begin=time.time()
             Ypred = simulator(self.flags.data_set, geometry_eval_input.cpu().data.numpy())
-            print("SIMULATOR: ",time.time()-begin)
+            #print("SIMULATOR: ",time.time()-begin)
             if len(np.shape(Ypred)) == 1:           # If this is the ballistics dataset where it only has 1d y'
                 Ypred = np.reshape(Ypred, [-1, 1])
         Ypred_best = np.reshape(np.copy(Ypred[best_estimate_index, :]), [1, -1])

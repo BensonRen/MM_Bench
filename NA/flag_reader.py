@@ -21,6 +21,12 @@ def read_flag():
     parser.add_argument('--data-set', default=DATA_SET, type=str, help='which data set you are chosing')
     parser.add_argument('--test-ratio', default=TEST_RATIO, type=float, help='the ratio of the test set')
 
+    # MD loss related params
+    parser.add_argument('--md-radius', default=MD_RADIUS, type=float, help='radius for the MD ')
+    parser.add_argument('--md-start', default=MD_START, type=int, help='coefficient of the MD loss')
+    parser.add_argument('--md-end', default=MD_END, type=int, help='coefficient of the MD loss')
+    parser.add_argument('--md-coeff', default=MD_COEFF, type=float, help='coefficient of the MD loss')
+
     # Model Architectural Params
     parser.add_argument('--use-lorentz', type=bool, default=USE_LORENTZ, help='The boolean flag that indicate whether we use lorentz oscillator')
     parser.add_argument('--linear', type=list, default=LINEAR, help='The fc layers units')
@@ -43,7 +49,6 @@ def read_flag():
     parser.add_argument('--stop_threshold', default=STOP_THRESHOLD, type=float,
                         help='The threshold below which training should stop')
                         
-    parser.add_argument('--md-coeff', default=MD_COEFF, type=float, help='coefficient of the MD loss')
     #    parser.add_argument('--decay-step', default=DECAY_STEP, type=int,
     #                        help='decay learning rate at this number of steps')
 
